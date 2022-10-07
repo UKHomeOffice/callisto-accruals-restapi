@@ -1,5 +1,0 @@
-apiVersion: v2
-name: callisto-accruals-restapi
-description: A Helm chart for deploying Callisto Accruals REST api
-type: application
-version: 1.0.0
