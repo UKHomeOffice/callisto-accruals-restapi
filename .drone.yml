@@ -13,12 +13,6 @@ steps:
     commands:
       - mvn clean package
 
-  - name: lint_dockerfile
-      pull: if-not-exists
-      image: hadolint/hadolint:latest-alpine
-      commands:
-        - hadolint Dockerfile
-
 ---
 kind: pipeline
 type: kubernetes
