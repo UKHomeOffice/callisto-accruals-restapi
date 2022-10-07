@@ -37,8 +37,8 @@ steps:
     when:
       event:
         - push
-#      branch:
-#        - main
+      branch:
+        - main
 
 ---
 kind: pipeline
@@ -81,8 +81,8 @@ steps:
     when:
       event:
         - push
-#      branch:
-#        - main
+      branch:
+        - main
 
 ---
 kind: pipeline
