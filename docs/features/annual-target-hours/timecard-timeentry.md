@@ -2,9 +2,11 @@
 When a user records time in their TimeCard then the Accruals container needs to respond by updating the balances with those Accrual types that are effected by the newly recorded time.
 
 **Communication of recorded time**
+
 The Accruals container receives information about recorded time as `TimeEntry` events. The events are sent asynchronously and the container makes the assumption that they are arriving in the correct order. 
 
 **Data models**
+
 As mentioned above the [`TimeEntry`](https://github.com/UKHomeOffice/callisto-timecard-restapi/blob/main/docs/payload.md#timeentry) encapsulates the data that the Accruals container uses to update balances. Internally balance data is held by the `Accrual` resource (TODO - link to payload).
 
 ## Updating Accrual balance
