@@ -5,6 +5,7 @@
 
 <module name="Checker">
     <module name="LineLength">
-        <property name="max" value ="100000"/>
+        <property name="max" value ="120"/>
+        <property name="fileExtensions" value="java"/>
     </module>
 </module>
