@@ -2,11 +2,9 @@
 When a user records time in their TimeCard then the Accruals container needs to respond by updating the balances with those Accrual types that are effected by the newly recorded time.
 
 **Communication of recorded time**
-
 The Accruals container receives information about recorded time as `TimeEntry` events. The events are sent asynchronously and the container makes the assumption that they are arriving in the correct order. 
 
 **Data models**
-
 As mentioned above the [`TimeEntry`](https://github.com/UKHomeOffice/callisto-timecard-restapi/blob/main/docs/payload.md#timeentry) encapsulates the data that the Accruals container uses to update balances. Internally balance data is held by the `Accrual` resource (TODO - link to payload).
 
 ## Updating Accrual balance
@@ -111,8 +109,6 @@ end state:
         {
           "actualStartTime": "2022-06-25 08:00:00",
           "actualEndTime": "2022-06-25 18:00:00",
-          "version": 1,
-          "deleted": "false",
           "id":1
         },
         "contributedHours": 10
@@ -122,7 +118,7 @@ end state:
 ]
 ```
 
-#### Scenario 2: Delete an existing `TimeEntry` spanning two contiguous days
+#### Scenario 2: Delete an existing `TimeEntry` spanning a single day
 
 begin state:
 ```yaml
@@ -136,8 +132,6 @@ begin state:
         {
           "actualStartTime": "2022-06-25 08:00:00",
           "actualEndTime": "2022-06-25 18:00:00",
-          "version": 1,
-          "deleted": "false",
           "id":1
         },
         "contributedHours": 10
@@ -153,30 +147,7 @@ end state:
   { 
     "date": "2022-06-25",
     "balance": 100 
-    "contributions": [
-     {
-        "timeentry": 
-        {
-          "actualStartTime": "2022-06-25 08:00:00",
-          "actualEndTime": "2022-06-25 18:00:00",
-          "version": 2,
-          "deleted": "true",
-          "id":1
-        },
-        "contributedHours": 0 # becuase the timeentry has been deleted its contribution is negated
-      },
-      {
-        "timeentry": 
-        {
-          "actualStartTime": "2022-06-25 08:00:00",
-          "actualEndTime": "2022-06-25 18:00:00",
-          "version": 1,
-          "deleted": "false",
-          "id":1
-        },
-        "contributedHours": 10
-      }
-    ]
+    "contributions": []
   }  
 ]
 ```
@@ -197,8 +168,6 @@ begin state:
         {
           "actualStartTime": "2022-06-25 08:00:00",
           "actualEndTime": "2022-06-25 18:00:00",
-          "version": 1,
-          "deleted": "false",
           "id":1
         },
         "contributedHours": 10
@@ -213,29 +182,18 @@ end state:
 [
   { 
     "date": "2022-06-25",
-    "balance": 90
+    "balance": 96
     "contributions": [
       {
         "timeentry": 
         {
-          "actualStartTime": "2022-06-25 08:00:00",
-          "actualEndTime": "2022-06-25 18:00:00",
-          "version": 1,
-          "deleted": "false",
-          "id":1
-        },
-        "contributedHours": 10
-      },
-      {
-        "timeentry": 
-        {
           "actualStartTime": "2022-06-25 09:00:00",
-          "actualEndTime": "2022-06-25 19:00:00",
+          "actualEndTime": "2022-06-25 13:00:00",
           "version": 2,
           "deleted": "false",
           "id":1
         },
-        "contributedHours": 10 
+        "contributedHours": 4 
       }      
     ]
   }
@@ -272,8 +230,6 @@ end state:
         {
           "actualStartTime": "2022-06-25 19:00:00",
           "actualEndTime": "2022-06-26 06:00:00",
-          "version": 1,
-          "deleted": "false",
           "id":1
         },
         "contributedHours": 5
@@ -289,8 +245,6 @@ end state:
         {
           "actualStartTime": "2022-06-25 19:00:00",
           "actualEndTime": "2022-06-26 06:00:00",
-          "version": 1,
-          "deleted": "false",
           "id":1
         },
         "contributedHours": 6
@@ -314,8 +268,6 @@ begin state:
         {
           "actualStartTime": "2022-06-25 08:00:00",
           "actualEndTime": "2022-06-25 18:00:00",
-          "version": 1,
-          "deleted": "false",
           "id":1
         },
         "contributedHours": 10
@@ -340,23 +292,11 @@ end state:
        {
           "actualStartTime": "2022-06-25 19:00:00",
           "actualEndTime": "2022-06-26 06:00:00",
-          "version": 2,
-          "deleted": "false",
           "id":1
         },
         "contributedHours": 5
-      },
-      {
-        "timeentry": 
-        {
-          "actualStartTime": "2022-06-25 08:00:00",
-          "actualEndTime": "2022-06-25 18:00:00",
-          "version": 1,
-          "deleted": "false",
-          "id":1
-        },
-        "contributedHours": 10
       }
+    ]
   },
   { 
     "date": "2022-06-26",
@@ -367,8 +307,6 @@ end state:
         {
           "actualStartTime": "2022-06-25 19:00:00",
           "actualEndTime": "2022-06-26 06:00:00",
-          "version": 1,
-          "deleted": "false",
           "id":1
         },
         "contributedHours": 6
@@ -392,8 +330,6 @@ begin state:
         {
           "actualStartTime": "2022-06-25 19:00:00",
           "actualEndTime": "2022-06-26 06:00:00",
-          "version": 1,
-          "deleted": "false",
           "id":1
         },
         "contributedHours": 5
@@ -409,8 +345,6 @@ begin state:
         {
           "actualStartTime": "2022-06-25 19:00:00",
           "actualEndTime": "2022-06-26 06:00:00",
-          "version": 1,
-          "deleted": "false",
           "id":1
         },
         "contributedHours": 6
@@ -432,52 +366,16 @@ end state:
         {
           "actualStartTime": "2022-06-25 08:00:00",
           "actualEndTime": "2022-06-25 18:00:00",
-          "version": 2,
-          "deleted": "false",
           "id":1
         },
         "contributedHours": 10
       },
-      {
-        "timeentry": 
-        {
-          "actualStartTime": "2022-06-25 19:00:00",
-          "actualEndTime": "2022-06-26 06:00:00",
-          "version": 1,
-          "deleted": "false",
-          "id":1
-        },
-        "contributedHours": 5
-      }
     ]
   },
   { 
     "date": "2022-06-26",
     "balance": 90,
-    "contributions": [
-      {
-        "timeentry": 
-        {
-          "actualStartTime": "2022-06-25 08:00:00",
-          "actualEndTime": "2022-06-25 18:00:00",
-          "version": 2,
-          "deleted": "false",
-          "id":1
-        },
-        "contributedHours": 0
-      },    
-      {
-        "timeentry": 
-        {
-          "actualStartTime": "2022-06-25 19:00:00",
-          "actualEndTime": "2022-06-26 06:00:00",
-          "version": 1,
-          "deleted": "false",
-          "id":1
-        },
-        "contributedHours": 6
-      }
-	]
+    "contributions": []
   }  
 ]
 ```
@@ -496,8 +394,6 @@ begin state:
         {
           "actualStartTime": "2022-06-25 19:00:00",
           "actualEndTime": "2022-06-26 06:00:00",
-          "version": 1,
-          "deleted": "false",
           "id":1
         },
         "contributedHours": 5
@@ -513,8 +409,6 @@ begin state:
         {
           "actualStartTime": "2022-06-25 19:00:00",
           "actualEndTime": "2022-06-26 06:00:00",
-          "version": 1,
-          "deleted": "false",
           "id":1
         },
         "contributedHours": 6
@@ -530,58 +424,12 @@ end state:
   { 
     "date": "2022-06-25",
     "balance": 100 
-    "contributions": [
-      {
-        "timeentry": 
-        {
-          "actualStartTime": "2022-06-25 19:00:00",
-          "actualEndTime": "2022-06-26 06:00:00",
-          "version": 1,
-          "deleted": "false",
-          "id":1
-        },
-        "contributedHours": 5
-      },
-      {
-        "timeentry": 
-        {
-          "actualStartTime": "2022-06-25 19:00:00",
-          "actualEndTime": "2022-06-26 06:00:00",
-          "version": 2,
-          "deleted": "true",
-          "id":1
-        },
-        "contributedHours": 0 # becuase the timeentry has been deleted its contribution is negated
-      }      
-    ]
+    "contributions": []
   },
   { 
     "date": "2022-06-26",
     "balance": 100,
-    "contributions": [
-      {
-        "timeentry": 
-        {
-          "actualStartTime": "2022-06-25 19:00:00",
-          "actualEndTime": "2022-06-26 06:00:00",
-          "version": 1,
-          "deleted": "false",
-          "id":1
-        },
-        "contributedHours": 6
-      },
-      {
-        "timeentry": 
-        {
-          "actualStartTime": "2022-06-25 19:00:00",
-          "actualEndTime": "2022-06-26 06:00:00",
-          "version": 2,
-          "deleted": "true",
-          "id":1
-        },
-        "contributedHours": 0 # becuase the timeentry has been deleted its contribution is negated
-      }         
-	]
+    "contributions": []
   }  
 ]
 ```
@@ -601,8 +449,6 @@ begin state:
         {
           "actualStartTime": "2022-06-25 08:00:00",
           "actualEndTime": "2022-06-25 18:00:00",
-          "version": 1,
-          "deleted": "false",
           "id":1
         },
         "contributedHours": 10
@@ -623,30 +469,7 @@ end state:
   { 
     "date": "2022-06-25",
     "balance": 100
-    "contributions": [
-      {
-        "timeentry": 
-        {
-          "actualStartTime": "2022-06-25 08:00:00",
-          "actualEndTime": "2022-06-25 18:00:00",
-          "version": 1,
-          "deleted": "false",
-          "id":1
-        },
-        "contributedHours": 10
-      },
-      {
-        "timeentry": 
-        {
-          "actualStartTime": "2022-06-26 08:00:00",
-          "actualEndTime": "2022-06-26 18:00:00",
-          "version": 2,
-          "deleted": "false",
-          "id":1
-        },
-        "contributedHours": 0 # becuase the timeentry is for an non-overlapping day the contribution is set to zero
-      }      
-    ]
+    "contributions": []
   },
   { 
     "date": "2022-06-26",
@@ -657,8 +480,6 @@ end state:
         {
           "actualStartTime": "2022-06-26 08:00:00",
           "actualEndTime": "2022-06-26 18:00:00",
-          "version": 2,
-          "deleted": "false",
           "id":1
         },
         "contributedHours": 10
