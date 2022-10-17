@@ -8,7 +8,7 @@ The Accruals container receives information about recorded time as `TimeEntry` e
 As mentioned above the [`TimeEntry`](https://github.com/UKHomeOffice/callisto-timecard-restapi/blob/main/docs/payload.md#timeentry) encapsulates the data that the Accruals container uses to update balances. Internally balance data is held by the [`Accrual` resource](../../payload.md#accrual)
 
 ## Updating Accrual balance
-One of the key properties on an Accrual instance is the balance. Each instance represents the balance on a given date. When `TimeEntry` events are received then they to identify which type of `Accrual` they relate to and also to identify which date(s) are to have their balances calculated.
+One of the key properties on an Accrual instance is the balance. Each instance represents the balance on a given date. When `TimeEntry` events are received then they are used to identify which type of `Accrual` they relate to and also to identify which date(s) are to have their balances calculated. Note that the mechanism for identiftying an Accrual based on the data in a TimeEntry is outside of the scope of this document. The business rules under the [Annual Target Hours feature](https://collaboration.homeoffice.gov.uk/jira/browse/EAHW-1249) in Jira should be consulted.
 
 A key part of an `Accrual` instance is its set of `Contribution` instances.  A contribution references a `TimeEntry` and it also records how many hours of work that `TimeEntry` contributes to the `Accrual` instance's balance. 
 
