@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class CallistoAccrualsRestapiApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(CallistoAccrualsRestapiApplication.class, args);
-    }
+  public static void main(String[] args) {
+    SpringApplication.run(CallistoAccrualsRestapiApplication.class, args);
+  }
 
 }
