@@ -1,0 +1,47 @@
+@startuml
+
+entity time_entry {
+  * id : number
+  --
+  * version
+  * ownerid
+  * actual_start_time
+  * actual_end_time
+}
+
+entity flex_change {
+  * id : number
+  --
+  * time_entry_id: number <<FK>>
+}
+
+entity accrual {
+  * id : number <<generated>>
+  --
+  * type_id : number <<FK>>
+  --
+  * balance : number
+  * date : date
+}
+
+entity contribution {
+  * id : number <<generated>>
+  --
+  * time_entry_id : number <<FK>>
+  * accrual_id : number <<FK>>
+  --
+  * value : number
+}
+
+entity accrual_type {
+  * id : number <<generated>>
+  --
+  * name : string
+  * measurement_unit : enumeration
+}
+accrual ||.. accrual_type
+contribution ||.. accrual
+contribution ||.. time_entry
+flex_change ||.. time_entry
+
+@enduml

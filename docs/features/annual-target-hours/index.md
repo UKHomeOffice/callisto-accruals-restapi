@@ -6,9 +6,9 @@ This high-level design is intended to cover the Annual Target Hours Feature whic
 2.  Where required illustrate the high-level container orchestration.
 3.  Detail and explain the relevant parts of the data model impacting this feature.
 
-Annual Target Hours [feature definition](https://collaboration.homeoffice.gov.uk/jira/browse/EAHW-1249) (access required) in Jira details the user stories that make up the feature. The user stories contain more detailed requirement around business rules and validation logic. The intention is that this document should be used as a guide when designing and implementing and testing against a given story from the record time feature
+Annual Target Hours [feature definition](https://collaboration.homeoffice.gov.uk/jira/browse/EAHW-1249) (access required) in Jira details the user stories that make up the feature. The user stories contain more detailed requirement around business rules and validation logic. The intention is that this document should be used as a guide when designing and implementing and testing against a given story from the record time feature. For an overview of what Accruals is as a concept see the [main index](../../index.md) page
 
-To understand the proposed high-level design, it is instructive to consider both the definition of the [containers](./../index.md) used to perform the key actions and the appropriate parts of the [payload model](./../../payload.md) specifically [Accrual](./../../payload.md#accrual).
+To understand the proposed high-level design, it is instructive to consider both the definition of the [containers](./../index.md) used to perform the key actions and the appropriate parts of the [storage model](./../../storage.md) specifically [Accrual](./../../storage.md#accrual).
 
 ## Flows
 End users do not directly make changes to Accruals data. Instead the Accruals container responds to a set of events from other Callisto containers and external systems.
