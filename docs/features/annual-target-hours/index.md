@@ -23,7 +23,7 @@ There are three sources of events -
 There are two main activities initiated in TimeCard that Accruals is interested in
 
 #### User records their time
-This covers creating a brand new record of time worked or updating or removing an existing one. More detail about how this process is triggered, the key steps in the process and associated data are described in more detail [here](./timecard-timeentry.md)
+This covers creating a brand new record of time worked or updating or removing an existing one. More detail about how this process is triggered, the key steps in the process and associated data are described in more detail :warning: [here](./timecard-timeentry.md) :warning:
 
 #### User records a flexible change
 **TODO - detailed flow**
