@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/test")
 public class HelloController {
 
-    @GetMapping
-    public ResponseEntity<String> test() {
-        return ResponseEntity.status(HttpStatus.OK).body("Hello World");
-    }
+  @GetMapping
+  public ResponseEntity<String> test() {
+    return ResponseEntity.status(HttpStatus.OK).body("Hello World");
+  }
 }
