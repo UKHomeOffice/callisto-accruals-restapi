@@ -1,3 +1,4 @@
+
 # Annual Target Hours
 
 This high-level design is intended to cover the Annual Target Hours Feature which includes the user stories listed below. It seeks to:
@@ -10,6 +11,22 @@ Annual Target Hours [feature definition](https://collaboration.homeoffice.gov.uk
 
 To understand the proposed high-level design, it is instructive to consider both the definition of the [containers](./../index.md) used to perform the key actions and the appropriate parts of the [storage model](./../../storage.md) specifically [Accrual](./../../storage.md#accrual).
 
+## Contents
+- [Annual Target Hours](#annual-target-hours)
+  * [Flows](#flows)
+    + [TimeCard trigger](#timecard-trigger)
+      - [User records their time](#user-records-their-time) :hammer_and_wrench: Work In Progress
+      - [User records a flexible change](#user-records-a-flexible-change):warning: TODO
+    + [Scheduler trigger](#scheduler-trigger):warning: TODO
+    + [Agreement trigger](#agreement-trigger):warning: TODO
+      - [Agreement publication](#agreement-publication):warning: TODO
+      - [User on-boarding](#user-on-boarding):warning: TODO
+  * [Storage model](#storage-model)
+  * [Considerations](#considerations)
+  * [Out of scope](#out-of-scope)
+    + [Business rules](#business-rules)
+    + [Authorisation](#authorisation)
+
 ## Flows
 End users do not directly make changes to Accruals data. Instead the Accruals container responds to a set of events from other Callisto containers and external systems.
 
@@ -20,10 +37,15 @@ There are three sources of events -
  3. Agreement container (adapter for the TAMS external system that masters Agreements)
 
 ### TimeCard trigger
+
+![annualTargetHoursTimeCardUpdateAccrualModule.png](../../images/annualTargetHoursTimeCardUpdateAccrualModule.png)
+
 There are two main activities initiated in TimeCard that Accruals is interested in
 
 #### User records their time
-This covers creating a brand new record of time worked or updating or removing an existing one. More detail about how this process is triggered, the key steps in the process and associated data are described in more detail :warning: [here](./timecard-timeentry.md) :warning:
+This covers creating a brand new record of time worked or updating or removing an existing one. 
+
+:mag: follow [the step by step guide covering the detail of how a `TimeEntry` event triggers an update in Accruals](./timecard-timeentry.md)
 
 #### User records a flexible change
 **TODO - detailed flow**
@@ -51,11 +73,6 @@ Just as balances need to be brought in to Callisto as part of onboarding so to d
 This section describes which parts of the Accruals container's internal storage model are relevant when tracking annual hours. More information can be found in the [storage model definition](./../../storage.md). The key entity for the record time feature is the [Accrual](./../../storage.md#accrual).
 
 ![storage-model](./../../images/storage-model.png)
-
-## Considerations
-
-- TODO - event consumption - need to document topic naming convention based on product/container/resource
-
 
 ## Out of scope
 
