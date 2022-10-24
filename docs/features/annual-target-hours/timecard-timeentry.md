@@ -44,7 +44,7 @@ The totals work out to
 This would trigger the creation of a `contribution` record linked to the `accrual` record that is associated with 25 June with a `value` of 5. It would also trigger the creation of a second  `contribution` record for the `accrual` record associated with 26 June with a `value` of 6 (see Scenario 4: Create a `TimeEntry` spanning two contiguous days).
 
 #### Deletion
-When a `TimeEntry` is deleted (see the [event publication blueprint](https://github.com/UKHomeOffice/callisto-docs/blob/main/blueprints/event-publication.md#resource-lifecycle) to understand how to detect if a `TimeEntry` has been deleted) the Accrual instance that the deleted `TimeEntry` should be associated with can be found by one of the [single](#single-day) and [overlapping](overlaping-day) approaches above. 
+When a `TimeEntry` is deleted (see the [event publication blueprint](https://github.com/UKHomeOffice/callisto-docs/blob/main/blueprints/event-publishing-and-consuming.md#resource-lifecycle) to understand how to detect if a `TimeEntry` has been deleted) the Accrual instance that the deleted `TimeEntry` should be associated with can be found by one of the [single](#single-day) and [overlapping](overlaping-day) approaches above. 
 
 Once the `accrual` record has been found then a new `contribution` record must be created that references the newly received `TimeEntry` (via the `time_entry` table) and sets `value` to zero.
 
@@ -613,8 +613,8 @@ end state:
 ```
 
 ## Considerations
-Receipt of event - topic naming and also event strcuture
+[Consuming events](https://github.com/UKHomeOffice/callisto-docs/blob/main/blueprints/event-publishing-and-consuming.md#event-consumer)
 
 ## Out of scope
 - Exposing Accrual resources via RESTful endpoints. This will be covered elsewhere.
-- Identifying Accrual module based on `TimeEntry` data. The business rules under the [Annual Target Hours feature](https://collaboration.homeoffice.gov.uk/jira/browse/EAHW-1249) in Jira should be consulted.
+- Identifying relevant Accrual module(s) based on `TimeEntry` data. The business rules under the [Annual Target Hours feature](https://collaboration.homeoffice.gov.uk/jira/browse/EAHW-1249) in Jira should be consulted.
