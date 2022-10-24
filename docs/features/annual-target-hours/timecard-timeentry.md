@@ -1,17 +1,19 @@
 
 # User records their time
-When a user records time in their TimeCard then the Accruals container needs to respond by updating the balances with those Accrual types that are effected by the newly recorded time.
+When a user records time in their TimeCard then the Accruals container needs to respond by updating the balances with those Accrual modules that are effected by the newly recorded time.
 
 **Communication of recorded time**
+
 The Accruals container receives information about recorded time as `TimeEntry` events. The events are sent asynchronously and the container makes the assumption that they are arriving in the correct order. 
 
-For this scenario there is no RESTful component. The process is triggered by the arrival of events from the TimeCard container that encapsulate `TimeEntry` resources. The resulting data created by the processing are then stored in the Accrual container's data store. Other feature designs will explain how that stored data is to be exposed as resources via the Accrual's RESTful API.
+For this scenario there is no RESTful component. The process is triggered by the arrival of events from the TimeCard container that encapsulate `TimeEntry` resources. The resulting data created by the processing are then stored in the Accrual container's data store. Other feature designs will explain how that stored data is to be exposed as resources via the Accrual's RESTful API (see [Out of Scope](#out-of-scope). 
 
-**Data models**
+**Storage models**
+
 As mentioned above the [`TimeEntry`](https://github.com/UKHomeOffice/callisto-timecard-restapi/blob/main/docs/payload.md#timeentry) encapsulates the data that the Accruals container uses to update balances. Internally balance data is held by in the [`accrual` table](../../storage.md#accrual)
 
 ## Updating Accrual balance
-One of the key properties on an accrual record is the balance. Each instance represents the balance on a given date. When `TimeEntry` events are received then they are used to identify which type of `accrual` records they relate to and also to identify which date(s) are to have their balances calculated. Note that the mechanism for identifying an `accrual` record type based on the data in a TimeEntry is outside of the scope of this document. The business rules under the [Annual Target Hours feature](https://collaboration.homeoffice.gov.uk/jira/browse/EAHW-1249) in Jira should be consulted.
+One of the key properties on an accrual record is the balance. Each instance represents the balance on a given date. When `TimeEntry` events are received then they are used to identify which type of `accrual` records they relate to and also to identify which date(s) are to have their balances calculated. Note that the mechanism for identifying an `accrual` record type based on the data in a TimeEntry is outside of the scope of this document (see [Out of Scope](#out-of-scope). 
 
 A key part of an `accrual` record is its set of `contribution` records.  A contribution references a `time_entry` record and it also records how many hours of work that `time_entry` contributes to the `accrual` record's balance. 
 
@@ -42,7 +44,7 @@ The totals work out to
 This would trigger the creation of a `contribution` record linked to the `accrual` record that is associated with 25 June with a `value` of 5. It would also trigger the creation of a second  `contribution` record for the `accrual` record associated with 26 June with a `value` of 6 (see Scenario 4: Create a `TimeEntry` spanning two contiguous days).
 
 #### Deletion
-When a `TimeEntry` is deleted then it's `deleted` (**TODO** - link out to generic event payload showing action ) the Accrual instance that the deleted `TimeEntry` should be associated with can be found by one of the [single](#single-day) and [overlapping](overlaping-day) approaches above. 
+When a `TimeEntry` is deleted (see the [event publication blueprint](https://github.com/UKHomeOffice/callisto-docs/blob/main/blueprints/event-publication.md#resource-lifecycle) to understand how to detect if a `TimeEntry` has been deleted) the Accrual instance that the deleted `TimeEntry` should be associated with can be found by one of the [single](#single-day) and [overlapping](overlaping-day) approaches above. 
 
 Once the `accrual` record has been found then a new `contribution` record must be created that references the newly received `TimeEntry` (via the `time_entry` table) and sets `value` to zero.
 
@@ -51,35 +53,13 @@ Sometime a `TimeEntry` is modified. In this case the `TimeEntry.version` will be
 
 When a `TimeEntry` is received as well as matching Accruals by date as with the [single](#single-day) and [overlapping](overlaping-day) cases above the system must also look for any Accruals with `contribution` records that reference a `time_entry` record with the same `id` as the newly received `TimeEntry`. If any are found where the date range covered by the new version of  `TimeEntry` no longer overlaps with the `accrual.date` then a new `contribution` must be created that references the newly received `TimeEntry`  (via the `time_entry` table) and sets `value` to zero.
 
-### How to calculate `accrual.balance`
-
-**Assumption** - the type of Accrual to calculate a balance for has is already known
-
-To calculate balance (`day's balance`) for a given day `day` for accrual type `type` - 
-
-1. Get the Accrual for the `day` in question
-
- `day's Accrual` = select accrual where accrual.date = `day` AND accrual.type_id = `type`
- 
-2. Get the balance for the previous day 
-
-`previous day's balance` = select accrual.balance where accrual.date = `(day - 1)` AND accrual.type_id = `type`
-
-3. Add up the value for each of the `contribution` records associated with the `accrual` record
-
-`total contributed value` = for each contribution in `accrual's contributions[]` then `total contributed value` += contribution.value
-
-4. Finally subtract the `total contributed value` from the `previous day's balance`
-
-`day's balance` = `previous day's balance` - `total contributed hours`
-
 ### Example Scenarios
 
-The scenarios below cover way the state of an arbitrary Accrual module changes in response to `TimeEntry` events that the Accruals container receives from the TimeCard container. The scenarios centre around the 24 June, 25 June and 26 June
+The scenarios below show how `accrual` and `contribution` records change in response to `TimeEntry` events that the Accruals container receives from the TimeCard container. The scenarios centre around the 24 June, 25 June and 26 June
 
 For the purposes of the following worked examples assume that the balance on 24 June is 100. Exactly how this balance has been reached will not be broken down as it is not necessary to follow the examples through. The examples merely need a starting balance to be worked through.
 
-For clarity JSON format has been used however in reality the data will be manipualted in the form of the [storage model](../../storage.md).
+For clarity JSON format has been used however in reality the data will be manipulated in the form of the [storage model](../../storage.md).
 
 #### Scenario 1:  Create a `TimeEntry` spanning a single day
 
@@ -92,6 +72,25 @@ begin state:
     "contributions": []
   }  
 ]
+```
+
+input event:
+```yaml
+{
+	"action:" "create"
+	"resource": {
+		"schema": "https://timecard.callisto.digital.homeoffice.gov.uk/schema/TimeEntry?version=1",
+		"content": {
+			"id": 1,
+			"version": 1,
+			"actualStartTime: "2022-06-25 08:00:00",
+			"actualEndTime": "2022-06-25 18:00:00",
+			"ownerId": 12,
+			"shiftType" "a label of some sort",
+			"timePeriodType": "shift"
+		}
+	}
+}
 ```
 
 end state:
@@ -108,7 +107,7 @@ end state:
           "actualEndTime": "2022-06-25 18:00:00",
           "id":1
         },
-        "contributedHours": 10
+        "value": 10
       }
     ]
   }  
@@ -131,11 +130,26 @@ begin state:
           "actualEndTime": "2022-06-25 18:00:00",
           "id":1
         },
-        "contributedHours": 10
+        "value": 10
       }
     ]
   }  
 ]
+```
+
+input event:
+```yaml
+{
+	"action:" "delete"
+	"resource": {
+		"schema": "https://callisto.digital.homeoffice.gov.uk/schema/ResourceReference?version=1",
+		"content": {
+			"id": 1,
+			"version": 1,
+			"tenantId": 1
+		}
+	}
+}
 ```
 
 end state:
@@ -167,12 +181,32 @@ begin state:
           "actualEndTime": "2022-06-25 18:00:00",
           "id":1
         },
-        "contributedHours": 10
+        "value": 10
       }
     ]
   }  
 ]
 ```
+
+input event:
+```yaml
+{
+	"action:" "create"
+	"resource": {
+		"schema": "https://timecard.callisto.digital.homeoffice.gov.uk/schema/TimeEntry?version=1",
+		"content": {
+			"id": 1,
+			"version": 2,
+			"actualStartTime": "2022-06-25 09:00:00",
+			"actualEndTime": "2022-06-25 13:00:00",
+			"ownerId": 12,
+			"shiftType" "a label of some sort",
+			"timePeriodType": "shift"
+		}
+	}
+}
+```
+
 end state: 
 
 ```yaml
@@ -190,7 +224,7 @@ end state:
           "deleted": "false",
           "id":1
         },
-        "contributedHours": 4 
+        "value": 4 
       }      
     ]
   }
@@ -215,6 +249,25 @@ begin state:
 ]
 ```
 
+input event:
+```yaml
+{
+	"action:" "create"
+	"resource": {
+		"schema": "https://timecard.callisto.digital.homeoffice.gov.uk/schema/TimeEntry?version=1",
+		"content": {
+			"id": 1,
+			"version": 1,
+			"actualStartTime": "2022-06-25 19:00:00",
+			"actualEndTime": "2022-06-26 06:00:00",
+			"ownerId": 12,
+			"shiftType" "a label of some sort",
+			"timePeriodType": "shift"
+		}
+	}
+}
+```
+
 end state:
 ```yaml
 [
@@ -229,7 +282,7 @@ end state:
           "actualEndTime": "2022-06-26 06:00:00",
           "id":1
         },
-        "contributedHours": 5
+        "value": 5
       }
     ]
   },
@@ -244,7 +297,7 @@ end state:
           "actualEndTime": "2022-06-26 06:00:00",
           "id":1
         },
-        "contributedHours": 6
+        "value": 6
       }
 	]
   }  
@@ -267,7 +320,7 @@ begin state:
           "actualEndTime": "2022-06-25 18:00:00",
           "id":1
         },
-        "contributedHours": 10
+        "value": 10
       }
   },
   { 
@@ -276,6 +329,25 @@ begin state:
     "contributions": []
   }  
 ]
+```
+
+input event:
+```yaml
+{
+	"action:" "create"
+	"resource": {
+		"schema": "https://timecard.callisto.digital.homeoffice.gov.uk/schema/TimeEntry?version=1",
+		"content": {
+			"id": 1,
+			"version": 1,
+			"actualStartTime": "2022-06-25 19:00:00",
+			"actualEndTime": "2022-06-26 06:00:00",
+			"ownerId": 12,
+			"shiftType" "a label of some sort",
+			"timePeriodType": "shift"
+		}
+	}
+}
 ```
 
 end state:
@@ -291,7 +363,7 @@ end state:
           "actualEndTime": "2022-06-26 06:00:00",
           "id":1
         },
-        "contributedHours": 5
+        "value": 5
       }
     ]
   },
@@ -306,7 +378,7 @@ end state:
           "actualEndTime": "2022-06-26 06:00:00",
           "id":1
         },
-        "contributedHours": 6
+        "value": 6
       }
 	]
   }  
@@ -329,7 +401,7 @@ begin state:
           "actualEndTime": "2022-06-26 06:00:00",
           "id":1
         },
-        "contributedHours": 5
+        "value": 5
       }
     ]
   },
@@ -344,11 +416,30 @@ begin state:
           "actualEndTime": "2022-06-26 06:00:00",
           "id":1
         },
-        "contributedHours": 6
+        "value": 6
       }
 	]
   }  
 ]
+```
+
+input event:
+```yaml
+{
+	"action:" "create"
+	"resource": {
+		"schema": "https://timecard.callisto.digital.homeoffice.gov.uk/schema/TimeEntry?version=1",
+		"content": {
+			"id": 1,
+			"version": 1,
+			"actualStartTime": "2022-06-25 08:00:00",
+			"actualEndTime": "2022-06-25 18:00:00",
+			"ownerId": 12,
+			"shiftType" "a label of some sort",
+			"timePeriodType": "shift"
+		}
+	}
+}
 ```
 
 end state:
@@ -365,7 +456,7 @@ end state:
           "actualEndTime": "2022-06-25 18:00:00",
           "id":1
         },
-        "contributedHours": 10
+        "value": 10
       },
     ]
   },
@@ -393,7 +484,7 @@ begin state:
           "actualEndTime": "2022-06-26 06:00:00",
           "id":1
         },
-        "contributedHours": 5
+        "value": 5
       }
     ]
   },
@@ -408,11 +499,26 @@ begin state:
           "actualEndTime": "2022-06-26 06:00:00",
           "id":1
         },
-        "contributedHours": 6
+        "value": 6
       }
 	]
   }  
 ]
+```
+
+input event:
+```yaml
+{
+	"action:" "delete"
+	"resource": {
+		"schema": "https://callisto.digital.homeoffice.gov.uk/schema/ResourceReference?version=1",
+		"content": {
+			"id": 1,
+			"version": 1,
+			"tenantId": 1
+		}
+	}
+}
 ```
 
 end state:
@@ -448,7 +554,7 @@ begin state:
           "actualEndTime": "2022-06-25 18:00:00",
           "id":1
         },
-        "contributedHours": 10
+        "value": 10
       }
     ]
   },
@@ -459,6 +565,26 @@ begin state:
   }  
 ]
 ```
+
+input event:
+```yaml
+{
+	"action:" "create"
+	"resource": {
+		"schema": "https://timecard.callisto.digital.homeoffice.gov.uk/schema/TimeEntry?version=1",
+		"content": {
+			"id": 1,
+			"version": 1,
+			"actualStartTime": "2022-06-26 08:00:00",
+			"actualEndTime": "2022-06-26 18:00:00",
+			"ownerId": 12,
+			"shiftType" "a label of some sort",
+			"timePeriodType": "shift"
+		}
+	}
+}
+```
+
 end state: 
 
 ```yaml
@@ -479,9 +605,16 @@ end state:
           "actualEndTime": "2022-06-26 18:00:00",
           "id":1
         },
-        "contributedHours": 10
+        "value": 10
       }          
     ]
   }  
 ]
 ```
+
+## Considerations
+Receipt of event - topic naming and also event strcuture
+
+## Out of scope
+- Exposing Accrual resources via RESTful endpoints. This will be covered elsewhere.
+- Identifying Accrual module based on `TimeEntry` data. The business rules under the [Annual Target Hours feature](https://collaboration.homeoffice.gov.uk/jira/browse/EAHW-1249) in Jira should be consulted.
