@@ -46,13 +46,16 @@ Just as balances need to be brought in to Callisto as part of onboarding so to d
 
 **TODO - detailed flow**
 
-## Payload model
+## Storage model
 
-This section describes which parts of the Accruals container's payload model are relevant when tracking annual hours. More information can be found in the [payload model definition](./../../payload.md). The key resource for the record time feature is the [Accrual](./../../payload.md#accrual).
+This section describes which parts of the Accruals container's internal storage model are relevant when tracking annual hours. More information can be found in the [storage model definition](./../../storage.md). The key entity for the record time feature is the [Accrual](./../../storage.md#accrual).
 
-![payload-model](./../../images/payload-model.png)
+![storage-model](./../../images/storage-model.png)
 
 ## Considerations
+
+- TODO - event consumption - need to document topic naming convention based on product/container/resource
+
 
 ## Out of scope
 
