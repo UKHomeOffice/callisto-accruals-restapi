@@ -111,6 +111,7 @@ end state:
         {
           "actualStartTime": "2022-06-25 08:00:00",
           "actualEndTime": "2022-06-25 18:00:00",
+	  "version": 1,
           "id":1
         },
         "value": 10
@@ -134,6 +135,7 @@ begin state:
         {
           "actualStartTime": "2022-06-25 08:00:00",
           "actualEndTime": "2022-06-25 18:00:00",
+	  "version": 1,
           "id":1
         },
         "value": 10
@@ -185,6 +187,7 @@ begin state:
         {
           "actualStartTime": "2022-06-25 08:00:00",
           "actualEndTime": "2022-06-25 18:00:00",
+	  "version": 1,
           "id":1
         },
         "value": 10
@@ -197,7 +200,7 @@ begin state:
 input event:
 ```json
 {
-	"action:" "create"
+	"action:" "update"
 	"resource": {
 		"schema": "https://timecard.callisto.digital.homeoffice.gov.uk/schema/TimeEntry?version=1",
 		"content": {
@@ -286,6 +289,7 @@ end state:
         {
           "actualStartTime": "2022-06-25 19:00:00",
           "actualEndTime": "2022-06-26 06:00:00",
+	  "version": 1,
           "id":1
         },
         "value": 5
@@ -301,6 +305,7 @@ end state:
         {
           "actualStartTime": "2022-06-25 19:00:00",
           "actualEndTime": "2022-06-26 06:00:00",
+	  "version": 1,
           "id":1
         },
         "value": 6
@@ -324,6 +329,7 @@ begin state:
         {
           "actualStartTime": "2022-06-25 08:00:00",
           "actualEndTime": "2022-06-25 18:00:00",
+	  "version": 1,
           "id":1
         },
         "value": 10
@@ -341,12 +347,12 @@ begin state:
 input event:
 ```json
 {
-	"action:" "create",
+	"action:" "update",
 	"resource": {
 		"schema": "https://timecard.callisto.digital.homeoffice.gov.uk/schema/TimeEntry?version=1",
 		"content": {
 			"id": 1,
-			"version": 1,
+			"version": 2,
 			"actualStartTime": "2022-06-25 19:00:00",
 			"actualEndTime": "2022-06-26 06:00:00",
 			"ownerId": 12,
@@ -369,6 +375,7 @@ end state:
        {
           "actualStartTime": "2022-06-25 19:00:00",
           "actualEndTime": "2022-06-26 06:00:00",
+	  "version": 2,
           "id":1
         },
         "value": 5
@@ -384,6 +391,7 @@ end state:
         {
           "actualStartTime": "2022-06-25 19:00:00",
           "actualEndTime": "2022-06-26 06:00:00",
+	  "version": 2,
           "id":1
         },
         "value": 6
@@ -407,6 +415,7 @@ begin state:
         {
           "actualStartTime": "2022-06-25 19:00:00",
           "actualEndTime": "2022-06-26 06:00:00",
+	  "version": 1,
           "id":1
         },
         "value": 5
@@ -422,6 +431,7 @@ begin state:
         {
           "actualStartTime": "2022-06-25 19:00:00",
           "actualEndTime": "2022-06-26 06:00:00",
+	  "version": 1,
           "id":1
         },
         "value": 6
@@ -434,12 +444,12 @@ begin state:
 input event:
 ```json
 {
-	"action:" "create"
+	"action:" "update"
 	"resource": {
 		"schema": "https://timecard.callisto.digital.homeoffice.gov.uk/schema/TimeEntry?version=1",
 		"content": {
 			"id": 1,
-			"version": 1,
+			"version": 2,
 			"actualStartTime": "2022-06-25 08:00:00",
 			"actualEndTime": "2022-06-25 18:00:00",
 			"ownerId": 12,
@@ -462,6 +472,7 @@ end state:
         {
           "actualStartTime": "2022-06-25 08:00:00",
           "actualEndTime": "2022-06-25 18:00:00",
+	  "version": 2,
           "id":1
         },
         "value": 10
@@ -490,6 +501,7 @@ begin state:
         {
           "actualStartTime": "2022-06-25 19:00:00",
           "actualEndTime": "2022-06-26 06:00:00",
+	  "version": 1,
           "id":1
         },
         "value": 5
@@ -505,6 +517,7 @@ begin state:
         {
           "actualStartTime": "2022-06-25 19:00:00",
           "actualEndTime": "2022-06-26 06:00:00",
+	  "version": 1,
           "id":1
         },
         "value": 6
@@ -560,6 +573,7 @@ begin state:
         {
           "actualStartTime": "2022-06-25 08:00:00",
           "actualEndTime": "2022-06-25 18:00:00",
+	  "version": 1,
           "id":1
         },
         "value": 10
@@ -577,12 +591,12 @@ begin state:
 input event:
 ```json
 {
-	"action:" "create"
+	"action:" "update"
 	"resource": {
 		"schema": "https://timecard.callisto.digital.homeoffice.gov.uk/schema/TimeEntry?version=1",
 		"content": {
 			"id": 1,
-			"version": 1,
+			"version": 2,
 			"actualStartTime": "2022-06-26 08:00:00",
 			"actualEndTime": "2022-06-26 18:00:00",
 			"ownerId": 12,
@@ -611,6 +625,7 @@ end state:
         {
           "actualStartTime": "2022-06-26 08:00:00",
           "actualEndTime": "2022-06-26 18:00:00",
+	  "version": 2,
           "id":1
         },
         "value": 10
