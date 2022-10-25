@@ -15,7 +15,7 @@ As mentioned above the [`TimeEntry`](https://github.com/UKHomeOffice/callisto-ti
 ![storage-model.png](../../images/storage-model.png)
 
 ## Updating Accrual balance
-One of the key properties on an accrual record is the balance. Each instance represents the balance on a given date. When `TimeEntry` events are received then they are used to identify which type of `accrual` records they relate to and also to identify which date(s) are to have their balances calculated. 
+One of the key properties on an accrual record is the balance. Each instance represents the running total of all contributions up to a given date. When `TimeEntry` events are received then they are used to identify which type of `accrual` records they relate to and also to identify which date(s) are to have their balances calculated. 
 
 **Note** 
 - that the mechanism for identifying an `accrual` record type based on the data in a TimeEntry is outside of the scope of this document (see [Out of Scope](#out-of-scope))
@@ -104,7 +104,7 @@ end state:
 [
   { 
     "date": "2022-06-25",
-    "balance": 90 
+    "balance": 110 
     "contributions": [
       {
         "timeentry": 
@@ -127,7 +127,7 @@ begin state:
 [
   { 
     "date": "2022-06-25",
-    "balance": 90 
+    "balance": 110 
     "contributions": [
       {
         "timeentry": 
@@ -178,7 +178,7 @@ begin state:
 [
   { 
     "date": "2022-06-25",
-    "balance": 90 
+    "balance": 110 
     "contributions": [
       {
         "timeentry": 
@@ -219,7 +219,7 @@ end state:
 [
   { 
     "date": "2022-06-25",
-    "balance": 96
+    "balance": 104
     "contributions": [
       {
         "timeentry": 
@@ -249,7 +249,7 @@ begin state:
   },
   { 
     "date": "2022-06-26",
-    "balance": 89,
+    "balance": 100,
     "contributions": []
   }  
 ]
@@ -279,7 +279,7 @@ end state:
 [
   { 
     "date": "2022-06-25",
-    "balance": 95 
+    "balance": 105 
     "contributions": [
       {
         "timeentry": 
@@ -294,7 +294,7 @@ end state:
   },
   { 
     "date": "2022-06-26",
-    "balance": 89,
+    "balance": 111,
     "contributions": [
       {
         "timeentry": 
@@ -317,7 +317,7 @@ begin state:
 [
   { 
     "date": "2022-06-25",
-    "balance": 90 
+    "balance": 110 
     "contributions": [
       {
         "timeentry": 
@@ -331,7 +331,7 @@ begin state:
   },
   { 
     "date": "2022-06-26",
-    "balance": 90,
+    "balance": 110,
     "contributions": []
   }  
 ]
@@ -361,7 +361,7 @@ end state:
 [
   { 
     "date": "2022-06-25",
-    "balance": 95 
+    "balance": 105 
     "contributions": [
     "timeentry": 
        {
@@ -375,7 +375,7 @@ end state:
   },
   { 
     "date": "2022-06-26",
-    "balance": 89,
+    "balance": 111,
     "contributions": [
      {
         "timeentry": 
@@ -398,7 +398,7 @@ begin state:
 [
   { 
     "date": "2022-06-25",
-    "balance": 95 
+    "balance": 105 
     "contributions": [
       {
         "timeentry": 
@@ -413,7 +413,7 @@ begin state:
   },
   { 
     "date": "2022-06-26",
-    "balance": 89,
+    "balance": 111,
     "contributions": [
       {
         "timeentry": 
@@ -453,7 +453,7 @@ end state:
 [
   { 
     "date": "2022-06-25",
-    "balance": 90 
+    "balance": 110 
     "contributions": [
       {
         "timeentry": 
@@ -468,7 +468,7 @@ end state:
   },
   { 
     "date": "2022-06-26",
-    "balance": 90,
+    "balance": 110,
     "contributions": []
   }  
 ]
@@ -481,7 +481,7 @@ begin state:
 [
   { 
     "date": "2022-06-25",
-    "balance": 95 
+    "balance": 105 
     "contributions": [
       {
         "timeentry": 
@@ -496,7 +496,7 @@ begin state:
   },
   { 
     "date": "2022-06-26",
-    "balance": 89,
+    "balance": 111,
     "contributions": [
       {
         "timeentry": 
@@ -551,7 +551,7 @@ begin state:
 [
   { 
     "date": "2022-06-25",
-    "balance": 90 
+    "balance": 110 
     "contributions": [
       {
         "timeentry": 
@@ -566,7 +566,7 @@ begin state:
   },
   { 
     "date": "2022-06-26",
-    "balance": 90,
+    "balance": 110,
     "contributions": []
   }  
 ]
@@ -602,7 +602,7 @@ end state:
   },
   { 
     "date": "2022-06-26",
-    "balance": 90,
+    "balance": 110,
     "contributions": [
 		{
         "timeentry": 
