@@ -65,7 +65,7 @@ The scenarios below show how `accrual` and `contribution` records change in resp
 
 For the purposes of the following worked examples assume that the balance on 24 June is 100. Exactly how this balance has been reached will not be broken down as it is not necessary to follow the examples through. The examples merely need a starting balance to be worked through.
 
-For clarity JSON format has been used however in reality the data will be manipulated in the form of the [storage model](../../storage.md).
+For clarity JSON format has been used however in reality the data will be manipulated in the form of the [storage model](../../storage.md). In addition to make the examples leaner `accrual.type_id` has been left out.
 
 #### Scenario 1:  Create a `TimeEntry` spanning a single day
 
