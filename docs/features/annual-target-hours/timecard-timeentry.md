@@ -364,6 +364,7 @@ end state:
     "date": "2022-06-25",
     "balance": 105 
     "contributions": [
+    {
     "timeentry": 
        {
           "actualStartTime": "2022-06-25 19:00:00",
