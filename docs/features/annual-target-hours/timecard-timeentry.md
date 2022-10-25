@@ -89,7 +89,7 @@ input event:
 		"content": {
 			"id": 1,
 			"version": 1,
-			"actualStartTime: "2022-06-25 08:00:00",
+			"actualStartTime": "2022-06-25 08:00:00",
 			"actualEndTime": "2022-06-25 18:00:00",
 			"ownerId": 12,
 			"shiftType" "a label of some sort",
@@ -279,7 +279,7 @@ end state:
 [
   { 
     "date": "2022-06-25",
-    "balance": 105 
+    "balance": 105, 
     "contributions": [
       {
         "timeentry": 
@@ -317,7 +317,7 @@ begin state:
 [
   { 
     "date": "2022-06-25",
-    "balance": 110 
+    "balance": 110,
     "contributions": [
       {
         "timeentry": 
@@ -340,7 +340,7 @@ begin state:
 input event:
 ```json
 {
-	"action:" "create"
+	"action:" "create",
 	"resource": {
 		"schema": "https://timecard.callisto.digital.homeoffice.gov.uk/schema/TimeEntry?version=1",
 		"content": {
