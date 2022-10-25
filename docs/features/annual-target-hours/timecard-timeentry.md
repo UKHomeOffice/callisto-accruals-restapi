@@ -12,6 +12,8 @@ For this scenario there is no RESTful component. The process is triggered by the
 
 As mentioned above the [`TimeEntry`](https://github.com/UKHomeOffice/callisto-timecard-restapi/blob/main/docs/payload.md#timeentry) encapsulates the data that the Accruals container uses to update balances. Internally balance data is held by in the [`accrual` table](../../storage.md#accrual)
 
+![storage-model.png](../../images/storage-model.png)
+
 ## Updating Accrual balance
 One of the key properties on an accrual record is the balance. Each instance represents the balance on a given date. When `TimeEntry` events are received then they are used to identify which type of `accrual` records they relate to and also to identify which date(s) are to have their balances calculated. Note that the mechanism for identifying an `accrual` record type based on the data in a TimeEntry is outside of the scope of this document (see [Out of Scope](#out-of-scope). 
 
