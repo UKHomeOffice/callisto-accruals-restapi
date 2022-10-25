@@ -70,7 +70,7 @@ For clarity JSON format has been used however in reality the data will be manipu
 #### Scenario 1:  Create a `TimeEntry` spanning a single day
 
 begin state:
-```yaml
+```json
 [
   { 
     "date": "2022-06-25",
@@ -81,7 +81,7 @@ begin state:
 ```
 
 input event:
-```yaml
+```json
 {
 	"action:" "create"
 	"resource": {
@@ -100,7 +100,7 @@ input event:
 ```
 
 end state:
-```yaml
+```json
 [
   { 
     "date": "2022-06-25",
@@ -123,7 +123,7 @@ end state:
 #### Scenario 2: Delete an existing `TimeEntry` spanning a single day
 
 begin state:
-```yaml
+```json
 [
   { 
     "date": "2022-06-25",
@@ -144,7 +144,7 @@ begin state:
 ```
 
 input event:
-```yaml
+```json
 {
 	"action:" "delete"
 	"resource": {
@@ -159,7 +159,7 @@ input event:
 ```
 
 end state:
-```yaml
+```json
 [
   { 
     "date": "2022-06-25",
@@ -174,7 +174,7 @@ end state:
 
 begin state: 
 
-```yaml
+```json
 [
   { 
     "date": "2022-06-25",
@@ -195,7 +195,7 @@ begin state:
 ```
 
 input event:
-```yaml
+```json
 {
 	"action:" "create"
 	"resource": {
@@ -215,7 +215,7 @@ input event:
 
 end state: 
 
-```yaml
+```json
 [
   { 
     "date": "2022-06-25",
@@ -240,7 +240,7 @@ end state:
 #### Scenario 4: Create a `TimeEntry` spanning two contiguous days
 
 begin state:
-```yaml
+```json
 [
   { 
     "date": "2022-06-25",
@@ -256,7 +256,7 @@ begin state:
 ```
 
 input event:
-```yaml
+```json
 {
 	"action:" "create"
 	"resource": {
@@ -275,7 +275,7 @@ input event:
 ```
 
 end state:
-```yaml
+```json
 [
   { 
     "date": "2022-06-25",
@@ -313,7 +313,7 @@ end state:
 #### Scenario 5: Move an existing `TimeEntry` spanning a single day to two contiguous days
 
 begin state:
-```yaml
+```json
 [
   { 
     "date": "2022-06-25",
@@ -338,7 +338,7 @@ begin state:
 ```
 
 input event:
-```yaml
+```json
 {
 	"action:" "create"
 	"resource": {
@@ -357,7 +357,7 @@ input event:
 ```
 
 end state:
-```yaml
+```json
 [
   { 
     "date": "2022-06-25",
@@ -394,7 +394,7 @@ end state:
 #### Scenario 6: Move an existing `TimeEntry` spanning two contiguous days a single day
 
 begin state:
-```yaml
+```json
 [
   { 
     "date": "2022-06-25",
@@ -430,7 +430,7 @@ begin state:
 ```
 
 input event:
-```yaml
+```json
 {
 	"action:" "create"
 	"resource": {
@@ -449,7 +449,7 @@ input event:
 ```
 
 end state:
-```yaml
+```json
 [
   { 
     "date": "2022-06-25",
@@ -477,7 +477,7 @@ end state:
 #### Scenario 7: Delete an existing `TimeEntry` spanning two contiguous days
 
 begin state:
-```yaml
+```json
 [
   { 
     "date": "2022-06-25",
@@ -513,7 +513,7 @@ begin state:
 ```
 
 input event:
-```yaml
+```json
 {
 	"action:" "delete"
 	"resource": {
@@ -528,7 +528,7 @@ input event:
 ```
 
 end state:
-```yaml
+```json
 [
   { 
     "date": "2022-06-25",
@@ -547,7 +547,7 @@ end state:
 
 begin state: 
 
-```yaml
+```json
 [
   { 
     "date": "2022-06-25",
@@ -573,7 +573,7 @@ begin state:
 ```
 
 input event:
-```yaml
+```json
 {
 	"action:" "create"
 	"resource": {
@@ -593,7 +593,7 @@ input event:
 
 end state: 
 
-```yaml
+```json
 [
   { 
     "date": "2022-06-25",
