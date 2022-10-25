@@ -7,7 +7,22 @@ This high-level design is intended to cover the Annual Target Hours Feature whic
 2.  Where required illustrate the high-level container orchestration.
 3.  Detail and explain the relevant parts of the data model impacting this feature.
 
-Annual Target Hours [feature definition](https://collaboration.homeoffice.gov.uk/jira/browse/EAHW-1249) (access required) in Jira details the user stories that make up the feature. The user stories contain more detailed requirement around business rules and validation logic. The intention is that this document should be used as a guide when designing and implementing and testing against a given story from the record time feature. For an overview of what Accruals is as a concept see the [main index](../../index.md) page
+Annual Target Hours [feature definition](https://collaboration.homeoffice.gov.uk/jira/browse/EAHW-1249) (access required) in Jira details the user stories that make up the feature. The user stories contain more detailed requirement around business rules and validation logic. The intention is that this document should be used as a guide when designing and implementing and testing against a given story from the record time feature. For an overview of what Accruals is as a concept see the [main index](../../index.md) page.
+
+The table below shows the individual tickets in the Annual Target Hours feature and also shows the how complete the design is for each ticket.
+
+| Ticket                                                                                                                                           | Status           |
+|--------------------------------------------------------------------------------------------------------------------------------------------------|------------------|
+| [Annual agreement hours - Timecard Update](https://collaboration.homeoffice.gov.uk/jira/browse/EAHW-1763)                                        | ready for review |
+| [Annual agreement hours - Timecard Removal](https://collaboration.homeoffice.gov.uk/jira/browse/EAHW-1764)                                       | ready for review |
+| [Annual agreement hours - Negative Count](https://collaboration.homeoffice.gov.uk/jira/browse/EAHW-1768)                                         | ready for review |
+| [Annual Target Hours - Count](https://collaboration.homeoffice.gov.uk/jira/browse/EAHW-1497)                                                     | ready for review |
+| [Annual Target Hours - Net indication](https://collaboration.homeoffice.gov.uk/jira/browse/EAHW-1906)                                            | TODO             |
+| [Annual Target Hours - Details Table](https://collaboration.homeoffice.gov.uk/jira/browse/EAHW-1624)                                             | TODO             |
+| [Annual Target Hours - Visual Indicator Over/under/on Target (April to February)](https://collaboration.homeoffice.gov.uk/jira/browse/EAHW-1899) | TODO             |
+| [Annual Target Hours - Visual Indicator Over/under/on Target (March)](https://collaboration.homeoffice.gov.uk/jira/browse/EAHW-2048)             | TODO             |
+| [Annual Target hours - Negative Balance Indicator](https://collaboration.homeoffice.gov.uk/jira/browse/EAHW-1738)                                | TODO             |
+| [Annual Target Hours - Tolerance Rate Calculation](https://collaboration.homeoffice.gov.uk/jira/browse/EAHW-1490)                                | TODO             |
 
 To understand the proposed high-level design, it is instructive to consider both the definition of the [containers](./../index.md) used to perform the key actions and the appropriate parts of the [storage model](./../../storage.md) specifically [Accrual](./../../storage.md#accrual).
 
