@@ -6,7 +6,7 @@ When a user records time in their TimeCard then the Accruals container needs to 
 
 The Accruals container receives information about recorded time as `TimeEntry` events. The events are sent asynchronously and the container makes the assumption that they are arriving in the correct order. 
 
-For this scenario there is no RESTful component. The process is triggered by the arrival of events from the TimeCard container that encapsulate `TimeEntry` resources. The resulting data created by the processing are then stored in the Accrual container's data store. Other feature designs will explain how that stored data is to be exposed as resources via the Accrual's RESTful API (see [Out of Scope](#out-of-scope). 
+For this scenario there is no RESTful component. The process is triggered by the arrival of events from the TimeCard container that encapsulate `TimeEntry` resources. The resulting data created by the processing are then stored in the Accrual container's data store. Other feature designs will explain how that stored data is to be exposed as resources via the Accrual's RESTful API (see [Out of Scope](#out-of-scope)). 
 
 **Storage models**
 
@@ -15,7 +15,11 @@ As mentioned above the [`TimeEntry`](https://github.com/UKHomeOffice/callisto-ti
 ![storage-model.png](../../images/storage-model.png)
 
 ## Updating Accrual balance
-One of the key properties on an accrual record is the balance. Each instance represents the balance on a given date. When `TimeEntry` events are received then they are used to identify which type of `accrual` records they relate to and also to identify which date(s) are to have their balances calculated. Note that the mechanism for identifying an `accrual` record type based on the data in a TimeEntry is outside of the scope of this document (see [Out of Scope](#out-of-scope). 
+One of the key properties on an accrual record is the balance. Each instance represents the balance on a given date. When `TimeEntry` events are received then they are used to identify which type of `accrual` records they relate to and also to identify which date(s) are to have their balances calculated. 
+
+**Note** 
+- that the mechanism for identifying an `accrual` record type based on the data in a TimeEntry is outside of the scope of this document (see [Out of Scope](#out-of-scope))
+- there will be one accrual record for each date in the current (effective) Annualised Hours Agreement. See [Out of Scope](#out-of-scope) for more information
 
 A key part of an `accrual` record is its set of `contribution` records.  A contribution references a `time_entry` record and it also records how many hours of work that `time_entry` contributes to the `accrual` record's balance. 
 
@@ -620,3 +624,4 @@ end state:
 ## Out of scope
 - Exposing Accrual resources via RESTful endpoints. This will be covered elsewhere.
 - Identifying relevant Accrual module(s) based on `TimeEntry` data. The business rules under the [Annual Target Hours feature](https://collaboration.homeoffice.gov.uk/jira/browse/EAHW-1249) in Jira should be consulted.
+- Seeding of accrual records based on an AH Agreement. This will be covered by a separate design invloving the [TAMS Agreement Adapter](https://github.com/UKHomeOffice/callisto-docs/blob/main/containers.md#tams-agreement-adapter)
