@@ -1,7 +1,7 @@
 @startuml
 
 entity time_entry {
-  * id : number
+  * id : number <<PK>>
   --
   * version
   * ownerid
@@ -10,13 +10,13 @@ entity time_entry {
 }
 
 entity flex_change {
-  * id : number
+  * id : number <<PK>>
   --
   * time_entry_id: number <<FK>>
 }
 
 entity accrual {
-  * id : number <<generated>>
+  * id : number <<PK>>
   --
   * type_id : number <<FK>>
   --
@@ -25,7 +25,7 @@ entity accrual {
 }
 
 entity contribution {
-  * id : number <<generated>>
+  * id : number <<PK>>
   --
   * time_entry_id : number <<FK>>
   * accrual_id : number <<FK>>
@@ -34,7 +34,7 @@ entity contribution {
 }
 
 entity accrual_type {
-  * id : number <<generated>>
+  * id : number <<PK>>
   --
   * name : string
   * measurement_unit : enumeration
@@ -46,7 +46,7 @@ contribution ||.. time_entry
 flex_change ||.. time_entry
 
 entity person {
-  * id : number <<generated>>
+  * id : number <<PK>>
   --
   * employment_type : string
   * location_code : string
@@ -70,14 +70,14 @@ person ||.. public_holiday_by_location
 public_holiday_by_location ||.. public_holiday
 
 entity flex_change_band_definition {
-  * id : number <<generated>>
+  * id : number <<PK>>
   --
   * name : string
   * upper_limit : integer
 }
   
 entity rsa_band_definition {
-  * id : number <<generated>>
+  * id : number <<PK>>
   --
   * name : string
   * lower_limit : integer
@@ -85,7 +85,7 @@ entity rsa_band_definition {
 }
 
 entity rsa_band_definition {
-  * id : number <<generated>>
+  * id : number <<PK>>
   --
   * name : string
   * lower_limit : integer
@@ -107,6 +107,5 @@ entity contract_type_definition {
   * min_night_duration : integer
   * min_shift_duration : integer
 }
-
 
 @enduml
