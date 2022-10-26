@@ -104,8 +104,9 @@ person ||.. night_hour_range
 entity contract_type_definition {
   * employment_type : string <<PK>>
   --
-  * min_night_duration : integer
-  * min_shift_duration : integer
+  * min_night_duration : float
+  * premod_nominal_daily rate : float
+  * mod_nominal_daily rate : float
 }
 
 @enduml
