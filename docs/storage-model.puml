@@ -1,31 +1,33 @@
 @startuml
 
 entity time_entry {
-  * id : number
+  * id : number <<PK>>
   --
-  * version
-  * ownerid
-  * actual_start_time
-  * actual_end_time
+  * version: number
+  * owner_id: number
+  * start_time: date_time
+  * end_time: date_time
+  meal_break_allowence: double
+  meal_break_taken: double  
 }
 
 entity flex_change {
-  * id : number
+  * id : number <<PK>>
   --
   * time_entry_id: number <<FK>>
 }
 
 entity accrual {
-  * id : number <<generated>>
+  * id : number <<PK>>
   --
   * type_id : number <<FK>>
   --
   * balance : number
-  * date : date
+  * day : date
 }
 
 entity contribution {
-  * id : number <<generated>>
+  * id : number <<PK>>
   --
   * time_entry_id : number <<FK>>
   * accrual_id : number <<FK>>
@@ -34,7 +36,7 @@ entity contribution {
 }
 
 entity accrual_type {
-  * id : number <<generated>>
+  * id : number <<PK>>
   --
   * name : string
   * measurement_unit : enumeration
