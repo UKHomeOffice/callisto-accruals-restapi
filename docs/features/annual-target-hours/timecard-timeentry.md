@@ -1,4 +1,5 @@
 
+
 # User records their time
 When a user records time in their TimeCard then the Accruals container needs to respond by updating the balances with those Accrual modules that are effected by the newly recorded time.
 
@@ -20,6 +21,7 @@ One of the key properties on an accrual record is the balance. Each instance rep
 **Note** 
 - that the mechanism for identifying an `accrual` record type based on the data in a TimeEntry is outside of the scope of this document (see [Out of Scope](#out-of-scope))
 - there will be one accrual record for each date in the current (effective) Annualised Hours Agreement. See [Out of Scope](#out-of-scope) for more information
+- In the user interface when viewing Accrual balances the end user will be presented with an eroded view of their balances. The translation from the running total captured in the storage model to that eroded view will be dealt with in a separate design
 
 A key part of an `accrual` record is its set of `contribution` records.  A contribution references a `time_entry` record and it also records how many hours of work that `time_entry` contributes to the `accrual` record's balance. 
 
