@@ -20,8 +20,8 @@ A `TimeEntry` will originate with the TimeCard container and will be consumed by
 |owner_id|number|true|none|The id of the Person who owns this `time_entry` record i.e. the Person who has performed the activity in the given time period|
 |start_time|date-time|true|none|The start time of the activity that was worked (to the minute)|
 |end_time|date-time|true|none|The end time of the activity that was worked (to the minute)|
-|meal_break_allowence|double|false|none|The amount of time that the person corresponding to the owner_id is permitted to take for a meal break (to the minute)|
-|meal_break_taken|double|true|none|The amount of time that th eperson corresponding to the owner_id actually took for their meal break (to the minute)|
+|meal_break_allowance|double|false|none|The amount of time that the person corresponding to the owner_id is permitted to take for a meal break (to the minute)|
+|meal_break_taken|double|true|none|The amount of time that the person corresponding to the owner_id actually took for their meal break (to the minute)|
 
 <h2 id="tocS_FlexChange">flex_change</h2>
 
