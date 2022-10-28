@@ -28,7 +28,7 @@ steps:
       SONAR_TOKEN:
         from_secret: sonar_cloud_token
     commands:
-      - mvn -s ./accruals_settings.xml sonar:sonar -Dsonar.host.url=$${SONAR_HOST} -Dsonar.login=$${SONAR_TOKEN} -Dsonar.organization=ukhomeoffice -Dsonar.projectKey=callisto-accruals-restapi -Dsonar.branch.name=$DRONE_BRANCH -Dsonar.projectName=callisto-accruals-restapi
+      - mvn -s ./accruals_settings.xml sonar:sonar -Dsonar.host.url=$${SONAR_HOST} -Dsonar.login=$${SONAR_TOKEN} -Dsonar.organization=ukhomeoffice -Dsonar.projectKey=callisto-accruals-restapi -Dsonar.branch.name=$DRONE_BRANCH -Dsonar.projectName=callisto-accruals-restapi -Dsonar.qualitygate.wait=true
     when:
       event:
         exclude:
