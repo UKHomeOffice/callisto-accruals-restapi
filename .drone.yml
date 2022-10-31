@@ -14,7 +14,7 @@ steps:
       ARTIFACTORY_TOKEN:
         from_secret: artifactory_token
     commands:
-      - mvn -s ./accruals_settings.xml clean package
+      - mvn -s ./accruals_settings.xml clean verify
 
   - name: sonar
     image: maven:3.8.3-openjdk-17
@@ -28,7 +28,14 @@ steps:
       SONAR_TOKEN:
         from_secret: sonar_cloud_token
     commands:
-      - mvn -s ./accruals_settings.xml sonar:sonar -Dsonar.host.url=$${SONAR_HOST} -Dsonar.login=$${SONAR_TOKEN} -Dsonar.organization=ukhomeoffice -Dsonar.projectKey=callisto-accruals-restapi -Dsonar.branch.name=$DRONE_BRANCH -Dsonar.projectName=callisto-accruals-restapi -Dsonar.qualitygate.wait=true
+      - mvn -s ./accruals_settings.xml sonar:sonar 
+        -Dsonar.host.url=$${SONAR_HOST}
+        -Dsonar.login=$${SONAR_TOKEN}
+        -Dsonar.organization=ukhomeoffice
+        -Dsonar.projectKey=callisto-accruals-restapi
+        -Dsonar.branch.name=$DRONE_BRANCH
+        -Dsonar.projectName=callisto-accruals-restapi -Dsonar.qualitygate.wait=true
+        -Dsonar.exclusions=src/main/java/uk/gov/homeoffice/digital/sas/accruals/CallistoAccrualsRestapiApplication.java
     when:
       event:
         exclude:
