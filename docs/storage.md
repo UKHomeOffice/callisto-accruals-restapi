@@ -96,6 +96,10 @@ Their relationship to the other tables is depicted below
 ## Tables
 <h2 id="tocS_Flex_Change_Band_Definition">flex_change_band_definition_<nry</h2>
 
+To compensate staff for flexibility in their working and the level of predictability of their roster, staff are paid an uplift. There are four levels of payment which are to be configured in the table below.
+
+### Properties
+
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
 |id| PK| true|none|Assigned when a new row is added to this table by the owning service|
