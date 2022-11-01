@@ -3,9 +3,9 @@
 The Accruals container stores a number of entities. There are three different type of entities stored within this container and it is useful to consider those differences as each
 are maintained in different ways. The main categories are:
 
-# Core tables actively created, updated or deleted by a service.
-# Tables of largely static 'reference data' owned, maintained and used by a service and not shared with other services. 
-# Data owned by another service and maintained using event consumption.
+* Core tables actively created, updated or deleted by a service.
+* Tables of largely static 'reference data' owned, maintained and used by a service and not shared with other services. 
+* Data owned by another service and maintained using event consumption.
 
 
 Principal amongst them is the `accrual` table
