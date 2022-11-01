@@ -1,19 +1,23 @@
 <h1 id="accruals">Accruals v0.1.0</h1>
 
-The Accruals container stores a number of entities. There are three different type of entities stored within this container and it is useful to consider those differences as each
-are maintained in different ways. The main categories are:
+The Accruals container stores a number of entities. There are three different type of entities stored within this container and it is useful to consider those differences as each are maintained in different ways. 
+
+The main categories are:
 
 * Core tables actively created, updated or deleted by a service.
-* Tables of largely static 'reference data' owned, maintained and used by a service and not shared with other services. 
 * Data owned by another service and maintained using event consumption.
+* Tables of largely static 'reference data' owned, maintained and used by a service and not shared with other services. 
 
 
-Principal amongst them is the `accrual` table
+# Core Tables
+
+Principal amongst the core tables is the `accrual` table. It's relationship to the other core tables is depicted below
 
 ![storage-model.png](./images/storage-model.png)
 
-# Tables
-<h2 id="tocS_TimeEntry">time_entry</h2>
+## Tables
+<
+h2 id="tocS_TimeEntry">time_entry</h2>
 
 A `TimeEntry` carries the time periods during which employees have performed a business activity (e.g. PCP, dog handling etc) or HR activity (e.g. leaves, training etc). `TimeEntry` is the actual recording of hours done by employees as per their roster. Encapsulates day and time (to the minute). 
 
@@ -80,3 +84,27 @@ Reference data that linked to a type of `Accrual`
 |id|PK|true|none|the identifier for this `accrual_type` record|
 |name|string|true|none|The human readable name for this `accrual_type` |
 |measurement_unit|string|true|one of 'hours' or 'count'|The way that the balance of an Accrual of this `accrual_type` should be interpreted|
+
+
+# Reference Data supplied externally
+
+If there are tables that exist as reference data maintained by another service they will be documented here:
+
+Their relationship to the other tables is depicted below
+
+![storage-model.png](./images/storage-model.png)
+
+## Tables
+<h2 id="tocS_TimeEntry">time_<nry</h2>
+
+# Reference Data owned soley by accruals
+
+If there are tables that exist as reference data used and maintained solely by this service they will be documented here:
+
+
+Principal amongst the core tables is the `accrual` table. It's relationship to the other core tables is depicted below
+
+![storage-model.png](./images/storage-model.png)
+
+## Tables
+<h2 id="tocS_TimeEntry">time_entry</h2>
