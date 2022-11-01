@@ -16,8 +16,7 @@ Principal amongst the core tables is the `accrual` table. It's relationship to t
 ![storage-model.png](./images/storage-model.png)
 
 ## Tables
-<
-h2 id="tocS_TimeEntry">time_entry</h2>
+<h2 id="tocS_TimeEntry">time_entry</h2>
 
 A `TimeEntry` carries the time periods during which employees have performed a business activity (e.g. PCP, dog handling etc) or HR activity (e.g. leaves, training etc). `TimeEntry` is the actual recording of hours done by employees as per their roster. Encapsulates day and time (to the minute). 
 
@@ -95,9 +94,15 @@ Their relationship to the other tables is depicted below
 ![storage-model.png](./images/storage-model.png)
 
 ## Tables
-<h2 id="tocS_TimeEntry">time_<nry</h2>
+<h2 id="tocS_Flex_Change_Band_Definition">flex_change_band_definition_<nry</h2>
 
-# Reference Data owned soley by accruals
+|Name|Type|Required|Restrictions|Description|
+|---|---|---|---|---|
+|id| PK| true|none|Assigned when a new row is added to this table by the owning service|
+|name|string|true|none|There are 4 levels of flexibility represented by this table at present, A, B, C or D|
+|upper\_limit|integer|true|none|Currently the upper limits for bands A through D are 24, 49, 75 and unlimited represented by 999|
+
+# Reference Data owned solely by accruals
 
 If there are tables that exist as reference data used and maintained solely by this service they will be documented here:
 
