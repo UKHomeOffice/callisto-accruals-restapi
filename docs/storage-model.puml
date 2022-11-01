@@ -3,12 +3,10 @@
 entity time_entry {
   * id : number <<PK>>
   --
-  * version: number
-  * owner_id: number
-  * start_time: date_time
-  * end_time: date_time
-  meal_break_allowence: double
-  meal_break_taken: double  
+  * version
+  * ownerid
+  * actual_start_time
+  * actual_end_time
 }
 
 entity flex_change {
@@ -23,7 +21,7 @@ entity accrual {
   * type_id : number <<FK>>
   --
   * balance : number
-  * day : date
+  * date : date
 }
 
 entity contribution {
@@ -41,9 +39,66 @@ entity accrual_type {
   * name : string
   * measurement_unit : enumeration
 }
+
 accrual ||.. accrual_type
 contribution ||.. accrual
 contribution ||.. time_entry
 flex_change ||.. time_entry
+
+entity person {
+  * id : number <<PK>>
+  --
+  * employment_type : string
+  * location_code : string
+  
+}
+
+entity public_holiday_by_location {
+  * location_code : string <<PK>>
+  --
+  * public_holiday_countrycode : string
+}
+
+entity public_holiday {
+  * country_code : string <<PK>>
+  * public_holiday_date : date <PK>
+  --
+  * public_holiday_type : enumeration
+}
+
+person ||.. public_holiday_by_location
+public_holiday_by_location ||.. public_holiday
+
+entity flex_change_band_definition {
+  * id : number <<PK>>
+  --
+  * name : string
+  * upper_limit : integer
+}
+  
+entity rsa_band_definition {
+  * id : number <<PK>>
+  --
+  * name : string
+  * lower_limit : integer
+  * upper_limit : integer
+}
+
+entity night_hour_range {
+  * employment_type : string <<PK>>
+  --
+  * start_time : time
+  * end_time : time
+}
+
+person ||.. night_hour_range
+
+entity contract_type_definition {
+  * employment_type : string <<PK>>
+  --
+  * min_night_duration : float
+  * premod_nominal_daily rate : float
+  * mod_nominal_daily rate : float
+}
 
 @enduml
