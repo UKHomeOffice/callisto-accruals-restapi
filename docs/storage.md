@@ -119,14 +119,22 @@ Staff who are on a shift roster basis can qualify for the Rostered Shift Allowan
 |lower\_limit|integer|true|none|Currently the upper limits for bands A through D are 11, 8, 5 , 1| 
 |upper\_limit|integer|true|none|Currently the upper limits for bands A through D are 999, 10, 7, 4|
 
+
+
+<h2 id="tocS_Contract_Type_Definition">contract_type_definition</h2>
+
+Staff on different AHW contract types (AAA, SDA etc) have different parameters which affect the calculation of their accruals. This table holds those variations
+
+### Properties
+
+|Name|Type|Required|Restrictions|Description|
+|---|---|---|---|---|
+|id| PK| true|none|Assigned when a new row is added to this table by the owning service|
+|min_night_duration|float|true|none|Minimum duration of a night shift to qualify|
+|premod_nominal_daily_rate|float|true|none|Number of hours for a day of full time premodernised employee| 
+|mod_nominal_daily_rate|float|true|none|Number of hours for a day of full time modernised employee| 
+
 # Reference Data owned solely by accruals
 
 If there are tables that exist as reference data used and maintained solely by this service they will be documented here:
 
-
-Principal amongst the core tables is the `accrual` table. It's relationship to the other core tables is depicted below
-
-![storage-model.png](./images/storage-model.png)
-
-## Tables
-<h2 id="tocS_TimeEntry">time_entry</h2>
