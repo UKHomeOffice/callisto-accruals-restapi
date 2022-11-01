@@ -94,7 +94,7 @@ Their relationship to the other tables is depicted below
 ![storage-model.png](./images/storage-model.png)
 
 ## Tables
-<h2 id="tocS_Flex_Change_Band_Definition">flex_change_band_definition_<nry</h2>
+<h2 id="tocS_Flex_Change_Band_Definition">flex_change_band_definition</h2>
 
 To compensate staff for flexibility in their working and the level of predictability of their roster, staff are paid an uplift. There are four levels of payment which are to be configured in the table below.
 
@@ -105,6 +105,19 @@ To compensate staff for flexibility in their working and the level of predictabi
 |id| PK| true|none|Assigned when a new row is added to this table by the owning service|
 |name|string|true|none|There are 4 levels of flexibility represented by this table at present, A, B, C or D|
 |upper\_limit|integer|true|none|Currently the upper limits for bands A through D are 24, 49, 75 and unlimited represented by 999|
+
+<h2 id="tocS_RSA_Band_Definition">rsa_band_definition</h2>
+
+Staff who are on a shift roster basis can qualify for the Rostered Shift Allowance, which is an allowance paid for a user being rostered to do a certain amount of night shifts. The more night shifts a user is rostered on to, the more they get paid – represented by 4 bands.
+
+### Properties
+
+|Name|Type|Required|Restrictions|Description|
+|---|---|---|---|---|
+|id| PK| true|none|Assigned when a new row is added to this table by the owning service|
+|name|string|true|none|There are 4 levels of flexibility represented by this table at present, A, B, C or D|
+|lower\_limit|integer|true|none|Currently the upper limits for bands A through D are 11, 8, 5 , 1| 
+|upper\_limit|integer|true|none|Currently the upper limits for bands A through D are 999, 10, 7, 4|
 
 # Reference Data owned solely by accruals
 
