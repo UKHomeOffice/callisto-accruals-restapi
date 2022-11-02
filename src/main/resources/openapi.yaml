@@ -1,0 +1,251 @@
+openapi: '3.0.3'
+info:
+  title: Accruals
+  description: The TimeCard container exposes a number of models to clients. The TimeEntry is a key model from which most others hang
+  version: 0.1.0
+paths: 
+  /resources/accrualDefinition:
+    get:
+      summary: Update a collection of Accrual resources atomically
+      operationId: getAccrualDefinitions
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/AccrualDefinition'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Error'
+  /resources/accrual:
+    get:
+      summary: Update a collection of Accrual resources atomically
+      operationId: findAccruals
+      parameters:
+        - name: dateFrom
+          in: query
+          required: true
+          description: The id of the pet to retrieve
+          schema:
+            type: string 
+            format: date
+        - name: dateTo
+          in: query
+          required: true
+          description: The id of the pet to retrieve
+          schema:
+            type: string 
+            format: date 
+        - name: typeCode
+          in: query
+          required: true
+          description: The id of the pet to retrieve
+          schema:
+            type: string 
+            format: date            
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Accrual'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Error'
+    put:
+      summary: Update a collection of Accrual resources atomically
+      operationId: updateAccruals
+      responses:
+        '200':
+          description: Null response
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Error'  
+  /operations/isBankHoliday:
+    get:
+      summary: Determine whether or not the given day is a Bank holiday (or a substitute bank holiday)
+      operationId: isBankHoliday
+      parameters:
+        - name: date
+          in: query
+          description: The date whose Bank holiday status is to be determined
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: personId
+          in: query
+          description: The person has a bearing on whether a date is a Bank holiday
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A boolean value. True if the date is a Bank holiday in the context of the person otherwise False
+          content:
+            application/json:    
+              schema:
+                type:
+                  boolean 
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Error'  
+  /operations/isNightShift:
+    get:
+      summary: Determine whether or not the given time period falls within the bounds of a night shift
+      operationId: isNightShift
+      parameters:
+        - name: startTime
+          in: query
+          description: The start of the time period to be assessed
+          required: true
+          schema:
+            type: string
+            format: date-time
+        - name: endTime
+          in: query
+          description: The end of the time period to be assessed
+          required: true
+          schema:
+            type: string
+            format: date-time
+      responses:
+        '200':
+          description: A boolean value. True if the time period encapsulated by the startTime and endTime params is a Night shift otherwise False
+          content:
+            application/json:    
+              schema:
+                type:
+                  boolean 
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Error' 
+  /operations/isNormalShift:
+    get:
+      summary: Determine whether or not the given time period falls within the bounds of a normal shift
+      operationId: isNormalShift
+      parameters:
+        - name: startTime
+          in: query
+          description: The start of the time period to be assessed
+          required: true
+          schema:
+            type: string
+            format: date-time
+        - name: endTime
+          in: query
+          description: The end of the time period to be assessed
+          required: true
+          schema:
+            type: string
+            format: date-time
+      responses:
+        '200':
+          description: A boolean value. True if the time period encapsulated by the startTime and endTime params is a Normal shift otherwise False
+          content:
+            application/json:    
+              schema:
+                type:
+                  boolean 
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Error'                
+components:
+  schemas:
+    Contribution:
+      type: object
+      description: A contribution towards the balance of an Accrual
+      required: 
+        - value
+        - timeEntryId
+      properties:
+        value:
+          description: Holds the count that this resource contributes to the owning Accrual resource's balance
+          type: number
+          format: double
+        timeEntryId:
+           description: The identifier of the TimeEntry that contributed some or all of this resource's value
+           type: number
+    Accrual:
+      type: object
+      description: . 
+      required:
+            - code
+            - date
+            - balance
+      properties:
+        code: 
+          description: The code of the type of Accrual that this resource is an instance of eg "AnnualHours". Can be used to retrieve meta-data about this type of Accrual
+          type: string
+        date:
+          description: The date that this resource is associated with
+          type: string
+          format: date
+        balance:
+          description: The total of all associated contribution values plus the balance from the previous day's Accrual
+          format: double
+        contributions:
+            description: The set of contributions that help to make up this resource's balance
+            allOf:
+              - $ref: '#/components/schemas/Contribution'
+    AccrualDefinition:
+      type: object
+      description: . 
+      required:
+            - code
+            - name
+            - measurementUnit
+      properties:
+        code: 
+          description: The code of the type of Accrual that this resource is an instance of eg "AnnualHours". Can be used to retrieve meta-data about this type of Accrual
+          type: string
+        name:
+          description: The user friendly name of this type of Accrual. Intended to be displayed in a user interface
+          type: string
+        measurementUnit:
+          description: The way that the balance of an Accrual of this `accrual_type` should be interpreted eg "hours" or "count"
+          format: string
+    Error:
+      type: object
+      description: A container for returning error conditions.
+      required: 
+        - error-code
+        - message
+      properties:
+        error-code:
+          description: Unique within the context of the API and specific to the category of error being reported
+          type: string
+        message:
+           description: A user friendly summary of the issue. Should be suitable to display in a user interface
+           type: string
+        detail:
+           description: Detail to help the client-developer understand the issue
+           type: string          
