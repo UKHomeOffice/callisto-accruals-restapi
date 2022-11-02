@@ -6,7 +6,7 @@ info:
 paths: 
   /resources/accrualDefinition:
     get:
-      summary: Update a collection of Accrual resources atomically
+      summary: Get all AccrualDefinition resources known to the API
       operationId: getAccrualDefinitions
       responses:
         '200':
@@ -25,7 +25,7 @@ paths:
                 - $ref: '#/components/schemas/Error'
   /resources/accrual:
     get:
-      summary: Update a collection of Accrual resources atomically
+      summary: Get all Accrual instances that meet the query criteria
       operationId: findAccruals
       parameters:
         - name: dateFrom
