@@ -1,7 +1,7 @@
 openapi: '3.0.3'
 info:
   title: Accruals
-  description: The TimeCard container exposes a number of models to clients. The TimeEntry is a key model from which most others hang
+  description: Manages access to Accrual data. A thin layer over the data store with some convenience endpoints to hide the complexity of joining data
   version: 0.1.0
 paths: 
   /resources/accrualDefinition:
