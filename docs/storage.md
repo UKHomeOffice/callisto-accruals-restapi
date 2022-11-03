@@ -91,7 +91,7 @@ If there are tables that exist as reference data maintained by another service t
 
 Their relationship to the other tables is depicted below
 
-![storage-model.png](./images/storage-model.png)
+![storage-model-ref-external.png](./images/storage-model-ref-external.png)
 
 ## Tables
 
