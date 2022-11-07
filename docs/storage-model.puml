@@ -1,22 +1,5 @@
 @startuml
 
-entity time_entry {
-  * id : number <<PK>>
-  --
-  * version: number
-  * owner_id: number
-  * start_time: date_time
-  * end_time: date_time
-  meal_break_allowance: double
-  meal_break_taken: double  
-}
-
-entity flex_change {
-  * id : number <<PK>>
-  --
-  * time_entry_id: number <<FK>>
-}
-
 entity accrual {
   * id : number <<PK>>
   --
@@ -43,7 +26,5 @@ entity accrual_type {
 }
 accrual ||.. accrual_type
 contribution ||.. accrual
-contribution ||.. time_entry
-flex_change ||.. time_entry
 
 @enduml

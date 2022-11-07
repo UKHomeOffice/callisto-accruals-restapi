@@ -23,7 +23,7 @@ paths:
               schema:
                 allOf:
                 - $ref: '#/components/schemas/Error'
-  /resources/accrual:
+  /resources/accruals:
     get:
       summary: Get all Accrual instances that meet the query criteria
       operationId: findAccruals

@@ -1,4 +1,4 @@
-# Accruals container
+# Accruals REST API container
 
 ![container.png](./images/container.png)
 
