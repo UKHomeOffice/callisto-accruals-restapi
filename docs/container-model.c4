@@ -2,6 +2,7 @@ workspace {
 
     model {
 		enterprise "Home Office" {
+		    user = person "User" "" "User"
 			worker = person "Worker" "" "Worker"
 			manager = person "Manager" "" "Manager"
 			scheduler = person "Scheduler" "" "Scheduler"
@@ -37,7 +38,7 @@ workspace {
         balanceEventsProducer -> accrualsService "consumes AH Balance events from" 
         worker -> singlePageApplication "views Accrual module balances using"
 		manager -> singlePageApplication "views team member's Accrual module balances using"
-        singlePageApplication -> accrualsService "reads Accrual and AccrualSummary" 
+        singlePageApplication -> accrualsService "reads Accrual and AccrualDetail" 
         worker -> timeCardEventsProducer "publishes TimeEntry and FlexChange events using"
         scheduler -> scheduledEventsProducer "publishes Scheduler events using"
         timeCardEventsProducer -> accrualsService "consumes TimeEntry and FlexChange events from"
@@ -59,8 +60,28 @@ workspace {
 			accrualsService -> accrualsService "identifies and accrual entity(s) and re-calculates their balance(s)"
 			accrualsService -> database "persists state of updated accrual entity(s)"
             autoLayout
-        }        
+        }  
         
+		dynamic accrualsSystem "displayDetailsTable" "Retreives and displays Accrual module summary data (params: date, personId)" {
+	        user -> singlePageApplication "navigates view accruals"
+			singlePageApplication -> accrualsService "get Accruals (query params = personId, day)"
+			accrualsService -> database "get id from accrual_type"
+			accrualsService -> database "for each accrual_type.id assembleAccrualDetail (params: date, personId, accrual_type.id)"
+			accrualsService -> singlePageApplication "return AccrualDetail set"
+			singlePageApplication -> user "display AccrualDetail set"
+            autoLayout
+        }
+        
+		dynamic accrualsSystem "assembleAccrualDetail" "Dynamically builds AccrualDetail resource (params: date, personId, accrualTypeId)" {
+			// read data
+			accrualsService -> database "get balance from accrual (params: date, personId, accrualTypeId)"
+	        accrualsService -> database "get target from accrual_target (params: personId, accrualTypeId)"
+	        accrualsService -> database "get ph_credit, deduct_ph_credit from accrual (params: personId)"
+	
+	        // build AccrualSumary
+	        accrualsService -> accrualsService "build AccrualDetail"
+            autoLayout
+        }        
         styles {
             element "Person" {
                 color #ffffff
