@@ -1,15 +1,21 @@
-# Accruals REST API container
+# Accruals system
 
-![container.png](./images/container.png)
+In Border Force many people are on what is known as an Annualised Hours Agreement (AHA). In short each person will have a set of target hours that they need to work in order to gain an uplift in their basic pay. 
 
-## Executive summary
-In Border Force many people are on what is known as an Annualised Hours Agreement (AHA). In short each person will have a set of target hours that they need to work in order to gain an uplift in their basic pay. The Accruals container tracks how people are performing against those targets.
+The hours that they work fall into one or more different categories, which are sometimes called modules or often reffered to as accruals.
 
-## What is the container for and why would you use it?
-**TODO** 
- 
-## Dependencies
-**TODO**
+### User goals
+Boiling it down, Accruals supports four key areas of functionality 
 
-## Container contract
-**TODO**
+- Calculating accrual balances 
+- Viewing balance(s)
+- Tracking balances changes over time
+- Viewing how balances have changed over time (statement)
+
+## Repository structure
+
+This repository holds two types of information. 
+
+1. features - the features that make up accruals' functionality. Features link off to the containers and the parts of the containers that support them
+2. containers - each container that makes up accruals has it's own design. These designs support the features of the accruals system
+
