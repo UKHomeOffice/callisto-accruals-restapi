@@ -13,22 +13,22 @@ The table below shows the individual tickets in the Annual Target Hours feature 
 
 | Ticket                                                                                                                                           | Design           |
 |--------------------------------------------------------------------------------------------------------------------------------------------------|------------------|
-| [Annual Target Hours - Details Table ](https://collaboration.homeoffice.gov.uk/jira/browse/EAHW-1624)                                        | [AccrualSummary](./../rest-operations.md#accrualsummary) |
+| [Annual Target Hours - Details Table ](https://collaboration.homeoffice.gov.uk/jira/browse/EAHW-1624)                                        | [AccrualSummary](./../containers/rest-api/rest-operations.md#accrualsummary) |
 | [Annual Target Hours - Visual Indicator Over/under/on Target (March)](https://collaboration.homeoffice.gov.uk/jira/browse/EAHW-2048)                                       | [Target Status](#target-status) |
 | [Annual Target Hours  - Visual Indicator Over/under/on Target (April to February)](https://collaboration.homeoffice.gov.uk/jira/browse/EAHW-1899)                                         | [Target Status](#target-status) |
-| [Annual Target hours - Negative Balance Indicator](https://collaboration.homeoffice.gov.uk/jira/browse/EAHW-1738)                                                     | [AccrualSummary.agreementVariance](./../rest-operations.md#accrualsummary) |	
+| [Annual Target hours - Negative Balance Indicator](https://collaboration.homeoffice.gov.uk/jira/browse/EAHW-1738)                                                     | [AccrualSummary.agreementVariance](./../containers/rest-api/rest-operations.md#accrualsummary) |	
 | [Annual Target Hours - Tolerance Rate Calculation ](https://collaboration.homeoffice.gov.uk/jira/browse/EAHW-1490)                                                     | [Tolerance Rate Calculation](#tolerance-rate-calculation) |
-| [Annual Target Hours - Net indication ](https://collaboration.homeoffice.gov.uk/jira/browse/EAHW-1906)                                                     | [AccrualSummary.total & AccrualSummary.totalNetOrGrossOfPH](./../rest-operations.md#accrualsummary) |
+| [Annual Target Hours - Net indication ](https://collaboration.homeoffice.gov.uk/jira/browse/EAHW-1906)                                                     | [AccrualSummary.total & AccrualSummary.totalNetOrGrossOfPH](./../containers/rest-api/rest-operations.md#accrualsummary) |
 
 ## Tolerance rate calculation
-The [AccrualSummary.targetVariance](./../rest-operations.md#accrualsummary) property will hold the surplus or deficit value against the target for the Annual target hours Accrual type. See the Jira ticket for details of the calculation.
+The [AccrualSummary.targetVariance](./../containers/rest-api/rest-operations.md#accrualsummary) property will hold the surplus or deficit value against the target for the Annual target hours Accrual type. See the Jira ticket for details of the calculation.
 
 ## Target Status
-The [AccrualSummary.targetStatus](./../rest-operations.md#accrualsummary) property will hold the indicator as to whether or not the worker is under, over or on target for Annual target hours. 
+The [AccrualSummary.targetStatus](./../containers/rest-api/rest-operations.md#accrualsummary) property will hold the indicator as to whether or not the worker is under, over or on target for Annual target hours. 
 
 The Jira ticket refers to *"remaining balance"* this is calculated as follows - 
 
-`remaining balance` = [`AccrualSummary.total`](./../rest-operations.md#accrualsummary) - [`AccrualSummary.remainingHighPrecision`](./../rest-operations.md#accrualsummary)
+`remaining balance` = [`AccrualSummary.total`](./../containers/rest-api/rest-operations.md#accrualsummary) - [`AccrualSummary.remainingHighPrecision`](./../containers/rest-api/rest-operations.md#accrualsummary)
 
 ## Matching criteria
 The data held in the `TimeEntry` event is used to determine whether or not the Annual target hours Accrual type should be updated.
