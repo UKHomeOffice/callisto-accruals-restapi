@@ -301,6 +301,10 @@ components:
           description: The total amount agreed for the Accrual in the Agreement period. 
           type: number
           format: double 
+        worked:
+          description: The total amount of units worked to date. 
+          type: number
+          format: double           
         totalNetOrGrossOfPH: 
           description: Shows whether the target is net or gross of public holiday allowence
           type: string

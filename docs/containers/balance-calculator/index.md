@@ -35,3 +35,8 @@ The process from receiving TimeCard events to updating Accrual balances can be b
 - RESTful endpoints - None
 - Events produced - None
 - Events consumed - [`TimeEntry`]() & [`FlexChange`]() from [`callisto-timecard-rest-api`]()
+
+## Contents
+
+- [container-model.c4](./container-model.c4) - a C4 model of the system, used to generate images that visualise the API of the container and components within it
+- [orchestration](./orchestration/) - holds the detailed design for the accruals calculations from receiving TimeCard events, updating balances and persisting changes
