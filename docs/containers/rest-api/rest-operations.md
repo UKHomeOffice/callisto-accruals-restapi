@@ -10,6 +10,8 @@ Provides an overview of a specific type of Accrual for a specific date. Pulls to
 - [AccuralSummary endpoint](./rest-endpoints.md#opIdgetAccrualSummaries)
 - [Storage model](./storage.md)
 
+![assemble-accrual-summary.png](./images/assemble-accrual-summary.png)
+
 ### Calculation
 There will be one `AccrualSummary` per accrual_type regardless of whether or not the person has bought the given Accrual type
 
@@ -91,6 +93,11 @@ SELECT person.target_totals_are_net
   FROM person 
  WHERE person.id = personId AND
 ```
+
+### Mapping to web user interface
+
+![!ui-mapping-accrual-summary.png](./images/ui-mapping-accrual-summary.png)
+
 
 ## isBankHoliday
 **TODO** when ref data work has been merged

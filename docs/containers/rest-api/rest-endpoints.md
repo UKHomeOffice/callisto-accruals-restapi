@@ -190,6 +190,7 @@ This operation does not require authentication
   "date": "2019-08-24",
   "measurementUnit": "string",
   "total": 0,
+  "worked": 0,
   "totalNetOrGrossOfPH": "net_of_ph",
   "target": 0,
   "remainingLowPrecision": 0,
@@ -218,6 +219,7 @@ Status Code **200**
 |» date|string(date)|true|none|The date that this summary covers|
 |» measurementUnit|string|true|none|The way that the balance of an Accrual of this `accrual_type` should be interpreted eg "hours" or "count"|
 |» total|number(double)|false|none|The total amount agreed for the Accrual in the Agreement period.|
+|» worked|number(double)|false|none|The total amount of units worked to date.|
 |» totalNetOrGrossOfPH|string|false|none|Shows whether the target is net or gross of public holiday allowence|
 |» target|number(double)|true|none|The pro-rated target value for the Accrual. Shows how many units of the Accrual type the worker should have worked (or been sheduled to work) by this date in order to remain on track to meet the target by the end of the agreement period|
 |» remainingLowPrecision|integer|true|none|The balance that is remaining at the given date presented as a rounded number|
@@ -479,6 +481,7 @@ A contribution towards the balance of an Accrual
   "date": "2019-08-24",
   "measurementUnit": "string",
   "total": 0,
+  "worked": 0,
   "totalNetOrGrossOfPH": "net_of_ph",
   "target": 0,
   "remainingLowPrecision": 0,
@@ -501,6 +504,7 @@ Provides an overview of a specific type of Accrual for a specific date.
 |date|string(date)|true|none|The date that this summary covers|
 |measurementUnit|string|true|none|The way that the balance of an Accrual of this `accrual_type` should be interpreted eg "hours" or "count"|
 |total|number(double)|false|none|The total amount agreed for the Accrual in the Agreement period.|
+|worked|number(double)|false|none|The total amount of units worked to date.|
 |totalNetOrGrossOfPH|string|false|none|Shows whether the target is net or gross of public holiday allowence|
 |target|number(double)|true|none|The pro-rated target value for the Accrual. Shows how many units of the Accrual type the worker should have worked (or been sheduled to work) by this date in order to remain on track to meet the target by the end of the agreement period|
 |remainingLowPrecision|integer|true|none|The balance that is remaining at the given date presented as a rounded number|

@@ -5,21 +5,11 @@ workspace {
 		    user = person "User" "" "User"
 			worker = person "Worker" "" "Worker"
 			manager = person "Manager" "" "Manager"
-			scheduler = person "Scheduler" "" "Scheduler"
-			admin = person "Admin" "" "Admin"
-			person = person "Person" "" "Person"
-
-			tamsBalanceAdapter = softwaresystem "Balance ETL" "Wraps TAMS and presents balance data in format that Callisto can work with" "Existing System"
-			tamsAgreementAdaptor = softwaresystem "TAMS Agreement Adaptor" "Wraps TAMS and presents data in format that Callisto can work with" "Existing System"
 
 			accrualsSystem = softwaresystem "Accruals service" "Maintains the balance of Accruals modules that a worker has purchased through their Annualised Hours Agreement (AHA)  Allows workers and managers to view Accrual module balances." {
-				agreementEventsProducer = container "Agreement Events Producer" "Provides a stream of events detailing AH Agreement data"
-				balanceEventsProducer = container "Balance Events Producer" "Provides a stream of events detailing AHA Balance data"
 				singlePageApplication = container "Single-Page Application" "Provides all of the Time card functionality to customers via their web browser." "React" "Web Browser"
-				scheduledEventsProducer = container "Scheduled Events Producer" "Provides a stream of events detailing scheduling data"
-				timeCardEventsProducer  = container "TimeCard Events Producer" "Provides a stream of events detailing recorded time data"
-				accrualsService = container "Accrual Service" "Provides Accrual functionality via RESTful API and Event stream" "Java and SpringBoot" 
-				database = container "Database" "Stores Accrual, Contribution and TimeEntry (Accural representation) entities" "PostgreSQL" "Database"			
+				accrualsRestApi = container "Accrual Service" "Provides Accrual functionality via RESTful API and Event stream" "Java and SpringBoot" 
+                database = container "Database" "Stores Accrual, Contribution and TimeEntry (Accural representation) entities" "PostgreSQL" "Database"			    
 			}
 		}
 		
@@ -27,23 +17,12 @@ workspace {
         worker -> accrualsSystem "views Accrual module balances using"
 		manager -> accrualsSystem "views team member's Accrual module balances using"
 		
-		# relationships between software systems
-		tamsAgreementAdaptor -> accrualsSystem "sends target balances at the start of a new agreement"
-		tamsBalanceAdapter -> accrualsSystem "sends actual target balances at the time of TAMS enduser offboarding and Callisto enduser onboarding"
-		
+	
         # relationships to/from containers
-        tamsAgreementAdaptor -> agreementEventsProducer "triggers publication of Agreement events using"
-        tamsBalanceAdapter -> balanceEventsProducer "triggers publication of AH Balance events using"
-        agreementEventsProducer -> accrualsService "consumes AH Agreement events from" 
-        balanceEventsProducer -> accrualsService "consumes AH Balance events from" 
         worker -> singlePageApplication "views Accrual module balances using"
 		manager -> singlePageApplication "views team member's Accrual module balances using"
-        singlePageApplication -> accrualsService "reads Accrual and AccrualDetail" 
-        worker -> timeCardEventsProducer "publishes TimeEntry and FlexChange events using"
-        scheduler -> scheduledEventsProducer "publishes Scheduler events using"
-        timeCardEventsProducer -> accrualsService "consumes TimeEntry and FlexChange events from"
-        scheduledEventsProducer -> accrualsService "consumes Scheduler events from"
-        accrualsService -> database "uses"
+        singlePageApplication -> accrualsRestApi "reads Accrual and AccrualDetail" 
+        accrualsRestApi -> database "uses"
     }
 
     views {
@@ -52,36 +31,17 @@ workspace {
             include *
             autoLayout
         }	
-		
-		// onboard?
-		
-		dynamic accrualsSystem "annualTargetHoursTimeCardUpdateAccrualModule" "Consumption of time recording event updates one or more Accrual modules" {
-	        timeCardEventsProducer -> accrualsService "consumes TimeEntry or FlexChange events from"
-			accrualsService -> accrualsService "identifies and accrual entity(s) and re-calculates their balance(s)"
-			accrualsService -> database "persists state of updated accrual entity(s)"
-            autoLayout
-        }  
         
 		dynamic accrualsSystem "displayDetailsTable" "Retreives and displays Accrual module summary data (params: date, personId)" {
 	        user -> singlePageApplication "navigates view accruals"
-			singlePageApplication -> accrualsService "get Accruals (query params = personId, day)"
-			accrualsService -> database "get id from accrual_type"
-			accrualsService -> database "for each accrual_type.id assembleAccrualDetail (params: date, personId, accrual_type.id)"
-			accrualsService -> singlePageApplication "return AccrualDetail set"
-			singlePageApplication -> user "display AccrualDetail set"
+			singlePageApplication -> accrualsRestApi "get Accruals (params: personId, day)"
+			accrualsRestApi -> database "get * from accrual_type"
+			accrualsRestApi -> database "for each accrual_type.id assembleAccrualSummary (params: date, personId, accrual_type.id, accrual_type.name, accrual_type.measurement_unit)"
+			accrualsRestApi -> singlePageApplication "return AccrualSummary set"
+			singlePageApplication -> user "display AccrualSummary set"
             autoLayout
         }
         
-		dynamic accrualsSystem "assembleAccrualDetail" "Dynamically builds AccrualDetail resource (params: date, personId, accrualTypeId)" {
-			// read data
-			accrualsService -> database "get balance from accrual (params: date, personId, accrualTypeId)"
-	        accrualsService -> database "get target from accrual_target (params: personId, accrualTypeId)"
-	        accrualsService -> database "get ph_credit, deduct_ph_credit from accrual (params: personId)"
-	
-	        // build AccrualSumary
-	        accrualsService -> accrualsService "build AccrualDetail"
-            autoLayout
-        }        
         styles {
             element "Person" {
                 color #ffffff

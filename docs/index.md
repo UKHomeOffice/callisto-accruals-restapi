@@ -12,10 +12,9 @@ Boiling it down, Accruals supports four key areas of functionality
 - Tracking balances changes over time
 - Viewing how balances have changed over time (statement)
 
-## Repository structure
+## Contents
 
-This repository holds two types of information. 
-
-1. [features](./features/) - the features that make up accruals' functionality. Features link off to the containers and the parts of the containers that support them
-2. [containers](./containers/) - each container that makes up accruals has it's own design. These designs support the features of the accruals system
+- [features](./features/) - the features that make up accruals' functionality. Features link off to the containers and the parts of the containers that support them
+- [containers](./containers/) - each container that makes up accruals has it's own design. These designs support the features of the accruals system
+- [container-model.c4](./container-model.c4) - a C4 model of the system, used to generate images that visualise the API of the container and components within it
 
