@@ -16,6 +16,6 @@ Boiling it down, Accruals supports four key areas of functionality
 
 This repository holds two types of information. 
 
-1. features - the features that make up accruals' functionality. Features link off to the containers and the parts of the containers that support them
-2. containers - each container that makes up accruals has it's own design. These designs support the features of the accruals system
+1. [features](./features/) - the features that make up accruals' functionality. Features link off to the containers and the parts of the containers that support them
+2. [containers](./containers/) - each container that makes up accruals has it's own design. These designs support the features of the accruals system
 
