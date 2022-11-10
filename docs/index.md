@@ -4,6 +4,8 @@ In Border Force many people are on what is known as an Annualised Hours Agreemen
 
 The hours that they work fall into one or more different categories, which are sometimes called modules or often reffered to as accruals.
 
+![landscape.png](./images/landscape.png)
+
 ### User goals
 Boiling it down, Accruals supports four key areas of functionality 
 
