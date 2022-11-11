@@ -1,44 +1,17 @@
 # Annual Target Hours
 
-This design covers how one goes about using the data from a `TimeEntry` event to identify the Accrual instances that require updating.
+This design covers how one goes about using the data from a `TimeEntry` event to update Accrual instances which represent the Annual Target Hours type.
 
-Two Accruals containers are involved in supporting this feature
+Much of the Accrual balance calculation logic is common across types. The variation comes in when trying to determine whether or not a `TimeEntry` is related to Annual Target Hours (see blue box). For more detail on this flow see the [detailed design](../containers/balance-calculator/orchestration/index.md) for balance calculation.
 
-1. Accrual balance calculator - performs the balance calculations and updates resources that hold balances
-2. Accrual REST API - used by the calculator to retrieve and save data 
+![](./../images/calculate-and-update-accrual-balances-detail.png)
 
-Follow the [balance calculation](./../containers/balance-calculator/orchestration/accrual-balance-calculation.md) design to understand how to work out what the balance of the Accrual instances should be.
+## Resources
+- For background on the Accruals system, what it is and the different containers that make it up see the root [index.md](../index.md)
+- For how to identify whether or not Annual Target Hours [`Accrual instances`](./../containers/rest-api/storage.md#tables) should be updated see [accrual-type-identification.md](./../containers/balance-calculator/orchestration/accrual-type-identification.md#annual-target-hours)
+- For how to to go from consuming a `TimeEntry` event to updating an Accrual balance see the [detailed design](./../containers/balance-calculator/orchestration/index.md)
+- For how to build an `AccrualSummary` instance to support the web user interface in displaying accrual balance data see [calculate-and-display-accrual-summary.md](./../containers/rest-api/orchestration/calculate-and-display-accrual-summary.md)
 
-The table below shows the individual tickets in the Annual Target Hours feature and also shows the how complete the design is for each ticket.
-
-| Ticket                                                                                                                                           | Design           |
-|--------------------------------------------------------------------------------------------------------------------------------------------------|------------------|
-| [Annual Target Hours - Details Table ](https://collaboration.homeoffice.gov.uk/jira/browse/EAHW-1624)                                        | [AccrualSummary](./../containers/rest-api/rest-operations.md#accrualsummary) |
-| [Annual Target Hours - Visual Indicator Over/under/on Target (March)](https://collaboration.homeoffice.gov.uk/jira/browse/EAHW-2048)                                       | [Target Status](#target-status) |
-| [Annual Target Hours  - Visual Indicator Over/under/on Target (April to February)](https://collaboration.homeoffice.gov.uk/jira/browse/EAHW-1899)                                         | [Target Status](#target-status) |
-| [Annual Target hours - Negative Balance Indicator](https://collaboration.homeoffice.gov.uk/jira/browse/EAHW-1738)                                                     | [AccrualSummary.agreementVariance](./../containers/rest-api/rest-operations.md#accrualsummary) |	
-| [Annual Target Hours - Tolerance Rate Calculation ](https://collaboration.homeoffice.gov.uk/jira/browse/EAHW-1490)                                                     | [Tolerance Rate Calculation](#tolerance-rate-calculation) |
-| [Annual Target Hours - Net indication ](https://collaboration.homeoffice.gov.uk/jira/browse/EAHW-1906)                                                     | [AccrualSummary.total & AccrualSummary.totalNetOrGrossOfPH](./../containers/rest-api/rest-operations.md#accrualsummary) |
-
-## Tolerance rate calculation
-The [AccrualSummary.targetVariance](./../containers/rest-api/rest-operations.md#accrualsummary) property will hold the surplus or deficit value against the target for the Annual target hours Accrual type. See the Jira ticket for details of the calculation.
-
-## Target Status
-The [AccrualSummary.targetStatus](./../containers/rest-api/rest-operations.md#accrualsummary) property will hold the indicator as to whether or not the worker is under, over or on target for Annual target hours. 
-
-The Jira ticket refers to *"remaining balance"* this is calculated as follows - 
-
-`remaining balance` = [`AccrualSummary.total`](./../containers/rest-api/rest-operations.md#accrualsummary) - [`AccrualSummary.remainingHighPrecision`](./../containers/rest-api/rest-operations.md#accrualsummary)
-
-## Matching criteria
-The data held in the `TimeEntry` event is used to determine whether or not the Annual target hours Accrual type should be updated.
-
-More detail can be found in [Annual Target Hours - Count](https://collaboration.homeoffice.gov.uk/jira/browse/EAHW-1497). In summary the following events should be excluded from updating the Annual Target hours module -
-
-1. `FlexChange`
-2. `TimeEntry` where `TimeEntry.timePeriodType` signifies that the entry is for an on-call event
-
-Other than that every time entry change that is attributed to a worker contributes to their Annual Target hours accrual module. 
 
 
 

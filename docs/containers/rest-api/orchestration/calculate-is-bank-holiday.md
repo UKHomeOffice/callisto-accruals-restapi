@@ -1,4 +1,4 @@
-# REST Operations
+# Calculate Accrual Summary
 
 The Accruals REST API exposes a number of resources that are calculated at query-time as opposed to being retireved from the data store and returned to the client as-is.
 
