@@ -36,7 +36,7 @@ The data in the TimeCard events and the event type itself are used to identify w
 
 There are a number of different types of Accrual and depending on the data in the TimeCard event only some will be relevent.
 
-For detail on how to use the event data to identify which Accrual type(s) is relevent see the [features](../features/index.md) which are broken down by Accrual type.
+For detail on how to use the event data to identify which Accrual type(s) is relevent see [accrual-type-identification.md](./accrual-type-identification.md) which are broken down by Accrual type.
 
 ### Calculate and update Accrual balances
 Once the Accrual types have been identified then the next step is to identify the specific Accrual instances (i.e. days). Having done that then their balances can be recaluated.
@@ -44,9 +44,7 @@ Once the Accrual types have been identified then the next step is to identify th
 For detail on how to use the data in the TimeCard event to identify the accrual instances and how to calculate their new balances see [accrual-balance-calculation.md](./accrual-balance-calculation.md) 
 
 ### Persist updated Accrual instances
-Finally, having updated the Accrual instance's balances they must be persisted to the Accruals container's datastore via a RESTful call to the `callisto-accrual-restapi` component.
-
-**TODO** - link to the doc for the RESTFul endpoint
+Finally, having updated the Accrual instance's balances they must be persisted to the Accruals container's datastore via a RESTful call to the `callisto-accrual-restapi` component (`PUT` [/resources/accruals](./../../rest-api/rest-endpoints.md#updateaccruals))
 
 ![](./../images/calculate-and-update-accrual-balances-detail.png)
 
@@ -71,26 +69,15 @@ Since the process outlined above has a dependency on the `callisto-accrual-resta
 
 The implementation should guard against this by using a combination of an [exponential backoff retry for transative errors and a circuit breaker for handling persistant failure](https://dzone.com/articles/understanding-retry-pattern-with-exponential-back)
 
-`callisto-accrual-restapi` endpoints
-
-- PUT /resources/accruals
-
 #### Accrual Type identifier
 This is intended to an implementtion of the [strategy pattern](https://en.wikipedia.org/wiki/Strategy_pattern) because the alogorithm for determing which Accrual type a TimeCard event should effect varies by Accrual type. On this basis it is envisaged that there will be a series of concrete implementations of an Accrual Type identifer interface and the Orchestroatr simply cylces through each asking if the TimeCard event ties to the given Accrual type that the implementation knows about.
 
-`callisto-accrual-restapi` endpoints
-Depending upon the strategy none or some of these endpoints might be used
-
-- GET /operations/isBankHoliday
-- GET /operations/isNightShift
-- GET /operations/isNormalShift
+More detail on the specifics of identifying each type of Accrual can be found in [accrual-type-identification.md](./accrual-type-identification.md)
 
 #### Accrual Finder
 Used to find the Accrual instances that are to be updated based on data in the TimeCard event and also the type(s) of Accrual that the Accrual Type identifier returned. More information on how to use TimeCard event data along with Accrual type data can be found in [accrual-balance-calculation.md](./accrual-balance-calculation.md). 
 
-`callisto-accrual-restapi` endpoints
-
-- GET /resources/accruals
+Accrual instances are found via a RESTful call to the `callisto-accrual-restapi` component (`GET` [/resources/accruals](./../../rest-api/rest-endpoints.md#findaccruals))
 
 #### Balance calculator
 Having found the Accrual instances which are to be updated this component is responsible for calculating new balances and updating the owning Accrual instance. More information on how to use TimeCard event data to calcucualte a balance can be found in [accrual-balance-calculation.md](./accrual-balance-calculation.md).
