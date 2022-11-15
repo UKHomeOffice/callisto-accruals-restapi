@@ -152,7 +152,7 @@ Night shifts are normally rostered between the hours of 06.00 – 23.00hrs but t
 
 <h2 id="tocS_AHW_Type_Definition">AHW_type_definition</h2>
 
-Staff on different AHW contract types (AAA, SDA etc) have different parameters which affect the calculation of their accruals. This table holds those variations
+Staff on different AHW contract types (AAA, SDA etc) have different parameters which affect the calculation of their accruals. This table holds those variations.
 
 ### Properties
 
@@ -161,6 +161,7 @@ Staff on different AHW contract types (AAA, SDA etc) have different parameters w
 |id| PK| true|none|Assigned when a new row is added to this table by the owning service|
 |employment_type| FK| true|none|The employment_type for this individual from the person record|
 |min_night_duration|float|true|none|Minimum duration of a night shift to qualify|
+|min_overlapping_hours|float|true|none|. If a shift start and time duration overlaps by 3 hours or more |
 |premod_nominal_daily_rate|float|true|none|Number of hours for a day of full time premodernised employee| 
 |mod_nominal_daily_rate|float|true|none|Number of hours for a day of full time modernised employee| 
 
@@ -196,3 +197,31 @@ Staff who are on a shift roster basis can qualify for the Rostered Shift Allowan
 |name|string|true|none|There are 4 levels of flexibility represented by this table at present, A, B, C or D|
 |lower\_limit|integer|true|none|Currently the upper limits for bands A through D are 11, 8, 5 , 1| 
 |upper\_limit|integer|true|none|Currently the upper limits for bands A through D are 999, 10, 7, 4|
+
+
+<h2 id="tocS_Tolerance_Rate_Bands">tolerance_rate_bands</h2>
+
+A persons deviation from their target rate is displayed as being within a band. There are a number of bands which are displayed on the user interface as shown below
+
+
+* 25%+
+* 15% to 24%
+* 6% to 14% 
+* -5% to 5%
+* -6% to -14%
+* -15% to -24%
+* -25%+
+
+This table allows the upper and lower percentages to be defined and related to the display string.
+
+### Properties
+
+|Name|Type|Required|Restrictions|Description|
+|---|---|---|---|---|
+|id| PK| true|none|Assigned when a new row is added to this table by the owning service|
+|display_string|string|true|none|Thetext displayed for a given percentage difference between target and balance|
+|lower\_limit|integer|true|none|Defines the lower limit for this band| 
+|upper\_limit|integer|true|none|Defines the upper limit for this band|
+
+
+

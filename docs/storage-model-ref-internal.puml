@@ -15,5 +15,21 @@ entity rsa_band_definition {
   * upper_limit : integer
 }
 
+entity rsa_band_definition {
+  * id : number <<PK>>
+  --
+  * name : string
+  * lower_limit : integer
+  * upper_limit : integer
+}
+
+entity tolerance_rate_bands {
+  * id : number <<PK>>
+  --
+  * display_string
+  * lower_limit : integer
+  * upper_limit : integer
+}
+
 
 @enduml
