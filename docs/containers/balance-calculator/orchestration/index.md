@@ -80,7 +80,7 @@ Used to find the Accrual instances that are to be updated based on data in the T
 Accrual instances are found via a RESTful call to the `callisto-accrual-restapi` component (`GET` [/resources/accruals](./../../rest-api/rest-endpoints.md#findaccruals))
 
 #### Balance calculator
-Having found the Accrual instances which are to be updated this component is responsible for calculating new balances and updating the owning Accrual instance. More information on how to use TimeCard event data to calcucualte a balance can be found in [accrual-balance-calculation.md](./accrual-balance-calculation.md).
+Having found the Accrual instances which are to be updated this component is responsible for calculating new balances and updating the owning Accrual instance. More information on how to use TimeCard event data to calculate a balance can be found in [accrual-balance-calculation.md](./accrual-balance-calculation.md).
 
 ## Considerations
 - **Number of calls to `callisto-accruals-restapi`** - the Orchestrator component makes use of a number of other components some of which will call out to the RESTful endpoints exposed by `callisto-accruals-restapi`. A decision needs to be made as to whether or not to write the orchestrator such that calls are batched up or sent individually. There are two classes of call for which this decision needs to be made: Accrual finder & Accrual storage. One could imagine finding or updating all Accrual instances for every relevant Accrual type all at once or batching them up by type
