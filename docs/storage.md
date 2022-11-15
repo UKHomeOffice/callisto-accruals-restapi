@@ -110,9 +110,35 @@ There are several attributes of a person that will be required by the Accruals c
 |location_code|string|true|none|Key into the location table i.e BIRMINGHAM_INTERNATIONAL_AIRPORT|
 
 
+<h2 id="tocS_Public_Holiday">public_holiday</h2>
+
+Different nations within the United Kingdom have different Public Holidays and therefore configuration is required to permit this flexibility to be configured. In addition certain Public Holidays occur on different dates depending upon the calendar year.
+
+### Properties
+|Name|Type|Required|Restrictions|Description|
+|---|---|---|---|---|
+|id| PK| true|none|Assigned when a new row is added to this table by the owning service|
+|country_code| FK| true|none|The countrycode - England, Scotland, Wales, NI for Public Holiday purposes|
+|public_holiday_date|date|true|none|The date of the public holiday|
+|public_holiday_type|enumeration|true|none|Statutory, Substitute|
+
+
+<h2 id="tocS_Public_Holiday_By_Location">public_holiday_by_location</h2>
+
+Different nations within the United Kingdom have different Public Holidays and therefore configuration is required to permit this flexibility to be configured. This table allows every location to have a country code assigned.
+
+### Properties
+|Name|Type|Required|Restrictions|Description|
+|---|---|---|---|---|
+|id| PK| true|none|Assigned when a new row is added to this table by the owning service|
+|location_code| FK| true|none|The countrycode - England, Scotland, Wales, NI for Public Holiday purposes|
+|public_holiday_countrycode| | true|none|The countrycode - England, Scotland, Wales, NI for Public Holiday purposes|
+
+
+
 <h2 id="tocS_Night_Hour_Range">night_hour_range</h2>
 
-Night shifts are normally rostered between the hours of 06.00 – 23.00hrs but this can vary based on AHW employment typoe i.e AHA, SDA etc.
+Night shifts are normally rostered between the hours of 06.00 – 23.00hrs but this can vary based on AHW employment typoe i.e AHA, SDA etc. A shift/time-entry can be classified as Night one if it overlaps by MinimumOverlappingHoursRequired (e.g. 3 hours) or more with this range.
 
 ### Properties
 |Name|Type|Required|Restrictions|Description|
@@ -122,6 +148,29 @@ Night shifts are normally rostered between the hours of 06.00 – 23.00hrs but t
 |start_time|string|true|none|The time when a night shift must start on or after to qualify as a night shift|
 |end_time|string|true|none|The time when a night shift must end on or before to qualify as a night shift|
 
+
+
+<h2 id="tocS_AHW_Type_Definition">AHW_type_definition</h2>
+
+Staff on different AHW contract types (AAA, SDA etc) have different parameters which affect the calculation of their accruals. This table holds those variations
+
+### Properties
+
+|Name|Type|Required|Restrictions|Description|
+|---|---|---|---|---|
+|id| PK| true|none|Assigned when a new row is added to this table by the owning service|
+|employment_type| FK| true|none|The employment_type for this individual from the person record|
+|min_night_duration|float|true|none|Minimum duration of a night shift to qualify|
+|premod_nominal_daily_rate|float|true|none|Number of hours for a day of full time premodernised employee| 
+|mod_nominal_daily_rate|float|true|none|Number of hours for a day of full time modernised employee| 
+
+# Reference Data owned solely by accruals
+
+If there are tables that exist as reference data used and maintained solely by this service are documented here
+
+Their relationship to the other tables is depicted below
+
+![storage-model-ref-internal.png](./images/storage-model-ref-internal.png)
 
 <h2 id="tocS_Flex_Change_Band_Definition">flex_change_band_definition</h2>
 
@@ -147,23 +196,3 @@ Staff who are on a shift roster basis can qualify for the Rostered Shift Allowan
 |name|string|true|none|There are 4 levels of flexibility represented by this table at present, A, B, C or D|
 |lower\_limit|integer|true|none|Currently the upper limits for bands A through D are 11, 8, 5 , 1| 
 |upper\_limit|integer|true|none|Currently the upper limits for bands A through D are 999, 10, 7, 4|
-
-
-<h2 id="tocS_Contract_Type_Definition">contract_type_definition</h2>
-
-Staff on different AHW contract types (AAA, SDA etc) have different parameters which affect the calculation of their accruals. This table holds those variations
-
-### Properties
-
-|Name|Type|Required|Restrictions|Description|
-|---|---|---|---|---|
-|id| PK| true|none|Assigned when a new row is added to this table by the owning service|
-|employment_type| FK| true|none|The employment_type for this individual from the person record|
-|min_night_duration|float|true|none|Minimum duration of a night shift to qualify|
-|premod_nominal_daily_rate|float|true|none|Number of hours for a day of full time premodernised employee| 
-|mod_nominal_daily_rate|float|true|none|Number of hours for a day of full time modernised employee| 
-
-# Reference Data owned solely by accruals
-
-If there are tables that exist as reference data used and maintained solely by this service they will be documented here:
-

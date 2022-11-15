@@ -5,6 +5,7 @@ entity person {
   --
   * employment_type : string
   * location_code : string
+  * ph_taken_year_start : boolean
   
 }
 
@@ -17,37 +18,15 @@ entity public_holiday_by_location {
 person ||.. public_holiday_by_location
 
 entity public_holiday {
-  * country_code : string <<PK>>
-  * public_holiday_date : date <PK>
+  * id : number <<PK>>
+  * country_code : string <<FK>>
+  * public_holiday_date : date <FK>
   --
   * public_holiday_type : enumeration
 }
 
 person ||.. public_holiday_by_location
 public_holiday_by_location ||.. public_holiday
-
-entity flex_change_band_definition {
-  * id : number <<PK>>
-  --
-  * name : string
-  * upper_limit : integer
-}
-  
-entity rsa_band_definition {
-  * id : number <<PK>>
-  --
-  * name : string
-  * lower_limit : integer
-  * upper_limit : integer
-}
-
-entity rsa_band_definition {
-  * id : number <<PK>>
-  --
-  * name : string
-  * lower_limit : integer
-  * upper_limit : integer
-}
 
 entity night_hour_range {
   * employment_type : string <<PK>>
@@ -62,6 +41,7 @@ entity ahw_contract_definition {
   * employment_type : string <<PK>>
   --
   * min_night_duration : float
+  * min_overlapping_hours: float
   * premod_nominal_daily rate : float
   * mod_nominal_daily rate : float
 }
