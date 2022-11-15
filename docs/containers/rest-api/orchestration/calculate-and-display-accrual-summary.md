@@ -27,22 +27,22 @@ The next step is to loop through each row in the result set and use the data for
 <tbody>
   <tr>
     <td>name</td>
-    <td><a href="./storage.md#accrual_type">accrual_type.name</a></td>
+    <td><a href="./../storage.md#accrual_type">accrual_type.name</a></td>
     <td>accrual_type resultset</td>
   </tr>
   <tr>
     <td>measurementUnit</td>
-    <td><a href="./storage.md#accrual_type">accrual_type.measurement_unit</a></td>
+    <td><a href="./../storage.md#accrual_type">accrual_type.measurement_unit</a></td>
     <td>accrual_type resultset</td>
   </tr>
   <tr>
     <td>personId</td>
-    <td><a href="./rest-endpoints.md#opIdgetAccrualSummarys">personId</a></td>
+    <td><a href="./../rest-endpoints.md#opIdgetAccrualSummarys">personId</a></td>
     <td>HTTP query param</td>
   </tr>
   <tr>
     <td>date</td>
-    <td><a href="./rest-endpoints.md#opIdgetAccrualSummarys">date</a></td>
+    <td><a href="./../rest-endpoints.md#opIdgetAccrualSummarys">date</a></td>
     <td>HTTP query param</td>
   </tr>
   <tr>
@@ -77,7 +77,7 @@ The next step is to loop through each row in the result set and use the data for
   </tr>
   <tr>
     <td>targetStatus</td>
-    <td><a href="target-status-calculation">target status calculation</a></td>
+    <td><a href="#target-status-calculation">target status calculation</a></td>
     <td>calculated</td>
   </tr>
   <tr>
