@@ -37,7 +37,7 @@ entity night_hour_range {
 
 person ||.. night_hour_range
 
-entity ahw_contract_definition {
+entity ahw_type_definition {
   * employment_type : string <<PK>>
   --
   * min_night_duration : float
