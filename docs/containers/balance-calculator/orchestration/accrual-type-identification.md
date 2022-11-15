@@ -18,6 +18,7 @@ Other than that every time entry change that is attributed to a worker contribut
 
 
 `callisto-accrual-restapi` endpoints
+
 Depending upon the strategy none or some of these endpoints might be used
 
 - GET /operations/isBankHoliday
