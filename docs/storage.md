@@ -161,7 +161,7 @@ Staff on different AHW contract types (AAA, SDA etc) have different parameters w
 |id| PK| true|none|Assigned when a new row is added to this table by the owning service|
 |employment_type| FK| true|none|The employment_type for this individual from the person record|
 |min_night_duration|float|true|none|Minimum duration of a night shift to qualify|
-|min_overlapping_hours|float|true|none|. If a shift start and time duration overlaps by 3 hours or more |
+|min_overlapping_hours|float|true|none|Number of hours a shift must overlap a night hour range to qualify as night shift|
 |premod_nominal_daily_rate|float|true|none|Number of hours for a day of full time premodernised employee| 
 |mod_nominal_daily_rate|float|true|none|Number of hours for a day of full time modernised employee| 
 
