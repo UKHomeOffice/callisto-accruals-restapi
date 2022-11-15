@@ -189,6 +189,16 @@ To compensate staff for flexibility in their working and the level of predictabi
 
 Staff who are on a shift roster basis can qualify for the Rostered Shift Allowance, which is an allowance paid for a user being rostered to do a certain amount of night shifts. The more night shifts a user is rostered on to, the more they get paid – represented by 4 bands.
 
+| Level | Number of compulsory short term notice changes to roster per year | % of basic salary |
+| ----- | ----------------------------------------------------------------- | ----------------- |
+| A     | 1 to 24 changes                                                   | 2%                |
+| B     | Between 25 and 49 changes                                         | 5%                |
+| C     | 50 – 75 changes                                                   | 7.5%              |
+| D     | 76 + changes\*                                                    | 10%               |
+
+
+The details above will be represented with 4 records in the table below.
+
 ### Properties
 
 |Name|Type|Required|Restrictions|Description|
