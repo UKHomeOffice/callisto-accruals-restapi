@@ -1,4 +1,4 @@
-# Accrual Balance maintainance
+# Accrual Balance maintenance
 
 End users do not directly make changes to Accruals data. Instead the balance-calculator component responds to events produced by the TimeCard container.
 
@@ -27,19 +27,19 @@ The process from receiving TimeCard events to updating Accrual balances can be b
 
 ### Consume event from topic
 
-More detail on consuming eventscan be found in the relevent [blueprint](https://github.com/UKHomeOffice/callisto-docs/blob/main/blueprints/event-publishing-and-consuming.md#event-consumer). 
+More detail on consuming events can be found in the relevant [blueprint](https://github.com/UKHomeOffice/callisto-docs/blob/main/blueprints/event-publishing-and-consuming.md#event-consumer). 
 
 Topic name - `callisto-timecard`
 
 ### Identify Accrual type(s)
 The data in the TimeCard events and the event type itself are used to identify which types of Accrual should be updated.
 
-There are a number of different types of Accrual and depending on the data in the TimeCard event only some will be relevent.
+There are a number of different types of Accrual and depending on the data in the TimeCard event only some will be relevant.
 
-For detail on how to use the event data to identify which Accrual type(s) is relevent see [accrual-type-identification.md](./accrual-type-identification.md) which are broken down by Accrual type.
+For detail on how to use the event data to identify which Accrual type(s) is relevant see [accrual-type-identification.md](./accrual-type-identification.md) which are broken down by Accrual type.
 
 ### Calculate and update Accrual balances
-Once the Accrual types have been identified then the next step is to identify the specific Accrual instances (i.e. days). Having done that then their balances can be recaluated.
+Once the Accrual types have been identified then the next step is to identify the specific Accrual instances (i.e. days). Having done that then their balances can be recalculated.
 
 For detail on how to use the data in the TimeCard event to identify the accrual instances and how to calculate their new balances see [accrual-balance-calculation.md](./accrual-balance-calculation.md) 
 
@@ -57,20 +57,20 @@ The components map to the process outlined above
 Responsible for reading TimeCard events from the `callisto-timecard` topic
 
 #### Orchestrator
-Receives TimeCard events from the consumer and coordinates the updating of the balances of all relevent Accrual instances.
+Receives TimeCard events from the consumer and coordinates the updating of the balances of all relevant Accrual instances.
 
 The Orchestrator is responsible for ensuring that all Accrual instances have been persisted which is a result of a successful application of the logical steps outlined below. 
 
 - Successful processing - if all of the logical steps outlined below succeed then the Orchestrator must tell the TimeCard events consumer to release the TimeCard event from the topic. 
 
-- Failed processing - if any of the logical steps outlined below fails then the Orchestrator must tell the TimeCard events consumer to hold on to the TimeCard event from the topic. At this point the Orchestrator should try to reprocesses the event. Note that the process outlined below as a series of logical steps plus the alogorthm that is referecned below are designed to be idempotent. Therefore simply reprocessing the event until success can be done indefintiluy
+- Failed processing - if any of the logical steps outlined below fails then the Orchestrator must tell the TimeCard events consumer to hold on to the TimeCard event from the topic. At this point the Orchestrator should try to reprocesses the event. Note that the process outlined below as a series of logical steps plus the algorithm that is referenced below are designed to be idempotent. Therefore simply reprocessing the event until success can be done indefinitely
 
 Since the process outlined above has a dependency on the `callisto-accrual-restapi` it is possible that there could be a persistent failure to complete the process.
 
-The implementation should guard against this by using a combination of an [exponential backoff retry for transative errors and a circuit breaker for handling persistant failure](https://dzone.com/articles/understanding-retry-pattern-with-exponential-back)
+The implementation should guard against this by using a combination of an [exponential back off retry for transitive errors and a circuit breaker for handling persistent failure](https://dzone.com/articles/understanding-retry-pattern-with-exponential-back)
 
 #### Accrual Type identifier
-This is intended to an implementtion of the [strategy pattern](https://en.wikipedia.org/wiki/Strategy_pattern) because the alogorithm for determing which Accrual type a TimeCard event should effect varies by Accrual type. On this basis it is envisaged that there will be a series of concrete implementations of an Accrual Type identifer interface and the Orchestroatr simply cylces through each asking if the TimeCard event ties to the given Accrual type that the implementation knows about.
+This is intended to an implementation of the [strategy pattern](https://en.wikipedia.org/wiki/Strategy_pattern) because the algorithm for determining which Accrual type a TimeCard event should effect varies by Accrual type. On this basis it is envisaged that there will be a series of concrete implementations of an Accrual Type identifier interface and the Orchestrator simply cycles through each asking if the TimeCard event ties to the given Accrual type that the implementation knows about.
 
 More detail on the specifics of identifying each type of Accrual can be found in [accrual-type-identification.md](./accrual-type-identification.md)
 
@@ -83,9 +83,9 @@ Accrual instances are found via a RESTful call to the `callisto-accrual-restapi`
 Having found the Accrual instances which are to be updated this component is responsible for calculating new balances and updating the owning Accrual instance. More information on how to use TimeCard event data to calcucualte a balance can be found in [accrual-balance-calculation.md](./accrual-balance-calculation.md).
 
 ## Considerations
-- **Number of calls to `callisto-accruals-restapi`** - the Orchestrator component makes use of a number of other components some of which will call out to the RESTful endpoints exposed by `callisto-accruals-restapi`. A decision needs to be made as to whether or not to write the orachestor such that calls are batched up or sent individually. There are two classes of call for which this decision needs to be made: Accrual finder & Accrual storage. One could imagine finding or updating all Accrual instances for every relevent Accrual type all at once or batching them up by type
-- **What (if any) components to run in parallel** - potentaiily the Accrual Type idnetifier stategiy implementations could be called in parallel. Similarly if the act of calcuation and storage were bounded by type then these could be wrapped up into that pareallel exection as well
+- **Number of calls to `callisto-accruals-restapi`** - the Orchestrator component makes use of a number of other components some of which will call out to the RESTful endpoints exposed by `callisto-accruals-restapi`. A decision needs to be made as to whether or not to write the orchestrator such that calls are batched up or sent individually. There are two classes of call for which this decision needs to be made: Accrual finder & Accrual storage. One could imagine finding or updating all Accrual instances for every relevant Accrual type all at once or batching them up by type
+- **What (if any) components to run in parallel** - potentially the Accrual Type identifier strategy implementations could be called in parallel. Similarly if the act of calculation and storage were bounded by type then these could be wrapped up into that parallel execution as well
 
 ## Out of scope
 - Exposing Accrual resources via RESTful endpoints. This will be covered elsewhere.
-- Seeding of accrual records based on an AH Agreement. This will be covered by a separate design invloving the [TAMS Agreement Adapter](https://github.com/UKHomeOffice/callisto-docs/blob/main/containers.md#tams-agreement-adapter)
+- Seeding of accrual records based on an AH Agreement. This will be covered by a separate design involving the [TAMS Agreement Adapter](https://github.com/UKHomeOffice/callisto-docs/blob/main/containers.md#tams-agreement-adapter)
