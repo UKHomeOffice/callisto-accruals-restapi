@@ -3,7 +3,7 @@ In the context of calculating the balance of one or more `Accrual` instances one
 
 The data in the TimeCard events and the event type itself are used to identify which types of Accrual should be updated.
 
-There are a number of different types of Accrual and depending on the data in the TimeCard event only some will be relevent. The way that the event is used to identify an accrual type varies from type to type
+There are a number of different types of Accrual and depending on the data in the TimeCard event only some will be relevant. The way that the event is used to identify an accrual type varies from type to type
 
 
 ## Annual Target Hours

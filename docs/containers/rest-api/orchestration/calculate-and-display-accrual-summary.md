@@ -1,10 +1,10 @@
 # Calculate Accrual Summary
 
-The Accruals REST API exposes a number of resources that are calculated at query-time as opposed to being retireved from the data store and returned to the client as-is.
+The Accruals REST API exposes a number of resources that are calculated at query-time as opposed to being retrieved from the data store and returned to the client as-is.
 
 One of these is `AccrualSummary` which provides an overview of a specific type of Accrual for a specific date. Pulls together data from a number of different tables in the data store.
 
-- [AccuralSummary endpoint](./rest-endpoints.md#opIdgetAccrualSummaries)
+- [AccrualSummary endpoint](./rest-endpoints.md#opIdgetAccrualSummaries)
 - [Storage model](./storage.md)
 
 ![assemble-accrual-summary.png](./../images/assemble-accrual-summary.png)
@@ -14,7 +14,7 @@ There will be one `AccrualSummary` per accrual_type regardless of whether or not
 ## Steps to build an `AccrualSummary`
 Step one in terms of assembling AccrualSummary instances is to query the [`accrual_type`](./../storage.md#tables) table and return all rows. 
 
-The next step is to loop through each row in the resultset and use the data for that accrual_type row to drive the creation of an [`AccrualSummary`](./../rest-endpoints.md#getaccrualsummaries)
+The next step is to loop through each row in the result set and use the data for that accrual_type row to drive the creation of an [`AccrualSummary`](./../rest-endpoints.md#getaccrualsummaries)
 
 <table>
 <thead>

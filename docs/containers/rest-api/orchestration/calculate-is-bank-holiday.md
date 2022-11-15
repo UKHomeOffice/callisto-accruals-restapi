@@ -1,13 +1,13 @@
 # Calculate Accrual Summary
 
-The Accruals REST API exposes a number of resources that are calculated at query-time as opposed to being retireved from the data store and returned to the client as-is.
+The Accruals REST API exposes a number of resources that are calculated at query-time as opposed to being retrieved from the data store and returned to the client as-is.
 
 This document explains which resources they are and how their various properties are calculated
 
 ## AccrualSummary
 Provides an overview of a specific type of Accrual for a specific date. Pulls together data from a number of different tables in the data store.
 
-- [AccuralSummary endpoint](./rest-endpoints.md#opIdgetAccrualSummaries)
+- [AccrualSummary endpoint](./rest-endpoints.md#opIdgetAccrualSummaries)
 - [Storage model](./storage.md)
 
 ![assemble-accrual-summary.png](./images/assemble-accrual-summary.png)
@@ -81,7 +81,7 @@ if [totalNetOrGrossOfPH](#totalNetOrGrossOfPH) is `net_of_ph` then the number of
 
 **TODO** - this value cannot yet be populated as its calculation is dependent on 
 - Accruals ref data work
-- Agreement model such that Accruals can store the Accural target total
+- Agreement model such that Accruals can store the Accrual target total
 
 #### totalNetOrGrossOfPH
 **TODO** - this value cannot yet be populated as its calculation is dependent on the person table being defined along with the RESTful endpoints used to manage it. Also need to think about how to onboard this data and where from
