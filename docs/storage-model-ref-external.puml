@@ -46,6 +46,7 @@ entity ahw_type_definition {
   * mod_nominal_daily rate : float
 }
 
+
 person ||.. ahw_type_definition
 
 @enduml
