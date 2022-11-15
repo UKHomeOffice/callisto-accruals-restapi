@@ -4,8 +4,8 @@ The Accruals REST API exposes a number of resources that are calculated at query
 
 One of these is `AccrualSummary` which provides an overview of a specific type of Accrual for a specific date. Pulls together data from a number of different tables in the data store.
 
-- [AccrualSummary endpoint](./rest-endpoints.md#opIdgetAccrualSummaries)
-- [Storage model](./storage.md)
+- [AccrualSummary endpoint](./../rest-endpoints.md#opIdgetAccrualSummaries)
+- [Storage model](./../storage.mdstorage.md)
 
 ![assemble-accrual-summary.png](./../images/assemble-accrual-summary.png)
 
