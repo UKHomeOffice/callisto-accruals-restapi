@@ -10,18 +10,18 @@ If an individual works for more than three hours within a 'night' period usually
 
 This endpoint simply returns whether the data supplied qualifies as a night shift.
 
-- [Is Public Holiday endpoint](./../rest-endpoints.md#opIdisNightShift)
+- [Is Night Shift endpoint](./../rest-endpoints.md#opIdisNightShift)
 - [Storage model](./../storage.md)
 
 ### Calculation
 
-There are a couple of factors involved in whether a shift qualifies as a night shift.
+There are a number of factors involved in whether a shift qualifies as a night shift.
 
-* The employment_type which for AHW workers can be SDA, AHA, AAA
-* Start and End Time of the night hour range based on the employment_type
-* The minimum number of hours that a shift MUST overlap the night hour range to qualify
+* The employment_type, which for AHW workers can be SDA, AHA, AAA.
+* Start and End Time of the night hour range which does vary based on the employment_type.
+* The minimum number of hours that a shift MUST overlap the night hour range to qualify.
 
-The look up is relatively trivial. There are three tables defined and the relationships are shown in the table below:
+The data retrieval is relatively trivial. There are three tables to be accessed to acquire the data required. 
 
 | Table                 | Accessed by      | Provides                |
 | --------------------- | ---------------- | ----------------------- |
@@ -34,4 +34,6 @@ The look up is relatively trivial. There are three tables defined and the relati
 These tables can also be seen in the following image:
 
 ![External Reference Data](./../images/storage-model-ref-external.png)
+
+
 
