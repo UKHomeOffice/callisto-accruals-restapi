@@ -21,6 +21,7 @@ Other than that every time entry change that is attributed to a worker contribut
 
 Depending upon the strategy none or some of these endpoints might be used
 
-- GET /operations/isPublicHoliday
-- GET /operations/isNightShift
-- GET /operations/isNormalShift
+- GET [/operations/isPublicHoliday](./../../rest-api/rest-endpoints.md#ispublicholiday)
+- GET [/operations/isNightShift](./../../rest-api/rest-endpoints.md#isnightshift)
+- GET [/operations/isNormalShift](./../../rest-api/rest-endpoints.md#isnormalshift)
+- GET /operations/CalculateNightHours **TODO**
