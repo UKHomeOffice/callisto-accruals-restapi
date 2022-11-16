@@ -110,27 +110,27 @@ paths:
               schema:
                 allOf:
                 - $ref: '#/components/schemas/Error'                 
-  /operations/isBankHoliday:
+  /operations/isPublicHoliday:
     get:
-      summary: Determine whether or not the given day is a Bank holiday (or a substitute bank holiday)
-      operationId: isBankHoliday
+      summary: Determine whether or not the given day is a public holiday (or a substitute public holiday)
+      operationId: isPublicHoliday
       parameters:
         - name: date
           in: query
-          description: The date whose Bank holiday status is to be determined
+          description: The date whose Public holiday status is to be determined
           required: true
           schema:
             type: string
             format: date
         - name: personId
           in: query
-          description: The person has a bearing on whether a date is a Bank holiday
+          description: The person has a bearing on whether a date is a public holiday
           required: true
           schema:
             type: string
       responses:
         '200':
-          description: A boolean value. True if the date is a Bank holiday in the context of the person otherwise False
+          description: A boolean value. True if the date is a public  holiday in the context of the person otherwise False
           content:
             application/json:    
               schema:
