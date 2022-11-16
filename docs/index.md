@@ -2,7 +2,7 @@
 
 In Border Force many people are on what is known as an Annualised Hours Agreement (AHA). In short each person will have a set of target hours that they need to work in order to gain an uplift in their basic pay. 
 
-The hours that they work fall into one or more different categories, which are sometimes called modules or often reffered to as accruals.
+The hours that they work fall into one or more different categories, which are sometimes called modules or often referred to as accruals.
 
 ![landscape.png](./images/landscape.png)
 
