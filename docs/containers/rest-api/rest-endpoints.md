@@ -306,6 +306,7 @@ This operation does not require authentication
 
 |Name|In|Type|Required|Description|
 |---|---|---|---|---|
+|personId|query|string|true|The person has a bearing on whether the time period is considered to be a night shift|
 |startTime|query|string(date-time)|true|The start of the time period to be assessed|
 |endTime|query|string(date-time)|true|The end of the time period to be assessed|
 
@@ -350,6 +351,7 @@ This operation does not require authentication
 
 |Name|In|Type|Required|Description|
 |---|---|---|---|---|
+|personId|query|string|true|The person has a bearing on whether the time period is considered to be a normal shift|
 |startTime|query|string(date-time)|true|The start of the time period to be assessed|
 |endTime|query|string(date-time)|true|The end of the time period to be assessed|
 
