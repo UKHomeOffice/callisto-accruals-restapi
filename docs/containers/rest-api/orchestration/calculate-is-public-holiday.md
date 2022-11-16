@@ -27,4 +27,4 @@ The look up is relatively trivial. There are three tables defined and the relati
 
 These tables can also be seen in the following image:
 
-![External Reference Data](./../images/storage-mode-ref-external.png)
+![External Reference Data](./../images/storage-model-ref-external.png)
