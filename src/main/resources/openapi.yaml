@@ -148,6 +148,12 @@ paths:
       summary: Determine whether or not the given time period falls within the bounds of a night shift
       operationId: isNightShift
       parameters:
+        - name: personId
+          in: query
+          description: The person has a bearing on whether the time period is considered to be a night shift
+          required: true
+          schema:
+            type: string
         - name: startTime
           in: query
           description: The start of the time period to be assessed
@@ -182,6 +188,12 @@ paths:
       summary: Determine whether or not the given time period falls within the bounds of a normal shift
       operationId: isNormalShift
       parameters:
+        - name: personId
+          in: query
+          description: The person has a bearing on whether the time period is considered to be a normal shift
+          required: true
+          schema:
+            type: string      
         - name: startTime
           in: query
           description: The start of the time period to be assessed
