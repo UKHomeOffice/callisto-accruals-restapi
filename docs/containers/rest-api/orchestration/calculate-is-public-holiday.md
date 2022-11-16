@@ -10,7 +10,7 @@ This endpoint simply returns whether the date supplied is a Public Holiday for t
 
 It does this by pulling together data from a number of different tables in the data store.
 
-- [Is Public Holiday endpoint](./rest-endpoints.md#opIdisPublicHoliday)
+- [Is Public Holiday endpoint](./../rest-endpoints.md#opIdisPublicHoliday)
 - [Storage model](./../storage.md)
 
 ### Calculation
