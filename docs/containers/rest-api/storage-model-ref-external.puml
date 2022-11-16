@@ -40,7 +40,7 @@ person ||.. night_hour_range
 entity ahw_type_definition {
   * employment_type : string <<PK>>
   --
-  * min_night_duration : float
+  * min_shift_duration : float
   * min_overlapping_hours: float
   * premod_nominal_daily rate : float
   * mod_nominal_daily rate : float
