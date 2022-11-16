@@ -11,7 +11,7 @@ This endpoint simply returns whether the date supplied is a Public Holiday for t
 It does this by pulling together data from a number of different tables in the data store.
 
 - [Is Public Holiday endpoint](./rest-endpoints.md#opIdisPublicHoliday)
-- [Storage model](./storage.md)
+- [Storage model](./../storage.md)
 
 ### Calculation
 
@@ -24,3 +24,7 @@ The look up is relatively trivial. There are three tables defined and the relati
 | Public\_Holiday\_By\_Location | Location\_Code | Public\_Holiday\_CountryCode                 |
 | Public\_Holiday               | CountryCode    | Public\_Holiday\_Date, Public\_Holiday\_Type |
 |                               |                |                                              |
+
+These tables can also be seen in the following image:
+
+![External Reference Data](./../images/storage-mode-ref-external.png)
