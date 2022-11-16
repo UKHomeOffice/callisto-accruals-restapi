@@ -250,20 +250,20 @@ Status Code **default**
 This operation does not require authentication
 </aside>
 
-## isBankHoliday
+## isPublicHoliday
 
-<a id="opIdisBankHoliday"></a>
+<a id="opIdisPublicHoliday"></a>
 
-`GET /operations/isBankHoliday`
+`GET /operations/isPublicHoliday`
 
-*Determine whether or not the given day is a Bank holiday (or a substitute bank holiday)*
+*Determine whether or not the given day is a public holiday (or a substitute public holiday)*
 
-<h3 id="isbankholiday-parameters">Parameters</h3>
+<h3 id="ispublicholiday-parameters">Parameters</h3>
 
 |Name|In|Type|Required|Description|
 |---|---|---|---|---|
-|date|query|string(date)|true|The date whose Bank holiday status is to be determined|
-|personId|query|string|true|The person has a bearing on whether a date is a Bank holiday|
+|date|query|string(date)|true|The date whose Public holiday status is to be determined|
+|personId|query|string|true|The person has a bearing on whether a date is a public holiday|
 
 > Example responses
 
@@ -273,14 +273,14 @@ This operation does not require authentication
 true
 ```
 
-<h3 id="isbankholiday-responses">Responses</h3>
+<h3 id="ispublicholiday-responses">Responses</h3>
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|A boolean value. True if the date is a Bank holiday in the context of the person otherwise False|boolean|
+|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|A boolean value. True if the date is a public  holiday in the context of the person otherwise False|boolean|
 |default|Default|unexpected error|Inline|
 
-<h3 id="isbankholiday-responseschema">Response Schema</h3>
+<h3 id="ispublicholiday-responseschema">Response Schema</h3>
 
 Status Code **default**
 
