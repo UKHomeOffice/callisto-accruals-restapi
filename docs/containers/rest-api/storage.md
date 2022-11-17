@@ -27,6 +27,7 @@ Represents the balance of an accrual on a given date.
 |---|---|---|---|---|
 |id|PK|true|none|the identifier for this Accrual|
 |type_id|FK ([accrual_type](#tocS_Accrual_Type))|true|none|the type of this Accrual. Sometimes referred to as the "module"|
+|owner_id|FK ([person](#tocS_Person))|true|none|the Person whose balance this accrual is tracking|
 |balance|number|true|none|The remaining balance on for the accrual on the given date. Default is zero|
 |date|date|true|none|The date that the Accrual is associated with|
 
