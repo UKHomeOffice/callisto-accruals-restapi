@@ -1,0 +1,11 @@
+name: callisto-accruals-restapi
+
+service:
+  name: callisto-accruals-restapi
+  port: 3000
+
+replicaCount: 1
+
+image:
+  repo: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/callisto/
+  tag: latest # this value will be overridden by drone.yml
