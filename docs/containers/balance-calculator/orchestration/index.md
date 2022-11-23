@@ -50,6 +50,8 @@ Finally, having updated the Accrual instance's balances they must be persisted t
 
 The sequence diagram above shows a number of components within the `accrual-balance-calculator` container. These components represent the logical steps that need to be taken in order to take the data in a TimeCard event and use it to update the balance on one or more Accrual instances.
 
+Note that everything from TimeCard events consumer up to and including Balance calculator sits within the `balance-calculator` container. The Balance calculator on the far right of the diagram is a component within the container that happens to share a similar name.
+
 ### Components
 The components map to the process outlined above
 
@@ -69,8 +71,7 @@ Since the process outlined above has a dependency on the `callisto-accrual-resta
 
 The implementation should guard against this by using a combination of an [exponential back off retry for transitive errors and a circuit breaker for handling persistent failure](https://dzone.com/articles/understanding-retry-pattern-with-exponential-back)
 
-#### Accrual Type identifier
-This is intended to an implementation of the [strategy pattern](https://en.wikipedia.org/wiki/Strategy_pattern) because the algorithm for determining which Accrual type a TimeCard event should effect varies by Accrual type. On this basis it is envisaged that there will be a series of concrete implementations of an Accrual Type identifier interface and the Orchestrator simply cycles through each asking if the TimeCard event ties to the given Accrual type that the implementation knows about.
+The algorithm for determining which Accrual type a TimeCard event should effect varies by Accrual type. On this basis it is envisaged that there will be a series of concrete implementations of an Accrual Type identifier interface and the Orchestrator simply cycles through each asking if the TimeCard event ties to the given Accrual type that the implementation knows about.
 
 More detail on the specifics of identifying each type of Accrual can be found in [accrual-type-identification.md](./accrual-type-identification.md)
 
@@ -82,9 +83,17 @@ Accrual instances are found via a RESTful call to the `callisto-accrual-restapi`
 #### Balance calculator
 Having found the Accrual instances which are to be updated this component is responsible for calculating new balances and updating the owning Accrual instance. More information on how to use TimeCard event data to calculate a balance can be found in [accrual-balance-calculation.md](./accrual-balance-calculation.md).
 
+### Atomic transactions
+All Accruals resources that are passed to the `accuals-rest-api`'s batch update endpoint should be committed in a single transaction.
+
+In the design presented here all Accrual resources are sent in a single call to the batch update endpoint. 
+
+This means that updating cannot be done in parallel. If this approach proves to be unacceptable (performance SLAs yet to be established) then the updating could be divided into smaller batches that could be executed in parallel. At a minimum all Accruals of the same type should be batched together in a call to the batch update endpoint. 
+
+Note that regardless of whether or not the orchestration is implemented as a parallel process all Accrual resources must be updated successfully before the TimeCard event can be released by the TimeCard event consumer. The process has been designed to be idempotent such that the same event can be replayed again and again.
+
 ## Considerations
 - **Number of calls to `callisto-accruals-restapi`** - the Orchestrator component makes use of a number of other components some of which will call out to the RESTful endpoints exposed by `callisto-accruals-restapi`. A decision needs to be made as to whether or not to write the orchestrator such that calls are batched up or sent individually. There are two classes of call for which this decision needs to be made: Accrual finder & Accrual storage. One could imagine finding or updating all Accrual instances for every relevant Accrual type all at once or batching them up by type
-- **What (if any) components to run in parallel** - potentially the Accrual Type identifier strategy implementations could be called in parallel. Similarly if the act of calculation and storage were bounded by type then these could be wrapped up into that parallel execution as well
 
 ## Out of scope
 - Exposing Accrual resources via RESTful endpoints. This will be covered elsewhere.
