@@ -66,6 +66,21 @@ Sometime a `TimeEntry` is modified. In this case the `TimeEntry.version` will be
 
 When a `TimeEntry` is received as well as matching Accruals by date as with the [single](#single-day) and [overlapping](overlaping-day) cases above the system must also look for any Accruals with `contribution` records that reference a `time_entry` record with the same `id` as the newly received `TimeEntry`. If any are found where the date range covered by the new version of  `TimeEntry` no longer overlaps with the `accrual.date` then a new `contribution` must be created that references the newly received `TimeEntry`  (via the `time_entry` table) and sets `value` to zero.
 
+### GMT and BST (daylight saving time)
+The diagrams below show examples where a person has been scheduled to work from 22.00 on one day to 04.00 on the following day. 
+
+The examples make no attempt to anticipate what a scheduler would do to account for the shift in time that moving from/to BST brings.
+
+![GMT-to-BST.png](./../images/GMT-to-BST.png)
+
+When moving from GMT to BST (typically last Sunday in March) it's clear that by just observing the revised time that an hour is lost therefore 3 hours would be recorded for that individual with 2 hours (22.00:00 to 23.59:59) being apportioned to the first day and 3 hours (00.00:00 to 04.00:00) apportioned to the following day.
+
+![BST-to-GMT.png](./../images/BST-to-GMT.png)
+
+When moving from BST to GMT (typically last Sunday in October) it's clear that by just observing the revised time that an hour is gained therefore 5 hours would be recorded for that individual with 2 hours (22.00:00 to 23.59:59) being apportioned to the first day and 3 hours (00.00:00 to 04.00:00) apportioned to the following day
+
+To give Callisto maximum flexibility time should be stored in UTC with an offset. In this Callisto can always understand the local time when the time was recorded. UTC with an offset inherently covers the addtion and removal of an hour in mainland UK to account for daylight savings
+
 ### Example Scenarios
 
 The scenarios below show how `accrual` and `contribution` records change in response to `TimeEntry` events that the Accruals container receives from the TimeCard container. The scenarios centre around the 24 June, 25 June and 26 June
