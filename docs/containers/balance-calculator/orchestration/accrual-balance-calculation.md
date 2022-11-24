@@ -73,11 +73,11 @@ The examples make no attempt to anticipate what a scheduler would do to account 
 
 ![GMT-to-BST.png](./../images/GMT-to-BST.png)
 
-When moving from GMT to BST (typically last Sunday in March) it's clear that by just observing the revised time that an hour is lost therefore 3 hours would be recorded for that individual with 2 hours (22.00:00 to 23.59:59) being apportioned to the first day and 3 hours (00.00:00 to 04.00:00) apportioned to the following day.
+When moving from GMT to BST (typically last Sunday in March) it's clear that by just observing the revised time that an hour is lost therefore 3 hours would be recorded for that individual with 2 hours (22.00:00 to 00.00:00) being apportioned to the first day and 3 hours (00.00:00 to 04.00:00) apportioned to the following day.
 
 ![BST-to-GMT.png](./../images/BST-to-GMT.png)
 
-When moving from BST to GMT (typically last Sunday in October) it's clear that by just observing the revised time that an hour is gained therefore 5 hours would be recorded for that individual with 2 hours (22.00:00 to 23.59:59) being apportioned to the first day and 3 hours (00.00:00 to 04.00:00) apportioned to the following day
+When moving from BST to GMT (typically last Sunday in October) it's clear that by just observing the revised time that an hour is gained therefore 5 hours would be recorded for that individual with 2 hours (22.00:00 to 00.00:00) being apportioned to the first day and 3 hours (00.00:00 to 04.00:00) apportioned to the following day
 
 To give Callisto maximum flexibility time should be stored in UTC with an offset. In this Callisto can always understand the local time when the time was recorded. UTC with an offset inherently covers the addtion and removal of an hour in mainland UK to account for daylight savings
 
