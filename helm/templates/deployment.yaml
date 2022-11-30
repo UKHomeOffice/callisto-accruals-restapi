@@ -32,3 +32,4 @@ spec:
           ports:
             - name: http
               containerPort: 8080
+          allowPrivilegeEscalation: true
