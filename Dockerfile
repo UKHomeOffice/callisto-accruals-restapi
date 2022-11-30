@@ -1,5 +1,5 @@
 FROM openjdk:17-alpine
-WORKDIR /usr/src/main
+RUN apk add --no-cache sudo
 ARG JAR_FILE=target/*.jar
 COPY ${JAR_FILE} accruals-api.jar
 ENTRYPOINT ["java","-jar","accruals-api.jar"]
