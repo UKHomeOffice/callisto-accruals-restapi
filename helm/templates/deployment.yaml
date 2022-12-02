@@ -18,6 +18,7 @@ spec:
       securityContext:
         runAsUser: 1001
         runAsGroup: 1001
+        allowPrivilegeEscalation: true
       containers:
         - name: accruals-restapi
           image: {{ .Values.image.repo }}accruals-restapi:{{ .Values.image.tag }}
@@ -32,5 +33,3 @@ spec:
           ports:
             - name: http
               containerPort: 8080
-          securityContext:
-            allowPrivilegeEscalation: true
