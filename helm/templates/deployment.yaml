@@ -20,7 +20,7 @@ spec:
         runAsGroup: 1001
       containers:
         - name: accruals-restapi
-          image: {{ .Values.image.repo }}accruals-restapi:{{ .Values.image.tag }}
+          image: accruals:latest
           imagePullPolicy: Always
           resources:
             requests:
@@ -32,3 +32,10 @@ spec:
           ports:
             - name: http
               containerPort: 8080
+      initContainers:
+        - name: accruals-certification
+          image: accruals:latest
+          imagePullPolicy: Always
+          env: {{ toYaml .Values.env.kafka | nindent 12}}
+          command:
+              ['sh', '-c', "keytool -importkeystore -srckeystore $(KEY_PAIR) -destkeystore kafka.client.keystore.jks -srcstoretype pkcs12 -alias shared -storepass $(PASSWORD) -keypass $(PASSWORD) -srcstorepass $(PASSWORD)"]

@@ -9,3 +9,21 @@ replicaCount: 1
 image:
   repo: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/callisto/
   tag: latest # this value will be overridden by drone.yml
+
+env:
+  kafka:
+    - name: BOOTSTRAP_BROKERS
+      valueFrom:
+        secretKeyRef:
+          name: callisto-dev-msk
+          key: bootstrap_server_tls
+    - name: KEY_PAIR
+      valueFrom:
+        secretKeyRef:
+          name: callisto-consumer-tls
+          key: key-pair.p12
+    - name: PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: callisto-consumer-tls
+          key: password
