@@ -17,13 +17,39 @@ env:
         secretKeyRef:
           name: callisto-dev-msk
           key: bootstrap_server_tls
-    - name: KEY_PAIR
+    - name: AWS_ACCESS_KEY
       valueFrom:
         secretKeyRef:
-          name: callisto-consumer-tls
-          key: key-pair.p12
+          name: callisto-dev-msk
+          key: certificate_authority_access_keys
+    - name: AWS_SECRET_KEY
+      valueFrom:
+          secretKeyRef:
+            name: callisto-dev-msk
+            key: certificate_authority_secret_keys
+    - name: CERTIFICATE_AUTHORITY_ARN
+      valueFrom:
+        secretKeyRef:
+          name: callisto-kafka-accruals
+          key: certificate_authority_arn
+    - name: CERTIFICATE_ARN
+      valueFrom:
+        secretKeyRef:
+          name: callisto-kafka-accruals
+          key: certificate_arn
+    - name: ACCRUALS_KEY
+      valueFrom:
+        secretKeyRef:
+         name: callisto-kafka-accruals
+        key: accruals-key
     - name: PASSWORD
       valueFrom:
         secretKeyRef:
-          name: callisto-consumer-tls
+          name: callisto-kafka-accruals
           key: password
+
+
+
+
+
+

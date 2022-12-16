@@ -20,8 +20,8 @@ spec:
         runAsGroup: 1001
       containers:
         - name: accruals-restapi
-          image: accruals:latest
-          imagePullPolicy: Always
+          image: accruals
+          imagePullPolicy: Never
           resources:
             requests:
               memory: '512Mi'
@@ -33,9 +33,15 @@ spec:
             - name: http
               containerPort: 8080
       initContainers:
-        - name: accruals-certification
-          image: accruals:latest
-          imagePullPolicy: Always
-          env: {{ toYaml .Values.env.kafka | nindent 12}}
-          command:
-              ['sh', '-c', "keytool -importkeystore -srckeystore $(KEY_PAIR) -destkeystore kafka.client.keystore.jks -srcstoretype pkcs12 -alias shared -storepass $(PASSWORD) -keypass $(PASSWORD) -srcstorepass $(PASSWORD)"]
+        - name: accruals-kafka-tls
+          image: accruals
+          imagePullPolicy: Never
+          env: {{ toYaml .Values.env.kafka | nindent12 }}
+          command: ["/helm/scripts/kafkaCerts.sh $(AWS_ACCESS_KEY) $AWS_SECRET_KEY $(CERTIFICATE_AUTHORITY_ARN) $(CERTIFICATE_ARN) $(ACCRUALS_KEY $(PASSWORD)"]
+          volumeMounts:
+          - name: kafka
+            mountPath: "/tmp"
+      volumes:
+      - name: kafka
+        emptyDir: {}
+
