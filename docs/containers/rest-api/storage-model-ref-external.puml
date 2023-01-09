@@ -1,0 +1,52 @@
+@startuml
+
+entity person {
+  * id : number <<PK>>
+  --
+  * employment_type : string
+  * location_code : string
+  * ph_taken_year_start : boolean
+  
+}
+
+entity public_holiday_by_location {
+  * location_code : string <<PK>>
+  --
+  * public_holiday_countrycode : string
+}
+
+person ||.. public_holiday_by_location
+
+entity public_holiday {
+  * id : number <<PK>>
+  * country_code : string <<FK>>
+  * public_holiday_date : date <FK>
+  --
+  * public_holiday_type : enumeration
+}
+
+person ||.. public_holiday_by_location
+public_holiday_by_location ||.. public_holiday
+
+entity night_hour_range {
+  * employment_type : string <<PK>>
+  --
+  * start_time : time
+  * end_time : time
+}
+
+person ||.. night_hour_range
+
+entity ahw_type_definition {
+  * employment_type : string <<PK>>
+  --
+  * min_shift_duration : float
+  * min_overlapping_hours: float
+  * premod_nominal_daily rate : float
+  * mod_nominal_daily rate : float
+}
+
+
+person ||.. ahw_type_definition
+
+@enduml
