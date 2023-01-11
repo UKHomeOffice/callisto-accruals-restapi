@@ -180,6 +180,6 @@ steps:
         Commit: <${DRONE_REPO_LINK}/commit/{{ build.commit }}|{{ truncate build.commit 8 }}> - {{{ trim build.message }}}
         Repo: {{ repo.name }}
         Author: {{ build.author }}
-#    when:
-#      branch:
-#        - main
+    when:
+      branch:
+        - main
