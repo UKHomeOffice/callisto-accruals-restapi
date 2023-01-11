@@ -11,5 +11,5 @@ RUN apk add --no-cache \
 WORKDIR /usr/src/main
 ARG JAR_FILE=target/*.jar
 COPY ${JAR_FILE} accruals-api.jar
-ENTRYPOINT ["java","-jar","accruals-api.jar"]
+ENTRYPOIddNT ["java","-jar","accruals-api.jar"]
 EXPOSE 8080
