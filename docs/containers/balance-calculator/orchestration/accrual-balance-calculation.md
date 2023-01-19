@@ -11,14 +11,14 @@ This high-level design is intended to cover having identified the type of Accrua
     + [Deletion](#deletion)
     + [Move](#move)
     + [Example Scenarios](#example-scenarios)
-      - [Scenario 1:  Create a `TimeEntry` spanning a single day](#scenario-1---create-a--timeentry--spanning-a-single-day)
-      - [Scenario 2: Delete an existing `TimeEntry` spanning a single day](#scenario-2--delete-an-existing--timeentry--spanning-a-single-day)
-      - [Scenario 3: Move an existing `TimeEntry` spanning a single day to a different time on the same day](#scenario-3--move-an-existing--timeentry--spanning-a-single-day-to-a-different-time-on-the-same-day)
-      - [Scenario 4: Create a `TimeEntry` spanning two contiguous days](#scenario-4--create-a--timeentry--spanning-two-contiguous-days)
-      - [Scenario 5: Move an existing `TimeEntry` spanning a single day to two contiguous days](#scenario-5--move-an-existing--timeentry--spanning-a-single-day-to-two-contiguous-days)
-      - [Scenario 6: Move an existing `TimeEntry` spanning two contiguous days a single day](#scenario-6--move-an-existing--timeentry--spanning-two-contiguous-days-a-single-day)
-      - [Scenario 7: Delete an existing `TimeEntry` spanning two contiguous days](#scenario-7--delete-an-existing--timeentry--spanning-two-contiguous-days)
-      - [Scenario 8: Move an existing `TimeEntry` spanning a single day to a different single day](#scenario-8--move-an-existing--timeentry--spanning-a-single-day-to-a-different-single-day)
+      - [Scenario 1:  Create a `TimeEntry` spanning a single day](#scenario-1--create-a-timeentry-spanning-a-single-day)
+      - [Scenario 2: Delete an existing `TimeEntry` spanning a single day](#scenario-2-delete-an-existing-timeentry-spanning-a-single-day)
+      - [Scenario 3: Move an existing `TimeEntry` spanning a single day to a different time on the same day](#scenario-3-move-an-existing-timeentry-spanning-a-single-day-to-a-different-time-on-the-same-day)
+      - [Scenario 4: Create a `TimeEntry` spanning two contiguous days](#scenario-4-create-a-timeentry-spanning-two-contiguous-days)
+      - [Scenario 5: Move an existing `TimeEntry` spanning a single day to two contiguous days](#scenario-5-move-an-existing-timeentry-spanning-a-single-day-to-two-contiguous-days)
+      - [Scenario 6: Move an existing `TimeEntry` spanning two contiguous days a single day](#scenario-6-move-an-existing-timeentry-spanning-two-contiguous-days-a-single-day)
+      - [Scenario 7: Delete an existing `TimeEntry` spanning two contiguous days](#scenario-7-delete-an-existing-timeentry-spanning-two-contiguous-days)
+      - [Scenario 8: Move an existing `TimeEntry` spanning a single day to a different single day](#scenario-8-move-an-existing-timeentry-spanning-a-single-day-to-a-different-single-day)
 
 ## Updating Accrual balance
 One of the key properties on an accrual record is the balance. Each instance represents the running total of all contributions up to a given date. When `TimeEntry` events are received then they are used to identify which type of `accrual` records they relate to and also to identify which date(s) are to have their balances calculated. 
