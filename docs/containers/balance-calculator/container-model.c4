@@ -47,7 +47,7 @@ workspace {
             timecardEventsProducer -> timecardEventsConsumer "consumes TimeCard event from"
             timecardEventsConsumer -> orchestrator "passes TimeCard event to"
             orchestrator -> accrualTypeIdentifier "determines if TimeCard event is relevant to Accrual type using"
-            accrualTypeIdentifier -> accrualsRestApi "Finds Accrual types effected by TimeCard event using"
+            accrualTypeIdentifier -> accrualsRestApi "Finds Accrual types affected by TimeCard event using"
             orchestrator -> accrualFinder "finds Accrual instances that TimeCard event and Accrual type are relevant to"
             accrualFinder -> accrualsRestApi "retrieves Accrual instances using"
             orchestrator -> balanceCalculator "updates Accrual instance balance using"
