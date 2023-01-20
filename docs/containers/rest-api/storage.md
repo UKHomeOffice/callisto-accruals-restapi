@@ -41,7 +41,7 @@ A contribution towards the balance of an Accrual
 |---|---|---|---|---|
 |id|PK|true|none|the identifier for this Contribution|
 |time_entry_id|FK ([time_entry](#tocS_TimeEntry))|true|none|The TimeEntry records an amount of time that backs the contributedHours property|
-|accrual_id|FK ([accrual](#tocS_Accrual))|true|none|The balance of the `Accrual` that this `Contribution` effects|
+|accrual_id|FK ([accrual](#tocS_Accrual))|true|none|The balance of the `Accrual` that this `Contribution` affects|
 |value|number|true|none|Holds the count that this `Contribution` negates the `Accrual`'s balance by|
 
 **REF DATA - accrual type and units etc, name**
