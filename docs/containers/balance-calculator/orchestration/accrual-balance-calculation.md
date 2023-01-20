@@ -67,7 +67,7 @@ Sometime a `TimeEntry` is modified. In this case the `TimeEntry.version` will be
 When a `TimeEntry` is received as well as matching Accruals by date as with the [single](#single-day) and [overlapping](overlaping-day) cases above the system must also look for any Accruals with `contribution` records that reference a `time_entry` record with the same `id` as the newly received `TimeEntry`. If any are found where the date range covered by the new version of  `TimeEntry` no longer overlaps with the `accrual.date` then a new `contribution` must be created that references the newly received `TimeEntry`  (via the `time_entry` table) and sets `value` to zero.
 
 ### GMT and BST (daylight saving time)
-The diagrams below show examples where a person has been scheduled to work from 22.00 on one day to 04.00 on the following day. 
+The diagrams below show examples where a person has been scheduled to work from 22.00 on one day to 04.00 on the following day. The Accruals balance calculator should expect to receive times in ISO 8061 format for reasons explained in the article [Time to Change](https://collaboration.homeoffice.gov.uk/display/EAHW/Time+to+Change) (access required)
 
 The examples make no attempt to anticipate what a scheduler would do to account for the shift in time that moving from/to BST brings.
 
