@@ -71,7 +71,7 @@ Since the process outlined above has a dependency on the `callisto-accrual-resta
 
 The implementation should guard against this by using a combination of an [exponential back off retry for transitive errors and a circuit breaker for handling persistent failure](https://dzone.com/articles/understanding-retry-pattern-with-exponential-back)
 
-The algorithm for determining which Accrual type a TimeCard event should effect varies by Accrual type. On this basis it is envisaged that there will be a series of concrete implementations of an Accrual Type identifier interface and the Orchestrator simply cycles through each asking if the TimeCard event ties to the given Accrual type that the implementation knows about.
+The algorithm for determining which Accrual type a TimeCard event should affect varies by Accrual type. On this basis it is envisaged that there will be a series of concrete implementations of an Accrual Type identifier interface and the Orchestrator simply cycles through each asking if the TimeCard event ties to the given Accrual type that the implementation knows about.
 
 More detail on the specifics of identifying each type of Accrual can be found in [accrual-type-identification.md](./accrual-type-identification.md)
 
