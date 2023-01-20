@@ -6,7 +6,7 @@ There are two main activities initiated in TimeCard that Accruals is interested 
 
 ### 1. User records their time
 
-When a user records time in their TimeCard then the Accruals container needs to respond by updating the balances with those Accrual modules that are effected by the newly recorded time.
+When a user records time in their TimeCard then the Accruals container needs to respond by updating the balances with those Accrual modules that are affected by the newly recorded time.
 
 The Accruals container receives information about recorded time as `TimeEntry` events. The events are sent asynchronously and the component makes the assumption that they are arriving in the correct order. 
 
