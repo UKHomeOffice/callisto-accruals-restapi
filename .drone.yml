@@ -7,6 +7,18 @@ platform:
   os: linux
   arch: amd64
 
+accruals_quay_settings: &accruals_quay_settings
+  pull: if-not-exists
+  image: plugins/docker
+  settings:
+    registry: quay.io
+    repo: quay.io/ukhomeofficedigital/callisto-accruals-restapi
+    username:
+      from_secret: quay_robot_name
+    password:
+      from_secret: quay_robot_token
+    file: Dockerfile
+
 steps:
   - name: build
     image: maven:3.8.3-openjdk-17
@@ -28,7 +40,7 @@ steps:
       SONAR_TOKEN:
         from_secret: sonar_cloud_token
     commands:
-      - mvn -s ./accruals_settings.xml sonar:sonar 
+      - mvn -s ./accruals_settings.xml sonar:sonar
         -Dsonar.host.url=$${SONAR_HOST}
         -Dsonar.login=$${SONAR_TOKEN}
         -Dsonar.organization=ukhomeoffice
@@ -47,20 +59,11 @@ steps:
     commands:
       - hadolint Dockerfile
 
-  - name: build_tag_push_ecr
-    pull: if-not-exists
-    image: plugins/ecr
+  - name: build_tag_push_quay
+    <<: *accruals_quay_settings
     depends_on:
       - sonar
-    environment:
-      AWS_REGION: eu-west-2
     settings:
-      access_key:
-        from_secret: ecr_accruals_restapi_access_key_id
-      secret_key:
-        from_secret: ecr_accruals_restapi_secret_access_key
-      repo: callisto/accruals-restapi
-      registry: 340268328991.dkr.ecr.eu-west-2.amazonaws.com
       tags:
         - latest
         - ${DRONE_COMMIT_SHA}

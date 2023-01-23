@@ -20,7 +20,7 @@ spec:
         runAsGroup: 1001
       containers:
         - name: accruals-restapi
-          image: {{ .Values.image.repo }}accruals-restapi:{{ .Values.image.tag }}
+          image: {{ .Values.image.repo }}callisto-accruals-restapi:{{ .Values.image.tag }}
           imagePullPolicy: Always
           resources:
             requests:
