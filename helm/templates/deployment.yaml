@@ -5,6 +5,8 @@ metadata:
   name: {{ .Release.Name }}
   labels:
     app: {{ .Release.Name }}
+  annotations:
+    downscaler/uptime: Mon-Fri 08:00-20:00 Europe/London
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
