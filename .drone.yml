@@ -194,7 +194,8 @@ trigger:
     - success
     - failure
   event:
-    - push
+    include:
+      - push
     exclude:
       - pull_request
 
