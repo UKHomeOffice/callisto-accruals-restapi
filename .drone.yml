@@ -24,6 +24,9 @@ platform:
   os: linux
   arch: amd64
 
+depends_on:
+  - lint-files
+
 accruals_quay_settings: &accruals_quay_settings
   pull: if-not-exists
   image: plugins/docker
@@ -70,12 +73,6 @@ steps:
         exclude:
           - pull_request
 
-  - name: lint_dockerfile
-    pull: if-not-exists
-    image: hadolint/hadolint:latest-alpine
-    commands:
-      - hadolint Dockerfile
-
   - name: build_tag_push_quay_branch
     <<: *accruals_quay_settings
     depends_on:
@@ -112,7 +109,6 @@ platform:
   arch: amd64
 
 depends_on:
-  - lint-files
   - callisto-accruals-restapi
 
 trigger:
