@@ -123,7 +123,8 @@ depends_on:
   - callisto-accruals-restapi
 
 trigger:
-  event: pull_request
+  event:
+    - pull_request
 
 steps:
   - name: branch_deploy
