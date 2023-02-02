@@ -2,18 +2,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.name }}
+  name: {{ .Release.Name }}
   labels:
-    app: {{ .Values.name }}
+    app: {{ .Release.Name }}
+  annotations:
+    downscaler/uptime: Mon-Fri 08:00-20:00 Europe/London
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ .Values.name }}
+      app: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: {{ .Values.name }}
+        app: {{ .Release.Name }}
     spec:
       securityContext:
         runAsUser: 1001

@@ -1,7 +1,6 @@
-name: callisto-accruals-restapi
+branch: main #overridden for branch deploys
 
 service:
-  name: callisto-accruals-restapi
   port: 3000
 
 replicaCount: 1
