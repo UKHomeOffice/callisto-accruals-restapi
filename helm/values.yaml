@@ -1,11 +1,10 @@
-name: callisto-accruals-restapi
+branch: main #overridden for branch deploys
 
 service:
-  name: callisto-accruals-restapi
   port: 3000
 
 replicaCount: 1
 
 image:
-  repo: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/callisto/
+  repo: quay.io/ukhomeofficedigital/
   tag: latest # this value will be overridden by drone.yml
