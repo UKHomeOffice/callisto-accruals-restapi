@@ -1,0 +1,35 @@
+@startuml
+
+entity flex_change_band_definition {
+  * id : number <<PK>>
+  --
+  * name : string
+  * upper_limit : integer
+}
+  
+entity rsa_band_definition {
+  * id : number <<PK>>
+  --
+  * name : string
+  * lower_limit : integer
+  * upper_limit : integer
+}
+
+entity rsa_band_definition {
+  * id : number <<PK>>
+  --
+  * name : string
+  * lower_limit : integer
+  * upper_limit : integer
+}
+
+entity tolerance_rate_bands {
+  * id : number <<PK>>
+  --
+  * display_string
+  * lower_limit : integer
+  * upper_limit : integer
+}
+
+
+@enduml

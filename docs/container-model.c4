@@ -1,0 +1,64 @@
+workspace {
+
+    model {
+		enterprise "Home Office" {
+		   
+			worker = person "Worker" "" "Worker"
+			manager = person "Manager" "" "Manager"
+
+			tamsBalanceAdapter = softwaresystem "Balance ETL" "Wraps TAMS and presents balance data in format that Callisto can work with" "Existing System"
+			tamsAgreementAdaptor = softwaresystem "TAMS Agreement Adaptor" "Wraps TAMS and presents data in format that Callisto can work with" "Existing System"
+            timeCard  = softwaresystem "TimeCard system" "Provides a stream of events detailing recorded time data"
+
+			accrualsSystem = softwaresystem "Accruals system" "Maintains the balance of Accruals modules that a worker has purchased through their Annualised Hours Agreement (AHA)  Allows workers and managers to view Accrual module balances." {
+				singlePageApplication = container "Single-Page Application" "Provides all of the Time card functionality to customers via their web browser." "React" "Web Browser"
+				accrualBalanceCalculator = container "Accrual Balance Calculator" "Maintains accurate balance data for a worker's Accruals" "Java and SpringBoot" 
+				accrualsRestAPI = container "Accrual REST API" "Provides access to Accruals data store via RESTful API" "Java and SpringBoot" 
+				database = container "Database" "Stores Accrual, Contribution entities" "PostgreSQL" "Database"			
+			}
+		}
+		
+		# relationships between people and software systems
+        worker -> accrualsSystem "views Accrual module balances using"
+		manager -> accrualsSystem "views team member's Accrual module balances using"
+		
+		# relationships between software systems
+		tamsAgreementAdaptor -> accrualsSystem "sends target balances at the start of a new agreement"
+		tamsBalanceAdapter -> accrualsSystem "sends actual target balances at the time of TAMS enduser offboarding and Callisto enduser onboarding"
+		timeCard -> accrualsSystem "sends events that a triggered by the recording of time"
+		
+        # relationships to/from containers
+        worker -> singlePageApplication "views Accrual module balances using"
+		manager -> singlePageApplication "views team member's Accrual module balances using"
+        singlePageApplication -> accrualsRestAPI "reads Accrual and AccrualDetail" 
+        timeCard -> accrualBalanceCalculator "consumes TimeEntry and FlexChange events from"
+        accrualsRestAPI -> database "uses"
+    }
+
+    views {
+	
+        styles {
+            element "Person" {
+                color #ffffff
+                fontSize 22
+                shape Person
+                background #08427b
+            }
+            element "Software System" {
+                background #1168bd
+                color #ffffff
+            }			
+            element "Container" {
+                background #438dd5
+                color #ffffff
+            }
+            element "Database" {
+                shape Cylinder
+            }
+            element "Component" {
+                background #85bbf0
+                color #000000
+            }			
+        } 
+    }
+}

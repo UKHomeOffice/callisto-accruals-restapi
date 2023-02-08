@@ -1,0 +1,69 @@
+workspace {
+
+    model {
+		enterprise "Home Office" {
+		    user = person "User" "" "User"
+			worker = person "Worker" "" "Worker"
+			manager = person "Manager" "" "Manager"
+
+			accrualsSystem = softwaresystem "Accruals service" "Maintains the balance of Accruals modules that a worker has purchased through their Annualised Hours Agreement (AHA)  Allows workers and managers to view Accrual module balances." {
+				singlePageApplication = container "Single-Page Application" "Provides all of the Time card functionality to customers via their web browser." "React" "Web Browser"
+				accrualsRestApi = container "Accrual Service" "Provides Accrual functionality via RESTful API and Event stream" "Java and SpringBoot" 
+                database = container "Database" "Stores Accrual, Contribution and TimeEntry (Accural representation) entities" "PostgreSQL" "Database"			    
+			}
+		}
+		
+		# relationships between people and software systems
+        worker -> accrualsSystem "views Accrual module balances using"
+		manager -> accrualsSystem "views team member's Accrual module balances using"
+		
+	
+        # relationships to/from containers
+        worker -> singlePageApplication "views Accrual module balances using"
+		manager -> singlePageApplication "views team member's Accrual module balances using"
+        singlePageApplication -> accrualsRestApi "reads Accrual and AccrualDetail" 
+        accrualsRestApi -> database "uses"
+    }
+
+    views {
+	
+	    container accrualsSystem "Containers" {
+            include *
+            autoLayout
+        }	
+        
+		dynamic accrualsSystem "displayDetailsTable" "Retreives and displays Accrual module summary data (params: date, personId)" {
+	        user -> singlePageApplication "navigates view accruals"
+			singlePageApplication -> accrualsRestApi "get Accruals (params: personId, day)"
+			accrualsRestApi -> database "get * from accrual_type"
+			accrualsRestApi -> database "for each accrual_type.id assembleAccrualSummary (params: date, personId, accrual_type.id, accrual_type.name, accrual_type.measurement_unit)"
+			accrualsRestApi -> singlePageApplication "return AccrualSummary set"
+			singlePageApplication -> user "display AccrualSummary set"
+            autoLayout
+        }
+        
+        styles {
+            element "Person" {
+                color #ffffff
+                fontSize 22
+                shape Person
+                background #08427b
+            }
+            element "Software System" {
+                background #1168bd
+                color #ffffff
+            }			
+            element "Container" {
+                background #438dd5
+                color #ffffff
+            }
+            element "Database" {
+                shape Cylinder
+            }
+            element "Component" {
+                background #85bbf0
+                color #000000
+            }			
+        } 
+    }
+}

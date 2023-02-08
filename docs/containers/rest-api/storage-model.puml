@@ -1,0 +1,44 @@
+@startuml
+
+
+entity accrual {
+  * id : number <<PK>>
+  --
+  * ownerid << FK >>
+  * type_id : number <<FK>>
+  --
+  * balance : number
+  * date : date
+}
+
+entity contribution {
+  * id : number <<PK>>
+  --
+  * time_entry_id : number <<FK>>
+  * accrual_id : number <<FK>>
+  --
+  * value : number
+}
+
+entity accrual_type {
+  * id : number <<PK>>
+  --
+  * name : string
+  * measurement_unit : enumeration
+}
+
+accrual ||.. accrual_type
+contribution ||.. accrual
+
+entity person {
+  * id : number <<PK>>
+  --
+  * employment_type : string
+  * location_code : string
+  * ph_taken_year_start : boolean
+  
+}
+
+person ||.. accrual
+
+@enduml

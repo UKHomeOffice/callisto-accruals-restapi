@@ -1,0 +1,60 @@
+workspace {
+
+    model {
+    
+		enterprise "Home Office" {    
+  
+            worker = person "Worker" "" "Worker"
+            
+            accrualsSystem = softwaresystem "Accruals service" "Maintains the balance of Accruals modules that a worker has purchased through their Annualised Hours Agreement (AHA)  Allows workers and managers to view Accrual module balances." {            
+               
+               timecardEventsProducer = container "TimeCard events producer" ""
+               accrualsRestApi = container "Accruals REST API" ""
+               
+                accrualsBalanceCalculator = container "Accruals Balance Calculator" "Maintains accurate balance data for a worker's Accruals" {
+                    timecardEventsConsumer = component "TimeCard events consumer" "Reads events published by TimeCard events publisher"
+                    orchestrator = component "Orchestrator" "" "Java class"
+                    accrualTypeIdentifier = component "Accrual Type identifier" "An interface that is capable of determining whether or not a given TimeCard event relates to the Accrual type that is associated with the interface" "Java interface"
+                    accrualFinder = component "Accrual Finder" "An class that is capable of identifying concrete Accrual instances that should be updated based on data in the given TimeCard event and the type of Accrual" "Java class"
+                    balanceCalculator = component "Balance calculator" "An interface that is capable of calculating the balance for a given Accrual based on data in a given TimeCard event" "Java interface"
+                }
+            }
+        }
+        
+        # relationships to/from containers
+        timecardEventsProducer -> timecardEventsConsumer "consumes TimeCard events from"
+        timecardEventsConsumer -> orchestrator "triggers Accrual balance calculation using"
+        orchestrator -> accrualTypeIdentifier "triggers identification of relevant Accrual types using"
+        orchestrator -> accrualFinder "triggers retrieval of relevant Accrual instances using"
+        orchestrator -> balanceCalculator "triggers calculation of Accrual instance's balance using"
+        orchestrator -> accrualsRestApi "triggers storage of Accrual instance using"
+    }
+    
+    views {
+	
+        component accrualsBalanceCalculator {
+            include *
+            autoLayout
+        }
+        
+        dynamic accrualsSystem "calculateAndUpdateAccrualBalancesOverview" "Consumption of TimeCard event updates one or more Accrual instances" {        
+            timecardEventsProducer -> accrualsBalanceCalculator "consumes TimeCard event from"
+            accrualsBalanceCalculator -> accrualsBalanceCalculator "identifies Accrual instannces and calculates balances"
+            accrualsBalanceCalculator -> accrualsRestApi "stores updated Accrual instance using"
+        }
+        
+        dynamic accrualsBalanceCalculator "calculateAndUpdateAccrualBalancesDetail" "Consumption of TimeCard event updates one or more Accrual instances" {        
+            timecardEventsProducer -> timecardEventsConsumer "consumes TimeCard event from"
+            timecardEventsConsumer -> orchestrator "passes TimeCard event to"
+            orchestrator -> accrualTypeIdentifier "determines if TimeCard event is relevant to Accrual type using"
+            accrualTypeIdentifier -> accrualsRestApi "Finds Accrual types affected by TimeCard event using"
+            orchestrator -> accrualFinder "finds Accrual instances that TimeCard event and Accrual type are relevant to"
+            accrualFinder -> accrualsRestApi "retrieves Accrual instances using"
+            orchestrator -> balanceCalculator "updates Accrual instance balance using"
+            orchestrator -> accrualsRestApi "stores updated Accrual instance using"
+            orchestrator -> timecardEventsConsumer "notifies of success or failure"
+            timecardEventsConsumer -> timecardEventsProducer "signals to drop or retain the TimeCard event"
+            autoLayout
+        }
+    }
+} 
