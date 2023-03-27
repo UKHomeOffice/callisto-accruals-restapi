@@ -123,6 +123,7 @@ steps:
   - name: branch_deploy
     image: pelotech/drone-helm3
     settings:
+      debug: true
       namespace: callisto-dev
       mode: upgrade
       add_repos: helm_repo=https://ukhomeoffice.github.io/callisto-helm-charts/
@@ -131,8 +132,7 @@ steps:
       values:
         - mainContainerImage.tag=${DRONE_COMMIT_SHA}
         - ingress.branch=${DRONE_SOURCE_BRANCH%%/*}
-      values_file:
-        - ./helm/values/dev-values.yaml
+      values_file: ./helm/values/dev-values.yaml
       release: callisto-accruals-restapi-${DRONE_SOURCE_BRANCH%%/*}
       kube_certificate:
         from_secret: notprod_kube_api_certificate
