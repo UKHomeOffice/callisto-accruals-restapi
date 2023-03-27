@@ -19,13 +19,6 @@ steps:
     commands:
       - hadolint Dockerfile
 
-  - name: lint_helm_files
-    image: pelotech/drone-helm3
-    settings:
-      mode: lint
-      chart: ./helm
-      values_file: ./helm/values.yaml
-
 ---
 kind: pipeline
 type: kubernetes
