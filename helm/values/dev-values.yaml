@@ -1,0 +1,26 @@
+mainContainerImage:
+  repositoryName: callisto-accruals-restapi
+  tag: latest
+
+#databaseMigrationImage:
+#  repositoryName: callisto-accruals-database
+#  tag: latest
+
+kafka:
+  identity: accruals-restapi
+  mskSecretKeyRefName: "callisto-dev-msk"
+  bootstrapSecretKeyRefName: "callisto-dev-bootstrap"
+  defaultTopic: "callisto-timecard-timeentries"
+
+#db:
+#  secretKeyRefName: "callistodev-rds"
+#  schemaName: "accruals"
+
+service:
+  containerPort: 9090
+
+ingress:
+  branch: main # overwritten by branch deploy
+  host: accruals.dev.callisto-notprod.homeoffice.gov.uk
+  tlsSecretName: callisto-accruals-tls
+  corsOrigin: "https://*.dev.callisto-notprod.homeoffice.gov.uk"

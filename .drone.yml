@@ -132,11 +132,14 @@ steps:
     settings:
       namespace: callisto-dev
       mode: upgrade
-      chart: ./helm
+      add_repos: helm_repo=https://ukhomeoffice.github.io/callisto-helm-charts/
+      chart: helm_repo/callisto-base-service
+      chart_version: 1.0.0
       values:
-        - image.tag=${DRONE_COMMIT_SHA}
-        - branch=${DRONE_SOURCE_BRANCH%%/*}
-      values_file: ./helm/values.yaml
+        - mainContainerImage.tag=${DRONE_COMMIT_SHA}
+        - ingress.branch=${DRONE_SOURCE_BRANCH%%/*}
+      values_file:
+        - ./helm/values/dev-values.yaml
       release: callisto-accruals-restapi-${DRONE_SOURCE_BRANCH%%/*}
       kube_certificate:
         from_secret: notprod_kube_api_certificate
