@@ -130,9 +130,10 @@ steps:
       chart: helm_repo/callisto-base-service
       chart_version: 1.0.0
       values:
-#        - mainContainerImage.tag=${DRONE_COMMIT_SHA}
+        - mainContainerImage.tag=${DRONE_COMMIT_SHA}
         - ingress.branch=${DRONE_SOURCE_BRANCH%%/*}
-      values_file: ./helm/values/dev-values.yaml
+      values_files:
+        - ./helm/values/dev-values.yaml
       release: callisto-accruals-restapi-${DRONE_SOURCE_BRANCH%%/*}
       kube_certificate:
         from_secret: notprod_kube_api_certificate
