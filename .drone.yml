@@ -123,7 +123,6 @@ steps:
   - name: branch_deploy
     image: pelotech/drone-helm3
     settings:
-      debug: true
       namespace: callisto-dev
       mode: upgrade
       add_repos: helm_repo=https://ukhomeoffice.github.io/callisto-helm-charts/
