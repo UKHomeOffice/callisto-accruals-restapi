@@ -155,7 +155,11 @@ depends_on:
   - callisto-accruals-restapi
 
 trigger:
-  status: success
+  event:
+    include:
+      - push
+  branch:
+    - main
 
 steps:
   - name: deploy_to_dev
@@ -174,11 +178,6 @@ steps:
         from_secret: notprod_kube_api_url
       kube_token:
         from_secret: notprod_kube_token
-    when:
-      event:
-        - push
-      branch:
-        - main
 
 ---
 kind: pipeline
