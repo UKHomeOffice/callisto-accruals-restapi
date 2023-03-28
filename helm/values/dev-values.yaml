@@ -2,6 +2,7 @@ mainContainerImage:
   repositoryName: callisto-accruals-restapi
   tag: latest
 
+# TODO: DISABLE PR WHEN UNCOMMENTING
 #databaseMigrationImage:
 #  repositoryName: callisto-accruals-database
 #  tag: latest

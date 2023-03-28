@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.7.4</version>
+		<version>3.0.4</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>uk.gov.homeoffice.digital.sas</groupId>
@@ -21,6 +21,7 @@
 		<sonar.language>java</sonar.language>
 		<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
         <checkstyle-maven-plugin.version>3.2.0</checkstyle-maven-plugin.version>
+		<callisto.jparest.version>0.1.9</callisto.jparest.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -47,6 +48,17 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>uk.gov.homeoffice.digital.sas</groupId>
+			<artifactId>jparest</artifactId>
+			<version>${callisto.jparest.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>42.5.2</version>
+			<scope>runtime</scope>
 		</dependency>
 	</dependencies>
 
