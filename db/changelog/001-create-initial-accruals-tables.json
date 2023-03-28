@@ -2,13 +2,13 @@
   "databaseChangeLog": [
     {
       "changeSet": {
-        "id": "001-create-agreement-table",
+        "id": "001-create-initial-accruals-tables",
         "author": "D Ramjan",
         "changes": [
           {
             "sqlFile": {
               "dbms": "postgresql",
-              "path": "sql/001-create-agreement-table.sql"
+              "path": "sql/001-create-initial-accruals-tables.sql"
             }
           }
         ]

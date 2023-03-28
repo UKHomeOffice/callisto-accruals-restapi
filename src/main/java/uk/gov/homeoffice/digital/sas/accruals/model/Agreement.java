@@ -39,18 +39,18 @@ public class Agreement extends BaseEntity {
     @DecimalMax(value = "1.0")
     private BigDecimal fteValue;
 
-    @NotNull(message = "Terms and Conditions should not be empty")
+    @NotNull(message = "Terms and conditions should not be empty")
     @Enumerated(EnumType.STRING)
     private TermsAndConditions termsAndConditions;
 
-    @NotNull(message = "Salary Basis should not be empty")
+    @NotNull(message = "Salary basis should not be empty")
     @Enumerated(EnumType.STRING)
     private SalaryBasis salaryBasis;
 
-    @NotNull(message = "Start Date should not be empty")
+    @NotNull(message = "Start date should not be empty")
     private LocalDate startDate;
 
-    @NotNull(message = "End Date should not be empty")
+    @NotNull(message = "End date should not be empty")
     private LocalDate endDate;
 
 
