@@ -2,15 +2,19 @@ package uk.gov.homeoffice.digital.sas.accruals.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.util.UUID;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import uk.gov.homeoffice.digital.sas.jparest.annotation.Resource;
 import uk.gov.homeoffice.digital.sas.jparest.models.BaseEntity;
 
@@ -22,13 +26,23 @@ import uk.gov.homeoffice.digital.sas.jparest.models.BaseEntity;
 @Setter
 public class AgreementTarget extends BaseEntity {
 
+  @NotNull(message = "Agreement ID should not be empty")
+  @JdbcTypeCode(SqlTypes.CHAR)
+  @Column(name = "agreement_id")
+  private UUID agreementId;
+
   @ManyToOne
-  @JoinColumn(name = "agreement_id", nullable = false, updatable = false)
+  @JoinColumn(name = "agreement_id", nullable = false, insertable=false, updatable = false)
   @JsonIgnore
   private Agreement agreement;
 
+  @NotNull(message = "Accrual type ID should not be empty")
+  @JdbcTypeCode(SqlTypes.CHAR)
+  @Column(name = "accrual_type_id")
+  private UUID accrualTypeId;
+
   @OneToOne
-  @JoinColumn(name = "accrual_type_id", nullable = false, updatable = false)
+  @JoinColumn(name = "accrual_type_id", nullable = false, insertable=false, updatable = false)
   @JsonIgnore
   private AccrualType accrualType;
 
