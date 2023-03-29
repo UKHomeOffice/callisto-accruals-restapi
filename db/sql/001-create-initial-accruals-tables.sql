@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS accruals.agreement (
+CREATE TABLE accruals.agreement (
     id VARCHAR(36) PRIMARY KEY,
     tenant_id VARCHAR(36) NOT NULL,
     person_id VARCHAR(36) NOT NULL,
@@ -10,9 +10,22 @@ CREATE TABLE IF NOT EXISTS accruals.agreement (
     end_date DATE NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS accruals.accrual_type (
+CREATE TABLE accruals.accrual_type (
     id VARCHAR(36) PRIMARY KEY,
     tenant_id VARCHAR(36) NOT NULL,
     name VARCHAR NOT NULL,
     measurement_unit TEXT CHECK (measurement_unit IN ('HOURS', 'COUNT'))
 );
+
+CREATE TABLE accruals.agreement_target (
+    id VARCHAR(36) PRIMARY KEY,
+    tenant_id VARCHAR(36) NOT NULL,
+    agreement_id VARCHAR(36) NOT NULL,
+    accrual_type_id VARCHAR(36) NOT NULL,
+    target_total DECIMAL NOT NULL, -- TODO: CHECK DECIMALS
+    CONSTRAINT fk_agreement FOREIGN KEY(agreement_id) REFERENCES accruals.agreement(id),
+    CONSTRAINT fk_accrual_type FOREIGN KEY(accrual_type_id) REFERENCES accruals.accrual_type(id)
+);
+
+CREATE INDEX ON accruals.agreement_target (agreement_id);
+CREATE INDEX ON accruals.agreement_target (accrual_type_id);

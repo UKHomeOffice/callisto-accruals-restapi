@@ -27,4 +27,5 @@ public class AccrualType extends BaseEntity {
   @NotNull(message = "Measurement unit should not be empty")
   @Enumerated(EnumType.STRING)
   private MeasurementUnit measurementUnit;
+
 }
