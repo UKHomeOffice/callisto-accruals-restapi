@@ -29,3 +29,18 @@ CREATE TABLE accruals.agreement_target (
 
 CREATE INDEX ON accruals.agreement_target (agreement_id);
 CREATE INDEX ON accruals.agreement_target (accrual_type_id);
+
+CREATE TABLE accruals.accrual (
+    id VARCHAR(36) PRIMARY KEY,
+    tenant_id VARCHAR(36) NOT NULL,
+    agreement_id VARCHAR(36) NOT NULL,
+    date DATE NOT NULL,
+    accrual_type_id VARCHAR(36) NOT NULL,
+    balance DECIMAL NOT NULL,
+    target DECIMAL NOT NULL,
+    CONSTRAINT fk_agreement FOREIGN KEY(agreement_id) REFERENCES accruals.agreement(id),
+    CONSTRAINT fk_accrual_type FOREIGN KEY(accrual_type_id) REFERENCES accruals.accrual_type(id)
+);
+
+CREATE INDEX ON accruals.accrual (agreement_id);
+CREATE INDEX ON accruals.accrual (accrual_type_id);

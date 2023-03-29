@@ -6,9 +6,9 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,15 +18,15 @@ import org.hibernate.type.SqlTypes;
 import uk.gov.homeoffice.digital.sas.jparest.annotation.Resource;
 import uk.gov.homeoffice.digital.sas.jparest.models.BaseEntity;
 
-@Resource(path = "agreement-targets")
-@Entity(name = "agreement_target")
+@Resource(path = "accruals")
+@Entity(name = "accrual")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @NoArgsConstructor
 @Getter
 @Setter
-public class AgreementTarget extends BaseEntity {
+public class Accrual extends BaseEntity {
 
-  @NotNull(message = "Agreement ID should not be empty")
+  @NotNull(message = "Agreement ID should not be null")
   @JdbcTypeCode(SqlTypes.CHAR)
   @Column(name = "agreement_id")
   private UUID agreementId;
@@ -36,17 +36,26 @@ public class AgreementTarget extends BaseEntity {
   @JsonIgnore
   private Agreement agreement;
 
-  @NotNull(message = "Accrual type ID should not be empty")
+  @NotNull(message = "Date should not be null")
+  private LocalDate date;
+
+  @NotNull(message = "Accrual type ID should not be null")
   @JdbcTypeCode(SqlTypes.CHAR)
   @Column(name = "accrual_type_id")
   private UUID accrualTypeId;
 
-  @OneToOne
+  // TODO: check if cardinality is correct
+  @ManyToOne
   @JoinColumn(name = "accrual_type_id", nullable = false, insertable = false, updatable = false)
   @JsonIgnore
   private AccrualType accrualType;
 
-  @NotNull(message = "Target total should not be empty")
-  private BigDecimal targetTotal;
+  @NotNull(message = "Balance should not be null")
+  // TODO: check what min and max are
+  private BigDecimal balance;
+
+  @NotNull(message = "Target should not be null")
+  // TODO: check what min and max are
+  private BigDecimal target;
 
 }
