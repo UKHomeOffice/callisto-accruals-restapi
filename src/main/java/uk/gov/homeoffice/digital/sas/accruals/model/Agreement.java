@@ -41,9 +41,7 @@ public class Agreement extends BaseEntity {
   @JdbcTypeCode(SqlTypes.CHAR)
   private UUID personId;
 
-  //TODO: check with Arcs if correct field
-  @NotNull(message = "Version should not be null")
-  private Integer version;
+  // TODO: check with Arcs if version is even needed field
 
   @DecimalMin(value = "0.0", inclusive = false)
   @Digits(integer = 1, fraction = 4)

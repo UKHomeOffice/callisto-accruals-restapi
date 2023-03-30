@@ -6,6 +6,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -45,21 +46,16 @@ public class Accrual extends BaseEntity {
 
   @NotNull(message = "Accrual type ID should not be null")
   @JdbcTypeCode(SqlTypes.CHAR)
-  @Column(name = "accrual_type_id")
   private UUID accrualTypeId;
 
-  // TODO: check if cardinality is correct
-  @ManyToOne
-  @JoinColumn(name = "accrual_type_id", nullable = false, insertable = false, updatable = false)
-  @JsonIgnore
-  private AccrualType accrualType;
-
   @NotNull(message = "Balance should not be null")
-  // TODO: check what min and max are
-  private BigDecimal balance;
+  // TODO: check with Product/BA (Alex?) what max is
+  @Min(0)
+  private BigDecimal cumulativeTotal;
 
   @NotNull(message = "Target should not be null")
-  // TODO: check what min and max are
-  private BigDecimal target;
+  // TODO: check with Product/BA (Alex?) what max is
+  @Min(0)
+  private BigDecimal cumulativeTarget;
 
 }

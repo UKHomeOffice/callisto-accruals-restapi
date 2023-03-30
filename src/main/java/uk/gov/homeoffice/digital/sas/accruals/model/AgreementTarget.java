@@ -6,7 +6,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -42,13 +41,7 @@ public class AgreementTarget extends BaseEntity {
 
   @NotNull(message = "Accrual type ID should not be empty")
   @JdbcTypeCode(SqlTypes.CHAR)
-  @Column(name = "accrual_type_id")
   private UUID accrualTypeId;
-
-  @OneToOne
-  @JoinColumn(name = "accrual_type_id", nullable = false, insertable = false, updatable = false)
-  @JsonIgnore
-  private AccrualType accrualType;
 
   @NotNull(message = "Target total should not be empty")
   private BigDecimal targetTotal;
