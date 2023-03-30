@@ -10,6 +10,8 @@ import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,6 +24,8 @@ import uk.gov.homeoffice.digital.sas.jparest.models.BaseEntity;
 @Entity(name = "accrual")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Getter
 @Setter
 public class Accrual extends BaseEntity {

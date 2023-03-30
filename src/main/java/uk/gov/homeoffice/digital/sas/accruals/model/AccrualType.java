@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,6 +18,8 @@ import uk.gov.homeoffice.digital.sas.jparest.models.BaseEntity;
 @Entity(name = "accrual_type")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Getter
 @Setter
 public class AccrualType extends BaseEntity {

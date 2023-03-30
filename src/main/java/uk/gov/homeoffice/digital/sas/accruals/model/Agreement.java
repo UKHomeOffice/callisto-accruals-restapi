@@ -14,6 +14,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,6 +31,8 @@ import uk.gov.homeoffice.digital.sas.jparest.models.BaseEntity;
 @Entity(name = "agreement")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Getter
 @Setter
 public class Agreement extends BaseEntity {
