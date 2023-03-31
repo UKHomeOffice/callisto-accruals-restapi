@@ -16,7 +16,7 @@ CREATE TABLE accruals.agreement_target (
     agreement_id VARCHAR(36) NOT NULL,
     accrual_type_id VARCHAR(36) NOT NULL,
     target_total DECIMAL NOT NULL, -- TODO: CHECK DECIMALS
-    CONSTRAINT fk_agreement FOREIGN KEY(agreement_id) REFERENCES accruals.agreement(id),
+    CONSTRAINT fk_agreement FOREIGN KEY(agreement_id) REFERENCES accruals.agreement(id)
 );
 
 CREATE INDEX ON accruals.agreement_target (agreement_id);
@@ -29,7 +29,8 @@ CREATE TABLE accruals.accrual (
     accrual_type_id VARCHAR(36) NOT NULL,
     cumulative_total DECIMAL NOT NULL,
     cumulative_target DECIMAL NOT NULL,
-    CONSTRAINT fk_agreement FOREIGN KEY(agreement_id) REFERENCES accruals.agreement(id),
+    contributions JSONB NULL,
+    CONSTRAINT fk_agreement FOREIGN KEY(agreement_id) REFERENCES accruals.agreement(id)
 );
 
 CREATE INDEX ON accruals.accrual (agreement_id);
