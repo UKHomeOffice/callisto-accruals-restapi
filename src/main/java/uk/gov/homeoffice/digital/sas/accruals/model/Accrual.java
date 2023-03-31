@@ -60,7 +60,6 @@ public class Accrual extends BaseEntity {
   private BigDecimal cumulativeTarget;
 
   @JdbcTypeCode(SqlTypes.JSON)
-  @SuppressWarnings("JpaAttributeTypeInspection")
   private Map<String, Contribution> contributions;
 
   @Min(0)
