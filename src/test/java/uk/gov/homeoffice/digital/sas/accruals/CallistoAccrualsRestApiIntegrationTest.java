@@ -13,8 +13,8 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.Map;
 import java.util.Random;
-import java.util.Set;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +34,6 @@ import uk.gov.homeoffice.digital.sas.accruals.model.Accrual;
 import uk.gov.homeoffice.digital.sas.accruals.model.Agreement;
 import uk.gov.homeoffice.digital.sas.accruals.model.AgreementTarget;
 import uk.gov.homeoffice.digital.sas.accruals.model.Contribution;
-import uk.gov.homeoffice.digital.sas.accruals.model.Contributions;
 import uk.gov.homeoffice.digital.sas.jparest.models.BaseEntity;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
@@ -91,12 +90,9 @@ class CallistoAccrualsRestApiIntegrationTest {
         .andExpect(jsonPath("$.items", not(empty())))
         .andReturn();
 
-    Contributions contributions = new Contributions();
-    contributions.setTotalValue(BigDecimal.TEN);
     Contribution contribution = new Contribution();
     contribution.setTimeEntryId(UUID.randomUUID());
     contribution.setValue(BigDecimal.ONE);
-    contributions.setItems(Set.of());
 
     Accrual accrual = Accrual.builder()
         .agreementId(agreementId)
@@ -104,7 +100,7 @@ class CallistoAccrualsRestApiIntegrationTest {
         .accrualTypeId(AccrualType.NIGHT_HOURS.getId())
         .cumulativeTotal(randomBigDecimal(2, 0, 5000))
         .cumulativeTarget(randomBigDecimal(2, 0, 5000))
-        .contributions(contributions)
+        .contributions(Map.of(UUID.randomUUID(), contribution))
         .build();
     accrual.setTenantId(TENANT_ID_UUID);
 

@@ -60,7 +60,7 @@ public class Accrual extends BaseEntity {
   private BigDecimal cumulativeTarget;
 
   @JdbcTypeCode(SqlTypes.JSON)
-  private Map<String, Contribution> contributions;
+  private Map<UUID, Contribution> contributions;
 
   @Min(0)
   // TODO: check with Product/BA (Alex?) what max is
