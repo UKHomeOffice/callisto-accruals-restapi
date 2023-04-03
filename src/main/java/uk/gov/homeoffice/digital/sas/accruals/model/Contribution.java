@@ -8,7 +8,6 @@ import lombok.Setter;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
-@EqualsAndHashCode
 @Setter
 @Getter
 public class Contribution {
@@ -17,6 +16,5 @@ public class Contribution {
   @JdbcTypeCode(SqlTypes.CHAR)
   private UUID timeEntryId;
 
-  @EqualsAndHashCode.Exclude
   private BigDecimal value;
 }
