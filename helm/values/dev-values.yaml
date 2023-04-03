@@ -1,16 +1,10 @@
 mainContainerImage:
   repositoryName: callisto-accruals-restapi
-  tag: latest # overwritten by branch deploy
+  tag: latest # overwritten by deployments
 
 databaseMigrationImage:
   repositoryName: callisto-accruals-database
-  tag: latest
-
-kafka:
-  identity: accruals-restapi
-  mskSecretKeyRefName: callisto-dev-msk
-  bootstrapSecretKeyRefName: callisto-dev-bootstrap
-  defaultTopic: callisto-timecard-timeentries
+  tag: latest # overwritten by deployments
 
 db:
   secretKeyRefName: callistodev-rds

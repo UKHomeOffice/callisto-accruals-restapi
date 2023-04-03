@@ -218,6 +218,8 @@ trigger:
   event:
     include:
       - push
+    exclude:
+      - promote
   branch:
     - main
 
