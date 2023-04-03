@@ -1,21 +1,20 @@
 mainContainerImage:
   repositoryName: callisto-accruals-restapi
-  tag: latest
+  tag: latest # overwritten by branch deploy
 
-# TODO: DISABLE PR WHEN UNCOMMENTING
-#databaseMigrationImage:
-#  repositoryName: callisto-accruals-database
-#  tag: latest
+databaseMigrationImage:
+  repositoryName: callisto-accruals-database
+  tag: latest
 
 kafka:
   identity: accruals-restapi
-  mskSecretKeyRefName: "callisto-dev-msk"
-  bootstrapSecretKeyRefName: "callisto-dev-bootstrap"
-  defaultTopic: "callisto-timecard-timeentries"
+  mskSecretKeyRefName: callisto-dev-msk
+  bootstrapSecretKeyRefName: callisto-dev-bootstrap
+  defaultTopic: callisto-timecard-timeentries
 
-#db:
-#  secretKeyRefName: "callistodev-rds"
-#  schemaName: "accruals"
+db:
+  secretKeyRefName: callistodev-rds
+  schemaName: accruals
 
 service:
   containerPort: 9090
