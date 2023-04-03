@@ -37,3 +37,4 @@ CREATE TABLE accruals.accrual (
 );
 
 CREATE INDEX ON accruals.accrual (agreement_id);
+CREATE INDEX accrual_time_entry_id_idx ON accruals.accrual USING GIN ((contributions -> 'timeEntryId'));
