@@ -50,12 +50,10 @@ public class Accrual extends BaseEntity {
   private UUID accrualTypeId;
 
   @NotNull(message = "Balance should not be null")
-  // TODO: check with Product/BA (Alex?) what max is
   @Min(0)
   private BigDecimal cumulativeTotal;
 
   @NotNull(message = "Target should not be null")
-  // TODO: check with Product/BA (Alex?) what max is
   @Min(0)
   private BigDecimal cumulativeTarget;
 
@@ -63,7 +61,6 @@ public class Accrual extends BaseEntity {
   private Map<UUID, Contribution> contributions;
 
   @Min(0)
-  // TODO: check with Product/BA (Alex?) what max is
   private BigDecimal contributionsTotal;
 
 }

@@ -4,7 +4,6 @@ import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-// TODO: Use enum. Get list of values from Product/BA (Alex?)
 @Getter
 @AllArgsConstructor
 public enum AccrualType {

@@ -15,8 +15,9 @@ CREATE TABLE accruals.agreement_target (
     tenant_id VARCHAR(36) NOT NULL,
     agreement_id VARCHAR(36) NOT NULL,
     accrual_type_id VARCHAR(36) NOT NULL,
-    target_total DECIMAL NOT NULL, -- TODO: CHECK DECIMALS
-    CONSTRAINT fk_agreement FOREIGN KEY(agreement_id) REFERENCES accruals.agreement(id)
+    target_total DECIMAL NOT NULL,
+    CONSTRAINT fk_agreement FOREIGN KEY(agreement_id) REFERENCES accruals.agreement(id),
+    UNIQUE(agreement_id, accrual_type_id)
 );
 
 CREATE INDEX ON accruals.agreement_target (agreement_id);
@@ -31,9 +32,8 @@ CREATE TABLE accruals.accrual (
     cumulative_target DECIMAL NOT NULL,
     contributions JSONB NULL,
     contributions_total DECIMAL NOT NULL,
-    CONSTRAINT fk_agreement FOREIGN KEY(agreement_id) REFERENCES accruals.agreement(id)
+    CONSTRAINT fk_agreement FOREIGN KEY(agreement_id) REFERENCES accruals.agreement(id),
+    UNIQUE(agreement_id, date, accrual_type_id)
 );
 
 CREATE INDEX ON accruals.accrual (agreement_id);
-
--- TODO: Add unique constraints
