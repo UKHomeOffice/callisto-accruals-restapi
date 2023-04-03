@@ -189,6 +189,7 @@ steps:
       chart_version: 1.0.0
       values:
         - mainContainerImage.tag=${DRONE_COMMIT_SHA}
+        - databaseMigrationImage.tag=${DRONE_COMMIT_SHA}
         - ingress.branch=${DRONE_SOURCE_BRANCH%%/*}
       values_files:
         - ./helm/values/dev-values.yaml
@@ -231,6 +232,7 @@ steps:
       chart_version: 1.0.0
       values:
         - mainContainerImage.tag=${DRONE_COMMIT_SHA}
+        - databaseMigrationImage.tag=${DRONE_COMMIT_SHA}
       values_files:
         - ./helm/values/dev-values.yaml
       release: callisto-accruals-restapi
