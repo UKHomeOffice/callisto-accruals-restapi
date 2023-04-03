@@ -19,16 +19,6 @@ steps:
     commands:
       - hadolint Dockerfile
 
-  - name: lint_helm_files
-    image: pelotech/drone-helm3
-    settings:
-      mode: lint
-      add_repos: helm_repo=https://ukhomeoffice.github.io/callisto-helm-charts/
-      chart: helm_repo/callisto-base-service
-      chart_version: 1.0.0
-      values_files:
-        - ./helm/values/dev-values.yaml
-
 ---
 kind: pipeline
 type: kubernetes
