@@ -31,7 +31,6 @@ CREATE TABLE accruals.accrual (
     cumulative_total DECIMAL NOT NULL,
     cumulative_target DECIMAL NOT NULL,
     contributions JSONB NULL,
-    contributions_total DECIMAL NOT NULL,
     CONSTRAINT fk_agreement FOREIGN KEY(agreement_id) REFERENCES accruals.agreement(id),
     UNIQUE(agreement_id, date, accrual_type_id)
 );
