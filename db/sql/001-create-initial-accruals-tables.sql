@@ -36,4 +36,6 @@ CREATE TABLE accruals.accrual (
 );
 
 CREATE INDEX ON accruals.accrual (agreement_id);
-CREATE INDEX accrual_time_entry_id_idx ON accruals.accrual USING GIN ((contributions -> 'timeEntryId'));
+CREATE INDEX accrual_time_entry_id_idx ON accruals.accrual
+    USING GIN ((contributions -> 'timeEntries') jsonb_path_ops);
+-- N.B. jsonb_path_ops operator class supports only queries with the @>, @? and @@ operators
