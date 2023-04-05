@@ -25,13 +25,13 @@ CREATE TABLE accruals.accrual (
     id VARCHAR(36) PRIMARY KEY,
     tenant_id VARCHAR(36) NOT NULL,
     agreement_id VARCHAR(36) NOT NULL,
-    date DATE NOT NULL,
+    accrual_date DATE NOT NULL,
     accrual_type_id VARCHAR(36) NOT NULL,
     cumulative_total DECIMAL NOT NULL,
     cumulative_target DECIMAL NOT NULL,
     contributions JSONB NULL,
     CONSTRAINT fk_agreement FOREIGN KEY(agreement_id) REFERENCES accruals.agreement(id),
-    UNIQUE(agreement_id, date, accrual_type_id)
+    UNIQUE(agreement_id, accrual_date, accrual_type_id)
 );
 
 CREATE INDEX ON accruals.accrual (agreement_id);

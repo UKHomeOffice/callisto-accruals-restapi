@@ -41,8 +41,8 @@ public class Accrual extends BaseEntity {
   @JsonIgnore
   private Agreement agreement;
 
-  @NotNull(message = "Date should not be null")
-  private LocalDate date;
+  @NotNull(message = "Accrual date should not be null")
+  private LocalDate accrualDate;
 
   @NotNull(message = "Accrual type ID should not be null")
   @JdbcTypeCode(SqlTypes.CHAR)
