@@ -186,7 +186,7 @@ steps:
       mode: upgrade
       add_repos: helm_repo=https://ukhomeoffice.github.io/callisto-helm-charts/
       chart: helm_repo/callisto-base-service
-      chart_version: 1.0.0
+      chart_version: 1.0.1
       values:
         - mainContainerImage.tag=${DRONE_COMMIT_SHA}
         - databaseMigrationImage.tag=${DRONE_COMMIT_SHA}
@@ -231,7 +231,7 @@ steps:
       mode: upgrade
       add_repos: helm_repo=https://ukhomeoffice.github.io/callisto-helm-charts/
       chart: helm_repo/callisto-base-service
-      chart_version: 1.0.0
+      chart_version: 1.0.1
       values:
         - mainContainerImage.tag=${DRONE_COMMIT_SHA}
         - databaseMigrationImage.tag=${DRONE_COMMIT_SHA}
