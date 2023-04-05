@@ -50,6 +50,8 @@ class CallistoAccrualsRestApiIntegrationTest {
   private static final String ACCRUAL_URL = "/resources/accruals";
   private static final String AGREEMENT_URL = "/resources/agreements";
   private static final String AGREEMENT_TARGET_URL = "/resources/agreement-targets";
+  private static final UUID TIME_ENTRY_ID = UUID.randomUUID();
+  public static final BigDecimal HOURS_WORKED = BigDecimal.ONE;
 
   private final Faker faker = new Faker();
 
@@ -60,19 +62,16 @@ class CallistoAccrualsRestApiIntegrationTest {
   private ObjectMapper objectMapper;
 
   @Test
-  void shouldPostAccrualResourcesSuccessfully() throws Exception {
+  void shouldPostAgreementResourceSuccessfully() throws Exception {
+    postResource(createAgreement(), AGREEMENT_URL)
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.items", not(empty())))
+        .andReturn();
+  }
 
-    Agreement agreement = Agreement.builder()
-        .personId(UUID.fromString(PERSON_ID))
-        .fteValue(randomBigDecimal(4, 0, 1))
-        .termsAndConditions(randomEnum(TermsAndConditions.class))
-        .salaryBasis(randomEnum(SalaryBasis.class))
-        .startDate(LocalDate.of(2023, Month.APRIL, 1))
-        .endDate(LocalDate.of(2024, Month.MARCH, 31))
-        .build();
-    agreement.setTenantId(TENANT_ID_UUID);
-
-    MvcResult result = postResource(agreement, AGREEMENT_URL)
+  @Test
+  void shouldPostAgreementTargetResourceSuccessfully() throws Exception {
+    MvcResult result = postResource(createAgreement(), AGREEMENT_URL)
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.items", not(empty())))
         .andReturn();
@@ -89,10 +88,19 @@ class CallistoAccrualsRestApiIntegrationTest {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.items", not(empty())))
         .andReturn();
+  }
+
+  @Test
+  void shouldPostAccrualResourceSuccessfully() throws Exception {
+    MvcResult result = postResource(createAgreement(), AGREEMENT_URL)
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.items", not(empty())))
+        .andReturn();
+    UUID agreementId = getResourceId(result);
 
     Contributions contributions = Contributions.builder()
-        .timeEntries(Map.of(UUID.randomUUID(), BigDecimal.ONE))
-        .total(BigDecimal.TEN)
+        .timeEntries(Map.of(TIME_ENTRY_ID, HOURS_WORKED))
+        .total(HOURS_WORKED)
         .build();
 
     Accrual accrual = Accrual.builder()
@@ -129,5 +137,19 @@ class CallistoAccrualsRestApiIntegrationTest {
 
   private <E extends Enum<E>> E randomEnum(Class<E> enumClass) {
     return enumClass.getEnumConstants()[new Random().nextInt(enumClass.getEnumConstants().length)];
+  }
+
+  private Agreement createAgreement() {
+    Agreement agreement = Agreement.builder()
+        .personId(UUID.fromString(PERSON_ID))
+        .fteValue(randomBigDecimal(4, 0, 1))
+        .termsAndConditions(randomEnum(TermsAndConditions.class))
+        .salaryBasis(randomEnum(SalaryBasis.class))
+        .startDate(LocalDate.of(2023, Month.APRIL, 1))
+        .endDate(LocalDate.of(2024, Month.MARCH, 31))
+        .build();
+    agreement.setTenantId(TENANT_ID_UUID);
+
+    return agreement;
   }
 }
