@@ -13,8 +13,8 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.Map;
 import java.util.Random;
-import java.util.Set;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +33,6 @@ import uk.gov.homeoffice.digital.sas.accruals.enums.TermsAndConditions;
 import uk.gov.homeoffice.digital.sas.accruals.model.Accrual;
 import uk.gov.homeoffice.digital.sas.accruals.model.Agreement;
 import uk.gov.homeoffice.digital.sas.accruals.model.AgreementTarget;
-import uk.gov.homeoffice.digital.sas.accruals.model.Contribution;
 import uk.gov.homeoffice.digital.sas.accruals.model.Contributions;
 import uk.gov.homeoffice.digital.sas.jparest.models.BaseEntity;
 
@@ -91,12 +90,8 @@ class CallistoAccrualsRestApiIntegrationTest {
         .andExpect(jsonPath("$.items", not(empty())))
         .andReturn();
 
-    Contribution contribution = new Contribution();
-    contribution.setTimeEntryId(UUID.randomUUID());
-    contribution.setValue(BigDecimal.ONE);
-
     Contributions contributions = Contributions.builder()
-        .timeEntries(Set.of(contribution))
+        .timeEntries(Map.of(UUID.randomUUID(), BigDecimal.ONE))
         .total(BigDecimal.TEN)
         .build();
 

@@ -2,7 +2,6 @@ CREATE TABLE accruals.agreement (
     id VARCHAR(36) PRIMARY KEY,
     tenant_id VARCHAR(36) NOT NULL,
     person_id VARCHAR(36) NOT NULL,
-    version INT NOT NULL DEFAULT 1,
     fte_value NUMERIC (5,4) NOT NULL,
     terms_and_conditions TEXT CHECK (terms_and_conditions IN ('MODERNISED', 'PRE_MODERNISED')),
     salary_basis TEXT CHECK (salary_basis IN ('LONDON', 'LONDON_PROVINCIAL', 'NATIONAL')),
@@ -37,5 +36,4 @@ CREATE TABLE accruals.accrual (
 
 CREATE INDEX ON accruals.accrual (agreement_id);
 CREATE INDEX accrual_time_entry_id_idx ON accruals.accrual
-    USING GIN ((contributions -> 'timeEntries') jsonb_path_ops);
--- N.B. jsonb_path_ops operator class supports only queries with the @>, @? and @@ operators
+    USING GIN ((contributions -> 'timeEntries'));
