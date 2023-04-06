@@ -29,7 +29,7 @@ CREATE TABLE accruals.accrual (
     accrual_type_id VARCHAR(36) NOT NULL,
     cumulative_total DECIMAL NOT NULL,
     cumulative_target DECIMAL NOT NULL,
-    contributions JSONB NULL,
+    contributions JSONB NOT NULL DEFAULT '{"timeEntries": {}, "total": 0}'::jsonb,
     CONSTRAINT fk_agreement FOREIGN KEY(agreement_id) REFERENCES accruals.agreement(id),
     UNIQUE(agreement_id, accrual_date, accrual_type_id)
 );

@@ -57,6 +57,6 @@ public class Accrual extends BaseEntity {
   private BigDecimal cumulativeTarget;
 
   @JdbcTypeCode(SqlTypes.JSON)
-  private Contributions contributions;
+  private Contributions contributions = new Contributions();
 
 }
