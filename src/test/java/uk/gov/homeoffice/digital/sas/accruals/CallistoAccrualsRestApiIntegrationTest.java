@@ -33,7 +33,7 @@ import uk.gov.homeoffice.digital.sas.accruals.enums.TermsAndConditions;
 import uk.gov.homeoffice.digital.sas.accruals.model.Accrual;
 import uk.gov.homeoffice.digital.sas.accruals.model.Agreement;
 import uk.gov.homeoffice.digital.sas.accruals.model.AgreementTarget;
-import uk.gov.homeoffice.digital.sas.accruals.model.AhaAgreementTerms;
+import uk.gov.homeoffice.digital.sas.accruals.model.AhaContractualTerms;
 import uk.gov.homeoffice.digital.sas.accruals.model.Contributions;
 import uk.gov.homeoffice.digital.sas.jparest.models.BaseEntity;
 
@@ -141,7 +141,7 @@ class CallistoAccrualsRestApiIntegrationTest {
   }
 
   private Agreement createAgreement() {
-    AhaAgreementTerms agreementTerms = AhaAgreementTerms.builder()
+    AhaContractualTerms contractualTerms = AhaContractualTerms.builder()
         .fteValue(randomBigDecimal(4, 0, 1))
         .termsAndConditions(randomEnum(TermsAndConditions.class))
         .salaryBasis(randomEnum(SalaryBasis.class))
@@ -149,7 +149,7 @@ class CallistoAccrualsRestApiIntegrationTest {
 
     Agreement agreement = Agreement.builder()
         .personId(UUID.fromString(PERSON_ID))
-        .agreementTerms(agreementTerms)
+        .contractualTerms(contractualTerms)
         .startDate(LocalDate.of(2023, Month.APRIL, 1))
         .endDate(LocalDate.of(2024, Month.MARCH, 31))
         .build();

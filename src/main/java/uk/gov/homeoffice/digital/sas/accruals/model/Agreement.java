@@ -36,7 +36,7 @@ public class Agreement extends BaseEntity {
 
   @JdbcTypeCode(SqlTypes.JSON)
   @Valid
-  private AgreementTerms agreementTerms;
+  private ContractualTerms contractualTerms;
 
   @NotNull(message = "Start date should not be empty")
   private LocalDate startDate;

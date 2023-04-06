@@ -11,31 +11,32 @@ import org.junit.jupiter.api.Test;
 import uk.gov.homeoffice.digital.sas.accruals.enums.SalaryBasis;
 import uk.gov.homeoffice.digital.sas.accruals.enums.TermsAndConditions;
 
-class AgreementTermsTest {
+class ContractualTermsTest {
   
   private final ObjectMapper objectMapper = new ObjectMapper();
 
   @Test
   void whenSerializingAhaAgreement_thenCorrectJsonProduced()
       throws JsonProcessingException {
-    AhaAgreementTerms agreementTerms = AhaAgreementTerms.builder()
+    AhaContractualTerms contractualTerms = AhaContractualTerms.builder()
         .fteValue(BigDecimal.TEN)
         .termsAndConditions(TermsAndConditions.MODERNISED)
         .salaryBasis(SalaryBasis.NATIONAL)
         .build();
 
     Agreement agreement = Agreement.builder()
-        .agreementTerms(agreementTerms)
+        .contractualTerms(contractualTerms)
         .build();
 
 
     String actual = objectMapper.writeValueAsString(agreement);
 
     String expected = """
-    { "type":"AHA",
-        "fteValue":10,
-        "termsAndConditions":"MODERNISED",
-        "salaryBasis":"NATIONAL"
+    {
+      "agreementType":"AHA",
+      "fteValue":10,
+      "termsAndConditions":"MODERNISED",
+      "salaryBasis":"NATIONAL"
     }
     """;
 
@@ -45,9 +46,9 @@ class AgreementTermsTest {
   @Test
   void whenDeserializingJsonWithValidAgreementType_thenCorrectObjectProduced() throws JsonProcessingException {
     String json = """
-    {"agreementTerms":
+    {"contractualTerms":
       {
-        "type":"AHA",
+        "agreementType":"AHA",
         "fteValue":1,
         "termsAndConditions":"MODERNISED",
         "salaryBasis":"NATIONAL"
@@ -59,21 +60,21 @@ class AgreementTermsTest {
         .readerFor(Agreement.class)
         .readValue(json);
 
-    AgreementTerms agreementTerms = agreement.getAgreementTerms();
-    assertThat(agreementTerms).isInstanceOf(AhaAgreementTerms.class);
+    ContractualTerms contractualTerms = agreement.getContractualTerms();
+    assertThat(contractualTerms).isInstanceOf(AhaContractualTerms.class);
 
-    AhaAgreementTerms ahaAgreementTerms = (AhaAgreementTerms) agreementTerms;
-    assertThat(ahaAgreementTerms.getFteValue()).isEqualTo(BigDecimal.ONE);
-    assertThat(ahaAgreementTerms.getTermsAndConditions()).isEqualTo(TermsAndConditions.MODERNISED);
-    assertThat(ahaAgreementTerms.getSalaryBasis()).isEqualTo(SalaryBasis.NATIONAL);
+    AhaContractualTerms ahaContractualTerms = (AhaContractualTerms) contractualTerms;
+    assertThat(ahaContractualTerms.getFteValue()).isEqualTo(BigDecimal.ONE);
+    assertThat(ahaContractualTerms.getTermsAndConditions()).isEqualTo(TermsAndConditions.MODERNISED);
+    assertThat(ahaContractualTerms.getSalaryBasis()).isEqualTo(SalaryBasis.NATIONAL);
   }
 
   @Test
   void whenDeserializingJsonWithUnknownAgreementType_thenThrowException() {
     String json = """
-    {"agreementTerms":
+    {"contractualTerms":
       {
-        "type":"UNKNOWN",
+        "agreementType":"UNKNOWN",
         "fteValue":1,
         "termsAndConditions":"MODERNISED",
         "salaryBasis":"NATIONAL"

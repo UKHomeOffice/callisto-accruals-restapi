@@ -2,7 +2,7 @@ CREATE TABLE accruals.agreement (
     id VARCHAR(36) PRIMARY KEY,
     tenant_id VARCHAR(36) NOT NULL,
     person_id VARCHAR(36) NOT NULL,
-    agreement_terms JSONB NOT NUll DEFAULT '{}'::jsonb,
+    contractual_terms JSONB NOT NUll DEFAULT '{}'::jsonb,
     start_date DATE NOT NULL,
     end_date DATE NOT NULL
 );

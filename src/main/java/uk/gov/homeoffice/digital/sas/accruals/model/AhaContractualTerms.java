@@ -24,7 +24,7 @@ import uk.gov.homeoffice.digital.sas.accruals.enums.TermsAndConditions;
 @Builder
 @Getter
 @Setter
-public class AhaAgreementTerms extends AgreementTerms {
+public class AhaContractualTerms implements ContractualTerms {
 
   @DecimalMin(value = "0.0", inclusive = false)
   @Digits(integer = 1, fraction = 4)

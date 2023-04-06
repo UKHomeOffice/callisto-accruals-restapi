@@ -5,9 +5,9 @@ import static uk.gov.homeoffice.digital.sas.accruals.constants.AgreementTypes.AH
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "agreementType")
 @JsonSubTypes({
-    @JsonSubTypes.Type(value = AhaAgreementTerms.class, name = AHA_AGREEMENT_TYPE)
+    @JsonSubTypes.Type(value = AhaContractualTerms.class, name = AHA_AGREEMENT_TYPE)
 })
-public abstract class AgreementTerms {
+public interface ContractualTerms {
 }
