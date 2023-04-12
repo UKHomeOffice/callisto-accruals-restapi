@@ -253,7 +253,7 @@ steps:
       kube_api_server:
           from_secret: notprod_kube_api_url
       kube_token:
-        from_secret: notprod_kube_token # TODO: change to dev_kube_token here and in drone
+        from_secret: dev_kube_token
 
 ---
 kind: pipeline
@@ -297,7 +297,7 @@ steps:
       kube_api_server:
         from_secret: notprod_kube_api_url
       kube_token:
-        from_secret: notprod_kube_token # TODO: change to dev_kube_token here and in drone
+        from_secret: dev_kube_token
 
 ---
 kind: pipeline
