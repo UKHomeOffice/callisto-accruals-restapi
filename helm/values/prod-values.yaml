@@ -1,0 +1,14 @@
+mainContainerImage:
+  repositoryName: callisto-accruals-restapi
+  tag: latest # overwritten by deployments
+
+databaseMigrationImage:
+  repositoryName: callisto-accruals-database
+  tag: latest # overwritten by deployments
+
+db:
+  secretKeyRefName: callisto-prod-1
+  schemaName: accruals
+
+service:
+  containerPort: 9090

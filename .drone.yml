@@ -22,7 +22,55 @@ steps:
 ---
 kind: pipeline
 type: kubernetes
-name: callisto-accruals-restapi
+name: promotion-check
+
+platform:
+  os: linux
+  arch: amd64
+
+trigger:
+  event:
+    - promote
+
+steps:
+  - name: branch-check
+    pull: if-not-exists
+    image: alpine:latest
+    commands:
+      - echo Cannot promote from non 'main' branch
+      - exit 1
+    when:
+      branch:
+        exclude:
+          - main
+
+  - name: environment-check
+    pull: if-not-exists
+    image: alpine:latest
+    commands:
+      - echo Cannot promote to a non prod environment
+      - exit 1
+    when:
+      target:
+        exclude:
+          - production
+
+  - name: build-check
+    pull: if-not-exists
+    image: drone/cli:1.6.2-alpine
+    environment:
+      DRONE_BUILD_PARENT: ${DRONE_BUILD_PARENT}
+      DRONE_SERVER: https://drone-gh.acp.homeoffice.gov.uk
+      DRONE_TOKEN:
+        from_secret: drone_token
+    commands:
+      - chmod +x ./bin/pipeline-scripts/check-build-promotion.sh
+      - ./bin/pipeline-scripts/check-build-promotion.sh
+
+---
+kind: pipeline
+type: kubernetes
+name: build-service
 
 platform:
   os: linux
@@ -30,6 +78,11 @@ platform:
 
 depends_on:
   - lint-files
+
+trigger:
+  event:
+    exclude:
+      - promote
 
 accruals_quay_settings: &accruals_quay_settings
   pull: if-not-exists
@@ -113,7 +166,7 @@ steps:
 ---
 kind: pipeline
 type: kubernetes
-name: callisto-accruals-database-schema
+name: build-database-schema
 
 platform:
   os: linux
@@ -172,7 +225,8 @@ platform:
   arch: amd64
 
 depends_on:
-  - callisto-accruals-restapi
+  - build-service
+  - build-database-schema
 
 trigger:
   event:
@@ -199,20 +253,20 @@ steps:
       kube_api_server:
           from_secret: notprod_kube_api_url
       kube_token:
-        from_secret: notprod_kube_token
+        from_secret: notprod_kube_token # TODO: change to dev_kube_token here and in drone
 
 ---
 kind: pipeline
 type: kubernetes
-name: callisto-accruals-restapi-dev-deploy
+name: dev-deploy
 
 platform:
   os: linux
   arch: amd64
 
 depends_on:
-  - lint-files
-  - callisto-accruals-restapi
+  - build-service
+  - build-database-schema
 
 trigger:
   event:
@@ -243,7 +297,89 @@ steps:
       kube_api_server:
         from_secret: notprod_kube_api_url
       kube_token:
-        from_secret: notprod_kube_token
+        from_secret: notprod_kube_token # TODO: change to dev_kube_token here and in drone
+
+---
+kind: pipeline
+type: kubernetes
+name: test-deploy
+
+platform:
+  os: linux
+  arch: amd64
+
+depends_on:
+  - dev-deploy
+
+trigger:
+  event:
+    include:
+      - push
+    exclude:
+      - promote
+  branch:
+    - main
+
+steps:
+  - name: deploy_to_test
+    image: pelotech/drone-helm3
+    settings:
+      namespace: callisto-test
+      mode: upgrade
+      add_repos: helm_repo=https://ukhomeoffice.github.io/callisto-helm-charts/
+      chart_version: 1.0.1
+      values:
+        - mainContainerImage.tag=${DRONE_COMMIT_SHA}
+        - databaseMigrationImage.tag=${DRONE_COMMIT_SHA}
+      values_files:
+        - ./helm/values/test-values.yaml
+      release: callisto-accruals-restapi
+      kube_certificate:
+        from_secret: notprod_kube_api_certificate
+      kube_api_server:
+        from_secret: notprod_kube_api_url
+      kube_token:
+        from_secret: test_kube_token
+
+---
+kind: pipeline
+type: kubernetes
+name: prod-deploy
+
+platform:
+  os: linux
+  arch: amd64
+
+depends_on:
+  - promotion-check
+
+trigger:
+  event:
+    - promote
+  target:
+    - production
+
+steps:
+  - name: deploy_to_prod
+    image: pelotech/drone-helm3
+    settings:
+      namespace: callisto-prod
+      mode: upgrade
+      add_repos: helm_repo=https://ukhomeoffice.github.io/callisto-helm-charts/
+      chart: helm_repo/callisto-base-service
+      chart_version: 1.0.1
+      values:
+        - mainContainerImage.tag=${DRONE_COMMIT_SHA}
+        - databaseMigrationImage.tag=${DRONE_COMMIT_SHA}
+      values_files:
+        - ./helm/values/prod-values.yaml
+      release: callisto-accruals-restapi
+      kube_certificate:
+        from_secret: prod_kube_api_certificate
+      kube_api_server:
+        from_secret: prod_kube_api_url
+      kube_token:
+        from_secret: prod_kube_token
 
 ---
 kind: pipeline
@@ -261,17 +397,23 @@ trigger:
       - pull_request
 
 depends_on:
-  - callisto-accruals-restapi
-  - callisto-accruals-restapi-dev-deploy
+  - build-service
+  - dev-deploy
+  - test-deploy
+  - prod-deploy
+
+slack: &slack
+  image: plugins/slack
+  settings:
+    webhook:
+      from_secret: slack_webhook_url
+    channel: callisto-tech-notifications
+    username: Drone
 
 steps:
   - name: slack
-    image: plugins/slack
+    <<: *slack
     settings:
-      webhook:
-        from_secret: slack_webhook_url
-      channel: callisto-tech-notifications
-      username: Drone
       template: |
         {{#success build.status}}
           <${DRONE_BUILD_LINK}|Build #{{build.number}}> succeeded! :tada:
@@ -283,6 +425,19 @@ steps:
         Branch: <${DRONE_REPO_LINK}/commits/{{ build.branch }}|{{ build.branch }}>
         Author: {{ build.author }}
         <https://sonarcloud.io/dashboard?id=callisto-ui&branch={{ build.branch }}&resolved=false|SonarCloud Analysis Report>
+
+  - name: slack_promotion
+    <<: *slack
+    settings:
+      template: >
+        {{#success build.status}}
+          :rocket: Successful *{{build.deployTo}}* deployment for *{{repo.name}}* <${DRONE_BUILD_LINK}| build #{{build.number}}>.
+        {{else}}
+          :zombie: Problem *{{build.deployTo}}* deployment failed for *{{repo.name}}* <${DRONE_BUILD_LINK}| build #{{build.number}}>.
+        {{/success}}
+    when:
+      event:
+        - promote
 
 ---
 kind: pipeline
@@ -297,8 +452,10 @@ trigger:
       - pull_request
 
 depends_on:
-  - callisto-accruals-restapi
-  - callisto-accruals-restapi-dev-deploy
+  - build-service
+  - dev-deploy
+  - test-deploy
+  - prod-deploy
 
 slack: &slack
   image: plugins/slack
@@ -320,3 +477,12 @@ steps:
     when:
       branch:
         - main
+
+  - name: slack_promote_urgent
+    <<: *slack
+    settings:
+      template: |
+        :alert: Problem *{{build.deployTo}}* deployment failed for *{{repo.name}}* <${DRONE_BUILD_LINK}| build #{{build.number}}>.
+    when:
+      event:
+        - promote

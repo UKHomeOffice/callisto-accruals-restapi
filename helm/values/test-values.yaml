@@ -10,14 +10,8 @@ deploymentAnnotations:
   downscaler/uptime: Mon-Fri 08:00-20:00 Europe/London
 
 db:
-  secretKeyRefName: callistodev-rds
+  secretKeyRefName: callisto-test-aurora
   schemaName: accruals
 
 service:
   containerPort: 9090
-
-ingress:
-  branch: main # overwritten by branch deploy
-  host: accruals.dev.callisto-notprod.homeoffice.gov.uk
-  tlsSecretName: callisto-accruals-tls
-  corsOrigin: "https://*.dev.callisto-notprod.homeoffice.gov.uk"
