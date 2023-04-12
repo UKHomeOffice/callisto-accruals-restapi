@@ -1,0 +1,3 @@
+databaseChangeLog:
+  - include:
+      file: changelog/001-create-initial-accruals-tables.json

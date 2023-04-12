@@ -19,13 +19,6 @@ steps:
     commands:
       - hadolint Dockerfile
 
-  - name: lint_helm_files
-    image: pelotech/drone-helm3
-    settings:
-      mode: lint
-      chart: ./helm
-      values_file: ./helm/values.yaml
-
 ---
 kind: pipeline
 type: kubernetes
@@ -51,8 +44,15 @@ accruals_quay_settings: &accruals_quay_settings
     file: Dockerfile
 
 steps:
+  - name: fetch
+    image: alpine/git
+    commands:
+      - "git fetch origin +refs/heads/main:"
+
   - name: build
     image: maven:3.8.3-openjdk-17
+    depends_on:
+      - fetch
     environment:
       ARTIFACTORY_TOKEN:
         from_secret: artifactory_token
@@ -113,6 +113,58 @@ steps:
 ---
 kind: pipeline
 type: kubernetes
+name: callisto-accruals-database-schema
+
+platform:
+  os: linux
+  arch: amd64
+
+depends_on:
+  - lint-files
+
+trigger:
+  event:
+    exclude:
+      - promote
+
+database_quay_settings: &database_quay_settings
+  pull: if-not-exists
+  image: plugins/docker
+  settings:
+    registry: quay.io
+    repo: quay.io/ukhomeofficedigital/callisto-accruals-database
+    username:
+      from_secret: quay_robot_name
+    password:
+      from_secret: quay_robot_token
+    dockerfile: db/Dockerfile
+    context: db
+
+steps:
+  - name: build_tag_push_quay_branch
+    <<: *database_quay_settings
+    settings:
+      tags:
+        - ${DRONE_COMMIT_SHA}
+        - ${DRONE_SOURCE_BRANCH%%/*}
+    when:
+      event: pull_request
+
+  - name: build_tag_push_quay
+    <<: *database_quay_settings
+    settings:
+      tags:
+        - latest
+        - ${DRONE_COMMIT_SHA}
+    when:
+      event:
+        - push
+      branch:
+        - main
+
+---
+kind: pipeline
+type: kubernetes
 name: callisto-accruals-restapi-branch-deploy
 
 platform:
@@ -132,11 +184,15 @@ steps:
     settings:
       namespace: callisto-dev
       mode: upgrade
-      chart: ./helm
+      add_repos: helm_repo=https://ukhomeoffice.github.io/callisto-helm-charts/
+      chart: helm_repo/callisto-base-service
+      chart_version: 1.0.1
       values:
-        - image.tag=${DRONE_COMMIT_SHA}
-        - branch=${DRONE_SOURCE_BRANCH%%/*}
-      values_file: ./helm/values.yaml
+        - mainContainerImage.tag=${DRONE_COMMIT_SHA}
+        - databaseMigrationImage.tag=${DRONE_COMMIT_SHA}
+        - ingress.branch=${DRONE_SOURCE_BRANCH%%/*}
+      values_files:
+        - ./helm/values/dev-values.yaml
       release: callisto-accruals-restapi-${DRONE_SOURCE_BRANCH%%/*}
       kube_certificate:
         from_secret: notprod_kube_api_certificate
@@ -148,7 +204,7 @@ steps:
 ---
 kind: pipeline
 type: kubernetes
-name: callisto-accruals-restapi-deploy
+name: callisto-accruals-restapi-dev-deploy
 
 platform:
   os: linux
@@ -159,7 +215,13 @@ depends_on:
   - callisto-accruals-restapi
 
 trigger:
-  status: success
+  event:
+    include:
+      - push
+    exclude:
+      - promote
+  branch:
+    - main
 
 steps:
   - name: deploy_to_dev
@@ -167,10 +229,14 @@ steps:
     settings:
       namespace: callisto-dev
       mode: upgrade
-      chart: ./helm
+      add_repos: helm_repo=https://ukhomeoffice.github.io/callisto-helm-charts/
+      chart: helm_repo/callisto-base-service
+      chart_version: 1.0.1
       values:
-        - image.tag=${DRONE_COMMIT_SHA}
-      values_file: ./helm/values.yaml
+        - mainContainerImage.tag=${DRONE_COMMIT_SHA}
+        - databaseMigrationImage.tag=${DRONE_COMMIT_SHA}
+      values_files:
+        - ./helm/values/dev-values.yaml
       release: callisto-accruals-restapi
       kube_certificate:
         from_secret: notprod_kube_api_certificate
@@ -178,11 +244,6 @@ steps:
         from_secret: notprod_kube_api_url
       kube_token:
         from_secret: notprod_kube_token
-    when:
-      event:
-        - push
-      branch:
-        - main
 
 ---
 kind: pipeline
@@ -201,7 +262,7 @@ trigger:
 
 depends_on:
   - callisto-accruals-restapi
-  - callisto-accruals-restapi-deploy
+  - callisto-accruals-restapi-dev-deploy
 
 steps:
   - name: slack
@@ -237,7 +298,7 @@ trigger:
 
 depends_on:
   - callisto-accruals-restapi
-  - callisto-accruals-restapi-deploy
+  - callisto-accruals-restapi-dev-deploy
 
 slack: &slack
   image: plugins/slack
