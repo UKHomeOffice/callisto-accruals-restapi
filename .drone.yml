@@ -392,8 +392,6 @@ trigger:
     - success
     - failure
   event:
-    include:
-      - push
     exclude:
       - pull_request
 
