@@ -106,6 +106,7 @@ class CallistoAccrualsRestApiIntegrationTest {
 
     Accrual accrual = Accrual.builder()
         .agreementId(agreementId)
+        .personId(PERSON_ID_UUID)
         .accrualDate(LocalDate.of(2023, Month.APRIL, 15))
         .accrualTypeId(AccrualType.NIGHT_HOURS.getId())
         .cumulativeTotal(randomBigDecimal(2, 0, 5000))
