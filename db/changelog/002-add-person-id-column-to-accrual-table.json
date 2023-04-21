@@ -1,0 +1,18 @@
+{
+  "databaseChangeLog": [
+    {
+      "changeSet": {
+        "id": "002-add-person-id-column-to-accrual-table",
+        "author": "T Mohdit",
+        "changes": [
+          {
+            "sqlFile": {
+              "dbms": "postgresql",
+              "path": "sql/002-add-person-id-column-to-accrual-table.sql"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,3 +1,5 @@
 databaseChangeLog:
   - include:
       file: changelog/001-create-initial-accruals-tables.json
+  - include:
+      file: changelog/002-add-person-id-column-to-accrual-table.json

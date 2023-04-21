@@ -31,6 +31,11 @@ import uk.gov.homeoffice.digital.sas.jparest.models.BaseEntity;
 @Setter
 public class Accrual extends BaseEntity {
 
+  @NotNull(message = "Person ID should not be null")
+  @JdbcTypeCode(SqlTypes.CHAR)
+  @Column(name = "person_id")
+  private UUID personId;
+
   @NotNull(message = "Agreement ID should not be null")
   @JdbcTypeCode(SqlTypes.CHAR)
   @Column(name = "agreement_id")
