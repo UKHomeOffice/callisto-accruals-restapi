@@ -1,7 +1,7 @@
 package uk.gov.homeoffice.digital.sas.accruals.controllers;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -118,34 +118,34 @@ class AccrualsControllerIntegrationTest {
   }
 
   @Test
-  void shouldGetAllAccrualWithTimeEntryId() throws Exception {
+  void getAccrualsImpactedByTimeEntry_shouldGetPriorAndAccrualWithCorrectId() throws Exception {
 
     Accrual priorAccrual = createAccrualAnnualTargetHours(PERSON_ID,
         TIME_ENTRY_START_DATE.minusDays(1),
         UUID.fromString("6a699394-693d-4ca7-ba9d-deba7a5e9c09"), UUID.fromString(agreementId));
 
-    postAccrual(priorAccrual)
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.items", not(empty())))
-        .andReturn();
+    String priorAccrualId = postAccrualAndGetId(priorAccrual);
+
 
     Accrual accrual = createAccrualAnnualTargetHours(
         PERSON_ID, TIME_ENTRY_START_DATE, TIME_ENTRY_ID, UUID.fromString(agreementId));
 
-    postAccrual(accrual)
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.items", not(empty())))
-        .andReturn();
+    String accrualId = postAccrualAndGetId(accrual);
 
-    MvcResult mvcResult = mvc.perform(get(ACCRUAL_URL + "/" + TIME_ENTRY_ID + TENANT_ID_PARAM)
+    mvc.perform(get(ACCRUAL_URL + "/" + TIME_ENTRY_ID + TENANT_ID_PARAM)
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectAsJsonString(buildBody())))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.items", not(empty())))
+        .andExpect(jsonPath("$.items.length()", is(2)))
+        .andExpect(jsonPath("$.items[0].id", is(priorAccrualId)))
+        .andExpect(jsonPath("$.items[1].id", is(accrualId)))
         .andReturn();
-
-    assertThat(mvcResult).isNotNull();
   }
+
+  //contribution before time entry
+
+  //contribution before and after time entry
 
   private ImpactedAccrualsBody buildBody() {
     return ImpactedAccrualsBody.builder()
@@ -155,10 +155,15 @@ class AccrualsControllerIntegrationTest {
         .build();
   }
 
-  private ResultActions postAccrual(Accrual accrual) throws Exception {
-    return mvc.perform(post(ACCRUAL_URL + TENANT_ID_PARAM)
+  private String postAccrualAndGetId(Accrual accrual) throws Exception {
+    MvcResult result = mvc.perform(post(ACCRUAL_URL + TENANT_ID_PARAM)
         .contentType(MediaType.APPLICATION_JSON)
-        .content(objectAsJsonString(accrual)));
+        .content(objectAsJsonString(accrual)))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.items", not(empty())))
+        .andReturn();
+
+    return JsonPath.read(result.getResponse().getContentAsString(), "$.items[0].id");
   }
 
   private ResultActions postAgreement(Agreement agreement) throws Exception {
