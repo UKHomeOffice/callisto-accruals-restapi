@@ -12,26 +12,13 @@ import uk.gov.homeoffice.digital.sas.accruals.model.Accrual;
 @Repository
 public interface AccrualsRepository extends JpaRepository<Accrual, UUID> {
 
-  @Query(
-      value = "WITH t1 AS ("
-          + "SELECT min(ac.accrual_date) as accrual_date, "
-          + "TO_DATE(:startDate, 'YYYY-MM-DD') as timeentrystartdate "
-          + "FROM accruals.accrual as ac "
-          + "WHERE (ac.contributions -> 'timeEntries') ->> :timeEntryId != 'null') "
-          + "SELECT ac.* "
-          + "FROM accruals.accrual ac "
-          + "WHERE ac.accrual_date BETWEEN "
-          + "(SELECT least(t1.accrual_date, t1.timeentrystartdate) - 1 FROM t1) "
-          + "AND :agreementEndDate "
-          + "AND ac.person_id = :personId "
-          + "AND ac.tenant_id = :tenantId "
-          + "ORDER BY ac.accrual_date;",
+  @Query(value =
+      "SELECT * FROM "
+          + "getImpactedAccrualsWithDayBefore(:startDate, :timeEntryId, :agreementEndDate);",
       nativeQuery = true)
   List<Accrual> getAccrualsImpactedByTimeEntryWithPreviousDay(
       @Param("timeEntryId") String timeEntryId,
-      @Param("startDate") LocalDate timeEntryStartDate,
-      @Param("agreementEndDate") LocalDate agreementEndDate,
-      @Param("personId") String personId,
-      @Param("tenantId") String tenantId
+      @Param("startDate") LocalDate startDate,
+      @Param("agreementEndDate") LocalDate agreementEndDate
   );
 }

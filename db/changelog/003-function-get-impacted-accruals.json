@@ -1,0 +1,18 @@
+{
+  "databaseChangeLog": [
+    {
+      "changeSet": {
+        "id": "003-function-get-impacted-accruals",
+        "author": "S Michota",
+        "changes": [
+          {
+            "sqlFile": {
+              "dbms": "postgresql",
+              "path": "sql/003-function-get-impacted-accruals.sql"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

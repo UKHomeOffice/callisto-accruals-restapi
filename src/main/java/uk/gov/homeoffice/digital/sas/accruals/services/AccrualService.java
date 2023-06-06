@@ -25,8 +25,7 @@ public class AccrualService {
   }
 
   public List<Accrual> getAccrualsImpactedByTimeEntry(
-      String timeEntryId, String tenantId, String body
-  ) {
+      String timeEntryId, String body) {
     ImpactedAccrualsBody mappedBody;
     try {
       mappedBody = objectMapper.readValue(body, ImpactedAccrualsBody.class);
@@ -35,8 +34,6 @@ public class AccrualService {
     }
 
     return accrualsRepository.getAccrualsImpactedByTimeEntryWithPreviousDay(
-        timeEntryId, mappedBody.getTimeEntryStartDate(),
-        mappedBody.getAgreementEndDate(), mappedBody.getPersonId(),
-        tenantId);
+        timeEntryId, mappedBody.getTimeEntryStartDate(), mappedBody.getAgreementEndDate());
   }
 }

@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.homeoffice.digital.sas.accruals.model.Accrual;
 import uk.gov.homeoffice.digital.sas.accruals.services.AccrualService;
@@ -25,11 +24,10 @@ public class AccrualsController {
   @GetMapping("/{timeEntryId}")
   public ApiResponse<Accrual> getAccrualsImpactedByTimeEntry(
       @PathVariable("timeEntryId") String timeEntryId,
-      @RequestBody String body,
-      @RequestParam("tenantId") String tenantId) {
+      @RequestBody String body) {
 
     return new ApiResponse<>(accrualService.getAccrualsImpactedByTimeEntry(
-        timeEntryId, tenantId, body));
+        timeEntryId, body));
 
   }
 }
