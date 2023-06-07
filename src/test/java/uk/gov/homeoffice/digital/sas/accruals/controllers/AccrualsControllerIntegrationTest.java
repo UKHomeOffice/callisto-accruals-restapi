@@ -23,12 +23,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.util.TestPropertyValues;
-import org.springframework.context.ApplicationContextInitializer;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
@@ -45,31 +44,20 @@ import uk.gov.homeoffice.digital.sas.accruals.repositories.AccrualsRepository;
 @TestPropertySource(locations="classpath:postgres.properties")
 @Testcontainers
 @AutoConfigureMockMvc
-@ContextConfiguration(initializers = {AccrualsControllerIntegrationTest.Initializer.class})
 class AccrualsControllerIntegrationTest {
 
-  /**
-   * Test class spins up a postgresTestContainer
-   * Allowing the Json operators with AccrualsRepository to be run
-   */
   @Container
-  public static PostgreSQLContainer postgreSQLContainer =
-       new PostgreSQLContainer<>("postgres:11.1")
-          .withInitScript("init.sql")
-          .withDatabaseName("integration-tests-db")
-          .withUsername("sa")
-          .withPassword("sa");
+  public static PostgreSQLContainer container =
+      new PostgreSQLContainer<>("postgres:13.1")
+            .withInitScript("init.sql");
 
-  static class Initializer
-      implements ApplicationContextInitializer<ConfigurableApplicationContext> {
-    public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
-      TestPropertyValues.of(
-          "spring.datasource.url=" + postgreSQLContainer.getJdbcUrl(),
-          "spring.datasource.username=" + postgreSQLContainer.getUsername(),
-          "spring.datasource.password=" + postgreSQLContainer.getPassword()
-      ).applyTo(configurableApplicationContext.getEnvironment());
-    }
-  }
+      @DynamicPropertySource
+      public static void overrideDbProperties(DynamicPropertyRegistry registry){
+        registry.add("spring.datasource.url", container::getJdbcUrl);
+        registry.add("spring.datasource.username", container::getUsername);
+        registry.add("spring.datasource.password", container::getPassword);
+      }
+
 
   private static final String ACCRUAL_URL = "/resources/accruals";
 
@@ -103,6 +91,8 @@ class AccrualsControllerIntegrationTest {
   AccrualsRepository accrualsRepository;
 
   @BeforeEach
+//  @Sql(scripts = "/fn.sql",
+//      executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
   public void setUp() throws Exception {
     Agreement agreement = createAgreement(AGREEMENT_START_DATE, AGREEMENT_END_DATE, PERSON_ID);
 
@@ -121,6 +111,7 @@ class AccrualsControllerIntegrationTest {
 
 
   @Test
+  @Sql(scripts = "/fn.sql")
   void getAccrualsImpactedByTimeEntry_shouldReturnEmptyList() throws Exception {
     mvc.perform(get(ACCRUAL_URL + "/" +TIME_ENTRY_ID + TENANT_ID_PARAM)
             .contentType(MediaType.APPLICATION_JSON)

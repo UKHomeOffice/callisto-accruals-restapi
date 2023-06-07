@@ -11,7 +11,7 @@
 -- Returns: Accruals table
 -- =============================================================================
 
-CREATE OR REPLACE FUNCTION get_impacted_accruals(
+CREATE OR REPLACE FUNCTION accruals.get_impacted_accruals(
         time_entry_start_date date, time_entry_id varchar, agreement_end_date date)
 RETURNS SETOF accruals.accrual
 LANGUAGE plpgsql

@@ -14,7 +14,7 @@ public interface AccrualsRepository extends JpaRepository<Accrual, UUID> {
 
   @Query(value =
       "SELECT * FROM "
-          + "get_impacted_accruals(:startDate, :timeEntryId, :agreementEndDate);",
+          + "accruals.get_impacted_accruals(:startDate, :timeEntryId, :agreementEndDate);",
       nativeQuery = true)
   List<Accrual> getAccrualsImpactedByTimeEntryWithPreviousDay(
       @Param("timeEntryId") String timeEntryId,
