@@ -15,7 +15,7 @@ import static uk.gov.homeoffice.digital.sas.accruals.testUtils.CommonUtils.objec
 
 import com.jayway.jsonpath.JsonPath;
 import java.time.LocalDate;
-import java.util.LinkedHashMap;
+import java.util.Set;
 import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,7 +36,6 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import uk.gov.homeoffice.digital.sas.accruals.model.Accrual;
 import uk.gov.homeoffice.digital.sas.accruals.model.Agreement;
-import uk.gov.homeoffice.digital.sas.accruals.model.ImpactedAccrualsBody;
 import uk.gov.homeoffice.digital.sas.accruals.repositories.AccrualsRepository;
 
 
@@ -44,6 +43,7 @@ import uk.gov.homeoffice.digital.sas.accruals.repositories.AccrualsRepository;
 @TestPropertySource(locations="classpath:postgres.properties")
 @Testcontainers
 @AutoConfigureMockMvc
+@Sql(scripts = "/fn.sql")
 class AccrualsControllerIntegrationTest {
 
   /**
@@ -93,8 +93,6 @@ class AccrualsControllerIntegrationTest {
   AccrualsRepository accrualsRepository;
 
   @BeforeEach
-//  @Sql(scripts = "/fn.sql",
-//      executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
   public void setUp() throws Exception {
     Agreement agreement = createAgreement(AGREEMENT_START_DATE, AGREEMENT_END_DATE, PERSON_ID);
 
@@ -113,28 +111,25 @@ class AccrualsControllerIntegrationTest {
 
 
   @Test
-  @Sql(scripts = "/fn.sql")
-  void getAccrualsImpactedByTimeEntry_shouldReturnEmptyList() throws Exception {
+  void getAccrualsImpactedByTimeEntry_whenEndPointIsCalled_shouldReturnEmptyList()
+      throws Exception {
      String timeEntryId = "4d254823-0a7d-43b4-b948-b43266c9cbc1";
 
-    mvc.perform(get(ACCRUAL_URL + "/" +timeEntryId + TENANT_ID_PARAM)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectAsJsonString(buildRequestBody())))
+        getImpactedAccruals(timeEntryId)
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.items", empty()))
         .andReturn();
   }
 
   @Test
-  void shouldGetPriorAndAccrualWithCorrectId() throws Exception {
+  void getAccrualsImpactedByTimeEntry_whenPriorAccrualIsPresent_shouldGetPriorAndAccrualWithContribution()
+      throws Exception {
 
     setUpAccrualsData(LocalDate.of(2023, 4, 1), 1, agreementId);
 
     String timeEntryId = getStoredTimeEntryId(LocalDate.of(2023,4,1));
 
-    mvc.perform(get(ACCRUAL_URL + "/" + timeEntryId + TENANT_ID_PARAM)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectAsJsonString(buildRequestBody())))
+    getImpactedAccruals(timeEntryId)
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.items", not(empty())))
         .andExpect(jsonPath("$.items.length()", is(2)))
@@ -145,16 +140,14 @@ class AccrualsControllerIntegrationTest {
   }
 
   @Test
-  void shouldGetContributionBeforeTimeEntry()
+  void getAccrualsImpactedByTimeEntry_whenEarlierContributionIsPresent_shouldGetContributionBeforeTimeEntry()
       throws Exception {
 
     setUpAccrualsData(LocalDate.of(2023, 3, 31), 2, agreementId);
 
     String timeEntryId = getStoredTimeEntryId(LocalDate.of(2023,4,1));
 
-    mvc.perform(get(ACCRUAL_URL + "/" + timeEntryId + TENANT_ID_PARAM)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectAsJsonString(buildRequestBody())))
+    getImpactedAccruals(timeEntryId)
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.items", not(empty())))
         .andExpect(jsonPath("$.items.length()", is(3)))
@@ -164,9 +157,9 @@ class AccrualsControllerIntegrationTest {
         .andExpect(jsonPath("$.items[2].accrualDate", is("2023-04-02")));
   }
 
-
   @Test
-  void shouldGetContributionCoveringTimeEntry() throws Exception {
+  void getAccrualsImpactedByTimeEntry_whenTimeEntryIsBetweenCurrentAccrual_shouldGetContributionCoveringTimeEntry()
+      throws Exception {
     String timeEntryId = "4d254823-0a7d-43b4-b948-b43266c9cbc1";
 
     Accrual accrualDay1 = createAccrualAnnualTargetHours(
@@ -186,9 +179,7 @@ class AccrualsControllerIntegrationTest {
 
     setUpAccrualsData(LocalDate.of(2023, 4, 1), 2, agreementId);
 
-    mvc.perform(get(ACCRUAL_URL + "/" + timeEntryId + TENANT_ID_PARAM)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectAsJsonString(buildRequestBody())))
+    getImpactedAccruals(timeEntryId)
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.items", not(empty())))
         .andExpect(jsonPath("$.items.length()", is(5)))
@@ -199,13 +190,13 @@ class AccrualsControllerIntegrationTest {
         .andExpect(jsonPath("$.items[4].accrualDate", is("2023-04-03")));
   }
 
-
-  private ImpactedAccrualsBody buildRequestBody() {
-    return ImpactedAccrualsBody.builder()
-        .timeEntryStartDate(TIME_ENTRY_START_DATE)
-        .agreementEndDate(AGREEMENT_END_DATE)
-        .personId(PERSON_ID.toString())
-        .build();
+  private ResultActions getImpactedAccruals(String timeEntryId) throws Exception {
+    return mvc.perform(get(ACCRUAL_URL + "/"
+            + "?&tenantId=" + TENANT_ID
+            + "&timeEntryId=" + timeEntryId
+            + "&timeEntryStartDate=" + TIME_ENTRY_START_DATE
+            + "&agreementEndDate=" + AGREEMENT_END_DATE)
+            .contentType(MediaType.APPLICATION_JSON));
   }
 
   private void postAccrual(Accrual accrual) throws Exception {
@@ -232,14 +223,10 @@ class AccrualsControllerIntegrationTest {
         .getResponse()
         .getContentAsString();
 
-    LinkedHashMap<String, String> contributionMap = JsonPath.read(result, "$.items[0]" +
-        ".contributions" +
-        ".timeEntries");
+    Set<String> timeEntryIdSet  =
+        JsonPath.read(result, "$.items[0].contributions.timeEntries.keys()");
 
-    return contributionMap.toString()
-        .replace("{", "")
-        .replace("}", "")
-        .split("=")[0];
+    return timeEntryIdSet.iterator().next();
   }
 
   private void setUpAccrualsData(LocalDate accrualEarliestContribution,

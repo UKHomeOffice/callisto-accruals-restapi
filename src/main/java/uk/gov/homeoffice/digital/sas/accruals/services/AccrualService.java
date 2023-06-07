@@ -1,39 +1,28 @@
 package uk.gov.homeoffice.digital.sas.accruals.services;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.homeoffice.digital.sas.accruals.model.Accrual;
-import uk.gov.homeoffice.digital.sas.accruals.model.ImpactedAccrualsBody;
 import uk.gov.homeoffice.digital.sas.accruals.repositories.AccrualsRepository;
-import uk.gov.homeoffice.digital.sas.jparest.exceptions.UnknownResourcePropertyException;
 
 @Slf4j
 @Service
+@Transactional
 public class AccrualService {
 
   private final AccrualsRepository accrualsRepository;
-
-  @Autowired
-  ObjectMapper objectMapper;
 
   public AccrualService(AccrualsRepository accrualsRepository) {
     this.accrualsRepository = accrualsRepository;
   }
 
-  public List<Accrual> getAccrualsImpactedByTimeEntry(
-      String timeEntryId, String body) {
-    ImpactedAccrualsBody mappedBody;
-    try {
-      mappedBody = objectMapper.readValue(body, ImpactedAccrualsBody.class);
-    } catch (JsonProcessingException ex) {
-      throw new UnknownResourcePropertyException();
-    }
+  public List<Accrual> getAccrualsImpactedByTimeEntry(String tenantId,
+      String timeEntryId, LocalDate timeEntryStartDate, LocalDate agreementEndDate) {
 
-    return accrualsRepository.getAccrualsImpactedByTimeEntryWithPreviousDay(
-        timeEntryId, mappedBody.getTimeEntryStartDate(), mappedBody.getAgreementEndDate());
+    return accrualsRepository.getAccrualsImpactedByTimeEntryWithPreviousDay(tenantId,
+        timeEntryId, timeEntryStartDate, agreementEndDate);
   }
 }

@@ -46,7 +46,7 @@ CREATE SCHEMA IF NOT EXISTS accruals;
 
 
 CREATE OR REPLACE FUNCTION accruals.get_impacted_accruals(
-        time_entry_start_date date, time_entry_id varchar, agreement_end_date date)
+        tenantid varchar, time_entry_start_date date, time_entry_id varchar, agreement_end_date date)
 RETURNS SETOF accruals.accrual
 LANGUAGE plpgsql
 AS'
@@ -54,7 +54,6 @@ DECLARE
 earliest_contribution_date DATE;
 min_date DATE;
 personid VARCHAR;
-tenantid VARCHAR;
 BEGIN
 		-- get date of the earliest TimeEntry contribution
         SELECT ac.accrual_date, ac.person_id, ac.tenant_id, time_entry_start_date
