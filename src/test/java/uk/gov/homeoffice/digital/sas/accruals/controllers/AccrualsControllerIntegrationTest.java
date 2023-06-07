@@ -1,7 +1,7 @@
 package uk.gov.homeoffice.digital.sas.accruals.controllers;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.hasKey;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -46,6 +46,11 @@ import uk.gov.homeoffice.digital.sas.accruals.repositories.AccrualsRepository;
 @AutoConfigureMockMvc
 class AccrualsControllerIntegrationTest {
 
+  /**
+   * Test class spins up a postgresTestContainer
+   * Allowing the Json operators with AccrualsRepository to be run
+   * Please ensure you have docker running to allow access to the docker daemon
+   */
   @Container
   public static PostgreSQLContainer container =
       new PostgreSQLContainer<>("postgres:13.1")
@@ -70,9 +75,6 @@ class AccrualsControllerIntegrationTest {
 
   private static final UUID PERSON_ID =
       UUID.fromString("722875f4-e5de-40fa-b84d-eea99d1fba66");
-
-  private static final UUID TIME_ENTRY_ID =
-      UUID.fromString("4d254823-0a7d-43b4-b948-b43266c9cbc1");
 
   private static final LocalDate TIME_ENTRY_START_DATE = LocalDate.of(
       2023, 4, 2);
@@ -113,7 +115,9 @@ class AccrualsControllerIntegrationTest {
   @Test
   @Sql(scripts = "/fn.sql")
   void getAccrualsImpactedByTimeEntry_shouldReturnEmptyList() throws Exception {
-    mvc.perform(get(ACCRUAL_URL + "/" +TIME_ENTRY_ID + TENANT_ID_PARAM)
+     String timeEntryId = "4d254823-0a7d-43b4-b948-b43266c9cbc1";
+
+    mvc.perform(get(ACCRUAL_URL + "/" +timeEntryId + TENANT_ID_PARAM)
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectAsJsonString(buildRequestBody())))
         .andExpect(status().isOk())
@@ -124,9 +128,9 @@ class AccrualsControllerIntegrationTest {
   @Test
   void shouldGetPriorAndAccrualWithCorrectId() throws Exception {
 
-    setUpAccrualsData(LocalDate.of(2023, 04, 01), 1, agreementId);
+    setUpAccrualsData(LocalDate.of(2023, 4, 1), 1, agreementId);
 
-    String timeEntryId = getStoredTimeEntryId(LocalDate.of(2023,04,01));
+    String timeEntryId = getStoredTimeEntryId(LocalDate.of(2023,4,1));
 
     mvc.perform(get(ACCRUAL_URL + "/" + timeEntryId + TENANT_ID_PARAM)
             .contentType(MediaType.APPLICATION_JSON)
@@ -135,6 +139,7 @@ class AccrualsControllerIntegrationTest {
         .andExpect(jsonPath("$.items", not(empty())))
         .andExpect(jsonPath("$.items.length()", is(2)))
         .andExpect(jsonPath("$.items[0].accrualDate", is("2023-04-01")))
+        .andExpect((jsonPath("$.items[0].contributions.timeEntries", hasKey(timeEntryId))))
         .andExpect(jsonPath("$.items[1].accrualDate", is("2023-04-02")))
         .andReturn();
   }
@@ -143,11 +148,11 @@ class AccrualsControllerIntegrationTest {
   void shouldGetContributionBeforeTimeEntry()
       throws Exception {
 
-    setUpAccrualsData(LocalDate.of(2023, 03, 31), 2, agreementId);
+    setUpAccrualsData(LocalDate.of(2023, 3, 31), 2, agreementId);
 
-    String timeEntryId = getStoredTimeEntryId(LocalDate.of(2023,04,01));
+    String timeEntryId = getStoredTimeEntryId(LocalDate.of(2023,4,1));
 
-    MvcResult result = mvc.perform(get(ACCRUAL_URL + "/" + timeEntryId + TENANT_ID_PARAM)
+    mvc.perform(get(ACCRUAL_URL + "/" + timeEntryId + TENANT_ID_PARAM)
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectAsJsonString(buildRequestBody())))
         .andExpect(status().isOk())
@@ -155,41 +160,43 @@ class AccrualsControllerIntegrationTest {
         .andExpect(jsonPath("$.items.length()", is(3)))
         .andExpect(jsonPath("$.items[0].accrualDate", is("2023-03-31")))
         .andExpect(jsonPath("$.items[1].accrualDate", is("2023-04-01")))
-        .andExpect(jsonPath("$.items[2].accrualDate", is("2023-04-02")))
-        .andReturn();
-
-    assertThat(result).isNotNull();
+        .andExpect((jsonPath("$.items[1].contributions.timeEntries", hasKey(timeEntryId))))
+        .andExpect(jsonPath("$.items[2].accrualDate", is("2023-04-02")));
   }
 
 
   @Test
   void shouldGetContributionCoveringTimeEntry() throws Exception {
-    Accrual accrualDay1 = createAccrualAnnualTargetHours(PERSON_ID,
-        LocalDate.of(2023, 03,30), TIME_ENTRY_ID,
+    String timeEntryId = "4d254823-0a7d-43b4-b948-b43266c9cbc1";
+
+    Accrual accrualDay1 = createAccrualAnnualTargetHours(
+        PERSON_ID,
+        LocalDate.of(2023, 3,30),
+        UUID.fromString("4d254823-0a7d-43b4-b948-b43266c9cbc1"),
         UUID.fromString(agreementId));
 
     postAccrual(accrualDay1);
 
     Accrual accrualDay2 = createAccrualAnnualTargetHours(PERSON_ID,
-        LocalDate.of(2023, 03,31), TIME_ENTRY_ID,
+        LocalDate.of(2023, 3,31),
+        UUID.fromString("4d254823-0a7d-43b4-b948-b43266c9cbc1"),
         UUID.fromString(agreementId));
 
     postAccrual(accrualDay2);
 
-    setUpAccrualsData(LocalDate.of(2023, 04, 01), 2, agreementId);
+    setUpAccrualsData(LocalDate.of(2023, 4, 1), 2, agreementId);
 
-    MvcResult result = mvc.perform(get(ACCRUAL_URL + "/" + TIME_ENTRY_ID + TENANT_ID_PARAM)
+    mvc.perform(get(ACCRUAL_URL + "/" + timeEntryId + TENANT_ID_PARAM)
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectAsJsonString(buildRequestBody())))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.items", not(empty())))
         .andExpect(jsonPath("$.items.length()", is(5)))
         .andExpect(jsonPath("$.items[0].accrualDate", is("2023-03-30")))
+        .andExpect((jsonPath("$.items[0].contributions.timeEntries", hasKey(timeEntryId))))
         .andExpect(jsonPath("$.items[1].accrualDate", is("2023-03-31")))
-        .andExpect(jsonPath("$.items[4].accrualDate", is("2023-04-03")))
-        .andReturn();
-
-    assertThat(result).isNotNull();
+        .andExpect((jsonPath("$.items[1].contributions.timeEntries", hasKey(timeEntryId))))
+        .andExpect(jsonPath("$.items[4].accrualDate", is("2023-04-03")));
   }
 
 
@@ -225,14 +232,14 @@ class AccrualsControllerIntegrationTest {
         .getResponse()
         .getContentAsString();
 
-    LinkedHashMap contributionMap = JsonPath.read(result, "$.items[0].contributions.timeEntries");
+    LinkedHashMap<String, String> contributionMap = JsonPath.read(result, "$.items[0]" +
+        ".contributions" +
+        ".timeEntries");
 
-    String timeEntryId = contributionMap.toString()
+    return contributionMap.toString()
         .replace("{", "")
         .replace("}", "")
         .split("=")[0];
-
-     return timeEntryId;
   }
 
   private void setUpAccrualsData(LocalDate accrualEarliestContribution,
