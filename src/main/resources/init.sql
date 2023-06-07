@@ -15,10 +15,10 @@ returns table (
 	person_id varchar
 )
 language plpgsql
-as''
+as'
 begin
 return query WITH t1 AS (SELECT *, startDate AS timeentrystartdate FROM accruals.accrual AS ac
-				WHERE (ac.contributions -> ''''timeEntries'''') ->> timeEntryId != ''''null''''
+				WHERE (ac.contributions -> ''timeEntries'') ->> timeEntryId != ''null''
 				ORDER BY ac.accrual_date LIMIT 1)
 SELECT CAST(ac.id as CHARACTER VARYING(36))              as id,
        CAST(ac.tenant_id as CHARACTER VARYING(36))       as tenant_id,
@@ -38,8 +38,7 @@ WHERE ac.person_id = (SELECT t1.person_id FROM t1)
     AND agreementEndDate
 
 ORDER BY ac.accrual_date;
-end;
-'';
+end;';
 
 
 -- CREATE OR REPLACE FUNCTION get_impacted_accruals(
@@ -54,8 +53,8 @@ end;
 -- tenantid VARCHAR;
 -- BEGIN
 -- 		-- get date of the earliest TimeEntry contribution
---         SELECT ac.accrual_date, ac.person_id, ac.tenant_id
---         INTO earliest_contribution_date, personid, tenantid
+--         SELECT ac.accrual_date, ac.person_id, ac.tenant_id, time_entry_start_date
+--         INTO earliest_contribution_date, personid, tenantid, time_entry_start_date
 --         FROM accruals.accrual AS ac
 --         WHERE (ac.contributions -> ''''timeEntries'''') ->> time_entry_id != ''''null''''
 --         ORDER BY ac.accrual_date LIMIT 1;
