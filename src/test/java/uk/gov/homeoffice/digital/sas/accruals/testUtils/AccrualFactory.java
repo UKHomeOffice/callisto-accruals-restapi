@@ -16,6 +16,11 @@ public class AccrualFactory {
   }
 
   public static Accrual createAccrualAnnualTargetHours(UUID personId, LocalDate accrualDate,
+        UUID agreementId) {
+    return createAccrualAnnualTargetHours(personId, accrualDate, UUID.randomUUID(), agreementId);
+  }
+
+  public static Accrual createAccrualAnnualTargetHours(UUID personId, LocalDate accrualDate,
                                                        UUID timeEntryId, UUID agreementId) {
     return Accrual.builder()
         .personId(personId)
@@ -28,7 +33,7 @@ public class AccrualFactory {
         .build();
   }
 
-  private static Contributions createContribution(UUID timeEntryId) {
+  public static Contributions createContribution(UUID timeEntryId) {
     BigDecimal value = BigDecimal.valueOf(360);
     Map<UUID, BigDecimal> timeEntries = new HashMap<>();
     timeEntries.put(timeEntryId, value);

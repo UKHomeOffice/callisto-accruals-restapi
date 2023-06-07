@@ -6,10 +6,9 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 public class CommonUtils {
 
-  private static final ObjectMapper mapper = new ObjectMapper();
+  private static final ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
   public static String objectAsJsonString(final Object obj) throws JsonProcessingException {
-    mapper.registerModule(new JavaTimeModule());
     return mapper.writeValueAsString(obj);
   }
 }
