@@ -21,7 +21,7 @@ public class AccrualsController {
     this.accrualService = accrualService;
   }
 
-  @GetMapping("/")
+  @GetMapping(params = {"tenantId", "timeEntryId", "timeEntryStartDate", "agreementEndDate"})
   public ApiResponse<Accrual> getAccrualsImpactedByTimeEntry(
       @RequestParam String tenantId,
       @RequestParam String timeEntryId,

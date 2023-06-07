@@ -56,13 +56,12 @@ class AccrualsControllerIntegrationTest {
       new PostgreSQLContainer<>("postgres:13.1")
             .withInitScript("init.sql");
 
-      @DynamicPropertySource
-      public static void overrideDbProperties(DynamicPropertyRegistry registry){
-        registry.add("spring.datasource.url", container::getJdbcUrl);
-        registry.add("spring.datasource.username", container::getUsername);
-        registry.add("spring.datasource.password", container::getPassword);
-      }
-
+  @DynamicPropertySource
+  public static void overrideDbProperties(DynamicPropertyRegistry registry){
+    registry.add("spring.datasource.url", container::getJdbcUrl);
+    registry.add("spring.datasource.username", container::getUsername);
+    registry.add("spring.datasource.password", container::getPassword);
+  }
 
   private static final String ACCRUAL_URL = "/resources/accruals";
 
@@ -191,7 +190,7 @@ class AccrualsControllerIntegrationTest {
   }
 
   private ResultActions getImpactedAccruals(String timeEntryId) throws Exception {
-    return mvc.perform(get(ACCRUAL_URL + "/"
+    return mvc.perform(get(ACCRUAL_URL
             + "?&tenantId=" + TENANT_ID
             + "&timeEntryId=" + timeEntryId
             + "&timeEntryStartDate=" + TIME_ENTRY_START_DATE
