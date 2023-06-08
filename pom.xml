@@ -22,6 +22,7 @@
 		<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
         <checkstyle-maven-plugin.version>3.2.0</checkstyle-maven-plugin.version>
 		<callisto.jparest.version>0.1.10</callisto.jparest.version>
+		<test.containers.version>1.18.3</test.containers.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -74,13 +75,13 @@
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>postgresql</artifactId>
-            <version>1.18.3</version>
+            <version>${test.containers.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>1.18.3</version>
+            <version>${test.containers.version}</version>
             <scope>test</scope>
         </dependency>
 	</dependencies>

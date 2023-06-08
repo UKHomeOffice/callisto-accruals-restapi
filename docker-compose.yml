@@ -25,7 +25,8 @@ services:
       HOME: /Users/1000
       MAVEN_USER_HOME: /Users/1000/.m2
     depends_on:
-      - accruals-database-migrations
+      accruals-database-migrations:
+        condition: service_completed_successfully
     networks:
       - callisto
 
