@@ -43,7 +43,7 @@ import uk.gov.homeoffice.digital.sas.accruals.repositories.AccrualsRepository;
 @TestPropertySource(locations="classpath:postgres.properties")
 @Testcontainers
 @AutoConfigureMockMvc
-@Sql(scripts = "/fn.sql")
+@Sql(scripts = "file:db/sql/003-function-get-impacted-accruals.sql")
 class AccrualsControllerIntegrationTest {
 
   /**
@@ -110,7 +110,7 @@ class AccrualsControllerIntegrationTest {
 
 
   @Test
-  void getAccrualsImpactedByTimeEntry_whenEndPointIsCalled_shouldReturnEmptyList()
+  void getAccrualsImpactedByTimeEntry_endPointIsCalled_shouldReturnEmptyList()
       throws Exception {
      String timeEntryId = "4d254823-0a7d-43b4-b948-b43266c9cbc1";
 
@@ -121,7 +121,7 @@ class AccrualsControllerIntegrationTest {
   }
 
   @Test
-  void getAccrualsImpactedByTimeEntry_whenPriorAccrualIsPresent_shouldGetPriorAndAccrualWithContribution()
+  void getAccrualsImpactedByTimeEntry_priorAccrualIsPresent_shouldGetPriorAndAccrualWithContribution()
       throws Exception {
 
     setUpAccrualsData(LocalDate.of(2023, 4, 1), 1, agreementId);
@@ -139,7 +139,7 @@ class AccrualsControllerIntegrationTest {
   }
 
   @Test
-  void getAccrualsImpactedByTimeEntry_whenEarlierContributionIsPresent_shouldGetContributionBeforeTimeEntry()
+  void getAccrualsImpactedByTimeEntry_earlierContributionIsPresent_shouldGetContributionBeforeTimeEntry()
       throws Exception {
 
     setUpAccrualsData(LocalDate.of(2023, 3, 31), 2, agreementId);
@@ -157,7 +157,7 @@ class AccrualsControllerIntegrationTest {
   }
 
   @Test
-  void getAccrualsImpactedByTimeEntry_whenTimeEntryIsBetweenCurrentAccrual_shouldGetContributionCoveringTimeEntry()
+  void getAccrualsImpactedByTimeEntry_timeEntryIsBetweenCurrentAccrual_shouldGetContributionCoveringTimeEntry()
       throws Exception {
     String timeEntryId = "4d254823-0a7d-43b4-b948-b43266c9cbc1";
 
