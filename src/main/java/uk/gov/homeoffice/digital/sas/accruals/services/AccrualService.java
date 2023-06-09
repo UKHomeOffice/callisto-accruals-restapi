@@ -20,10 +20,10 @@ public class AccrualService {
   }
 
   @Transactional(readOnly = true)
-  public List<Accrual> getAccrualsImpactedByTimeEntry(String tenantId,
-      String timeEntryId, LocalDate timeEntryStartDate, LocalDate agreementEndDate) {
+  public List<Accrual> getAccrualsImpactedByTimeEntry(String tenantId, String personId,
+      String timeEntryId, LocalDate timeEntryStartDate, LocalDate timeEntryEndDate) {
 
-    return accrualsRepository.getAccrualsImpactedByTimeEntryWithPreviousDay(tenantId,
-        timeEntryId, timeEntryStartDate, agreementEndDate);
+    return accrualsRepository.getAccrualsImpactedByTimeEntryWithPreviousDay(tenantId, personId,
+        timeEntryId, timeEntryStartDate, timeEntryEndDate);
   }
 }

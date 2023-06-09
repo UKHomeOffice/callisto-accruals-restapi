@@ -21,14 +21,15 @@ public class AccrualsController {
     this.accrualService = accrualService;
   }
 
-  @GetMapping(params = {"tenantId", "timeEntryId", "timeEntryStartDate", "agreementEndDate"})
+  @GetMapping(params = {"tenantId", "personId", "timeEntryId", "timeEntryStartDate", "timeEntryEndDate"})
   public ApiResponse<Accrual> getAccrualsImpactedByTimeEntry(
       @RequestParam String tenantId,
+      @RequestParam String personId,
       @RequestParam String timeEntryId,
       @RequestParam LocalDate timeEntryStartDate,
-      @RequestParam LocalDate agreementEndDate) {
+      @RequestParam LocalDate timeEntryEndDate) {
 
-    return new ApiResponse<>(accrualService.getAccrualsImpactedByTimeEntry(tenantId,
-        timeEntryId, timeEntryStartDate, agreementEndDate));
+    return new ApiResponse<>(accrualService.getAccrualsImpactedByTimeEntry(tenantId, personId,
+        timeEntryId, timeEntryStartDate, timeEntryEndDate));
   }
 }
