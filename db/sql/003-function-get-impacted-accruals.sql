@@ -32,7 +32,9 @@ AS'
                GREATEST(MAX(ac.accrual_date), p_time_entry_end_date)
         INTO v_min_date, v_max_date
         FROM accruals.accrual AS ac
-        WHERE (ac.contributions -> ''timeEntries'') ? p_time_entry_id;
+        WHERE ac.tenant_id = p_tenant_id
+        AND ac.person_id = p_person_id
+        AND (ac.contributions -> ''timeEntries'') ? p_time_entry_id;
 
         SELECT ag.end_date
         INTO v_agreement_end_date
@@ -40,13 +42,13 @@ AS'
         WHERE ag.tenant_id = p_tenant_id
         AND ag.person_id = p_person_id
         AND v_max_date
-                BETWEEN ag.start_date AND v_agreement_end_date;
+                BETWEEN ag.start_date AND ag.end_date;-- end_date is not nullable
 
         RETURN QUERY
             SELECT ac.*
-            FROM accruals.accrual ac
-            WHERE ac.person_id = p_person_id
-              AND ac.tenant_id = p_tenant_id
+            FROM accruals.accrual AS ac
+            WHERE ac.tenant_id = p_tenant_id
+              AND ac.person_id = p_person_id
               AND ac.accrual_date
                 BETWEEN v_min_date - 1 AND v_agreement_end_date
             ORDER BY ac.accrual_date;
