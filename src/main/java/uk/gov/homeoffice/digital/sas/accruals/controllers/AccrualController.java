@@ -13,11 +13,11 @@ import uk.gov.homeoffice.digital.sas.jparest.web.ApiResponse;
 @Slf4j
 @RestController
 @RequestMapping("/resources/accruals")
-public class AccrualsController {
+public class AccrualController {
 
   private final AccrualService accrualService;
 
-  public AccrualsController(AccrualService accrualService) {
+  public AccrualController(AccrualService accrualService) {
     this.accrualService = accrualService;
   }
 

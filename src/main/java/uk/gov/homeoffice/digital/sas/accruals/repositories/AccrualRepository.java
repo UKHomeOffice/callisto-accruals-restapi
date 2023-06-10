@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import uk.gov.homeoffice.digital.sas.accruals.model.Accrual;
 
 @Repository
-public interface AccrualsRepository extends JpaRepository<Accrual, UUID> {
+public interface AccrualRepository extends JpaRepository<Accrual, UUID> {
 
   @Query(value =
       "SELECT * FROM "

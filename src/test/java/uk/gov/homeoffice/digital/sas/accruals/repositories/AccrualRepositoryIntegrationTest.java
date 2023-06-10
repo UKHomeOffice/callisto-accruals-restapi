@@ -22,7 +22,7 @@ import uk.gov.homeoffice.digital.sas.accruals.model.Accrual;
 @Testcontainers
 @Transactional
 @Sql(scripts = {"file:db/sql/003-function-get-impacted-accruals.sql", "/create-data.sql"})
-class AccrualsRepositoryIntegrationTest {
+class AccrualRepositoryIntegrationTest {
 
   private static final String TENANT_ID = "00000000-0000-0000-0000-000000000000";
   private static final String PERSON_ID = "00000000-0000-0000-0000-000000000001";
@@ -31,7 +31,7 @@ class AccrualsRepositoryIntegrationTest {
   public static PostgreSQLContainer<?> container = createContainer();
 
   @Autowired
-  private AccrualsRepository accrualsRepository;
+  private AccrualRepository accrualRepository;
 
   private static PostgreSQLContainer<?> createContainer() {
     try (PostgreSQLContainer<?> container = new PostgreSQLContainer<>("postgres:13.1")
@@ -53,7 +53,7 @@ class AccrualsRepositoryIntegrationTest {
     LocalDate timeEntryEndDate = LocalDate.parse("2022-04-03");
     String timeEntryId = "10000000-0000-0000-0000-000000000002";
     List<Accrual> accruals =
-        accrualsRepository.getAccrualsImpactedByTimeEntryWithPreviousDay(TENANT_ID,
+        accrualRepository.getAccrualsImpactedByTimeEntryWithPreviousDay(TENANT_ID,
             PERSON_ID,
             timeEntryId,
             timeEntryStartDate,
@@ -67,7 +67,7 @@ class AccrualsRepositoryIntegrationTest {
     LocalDate timeEntryEndDate = LocalDate.parse("2022-04-03");
     String timeEntryId = "10000000-0000-0000-0000-000000000003";
     List<Accrual> accruals =
-        accrualsRepository.getAccrualsImpactedByTimeEntryWithPreviousDay(TENANT_ID,
+        accrualRepository.getAccrualsImpactedByTimeEntryWithPreviousDay(TENANT_ID,
             PERSON_ID,
             timeEntryId,
             timeEntryStartDate,
@@ -81,7 +81,7 @@ class AccrualsRepositoryIntegrationTest {
     LocalDate timeEntryEndDate = LocalDate.parse("2022-04-06");
     String timeEntryId = "10000000-0000-0000-0000-000000000005";
     List<Accrual> accruals =
-        accrualsRepository.getAccrualsImpactedByTimeEntryWithPreviousDay(TENANT_ID,
+        accrualRepository.getAccrualsImpactedByTimeEntryWithPreviousDay(TENANT_ID,
             PERSON_ID,
             timeEntryId,
             timeEntryStartDate,

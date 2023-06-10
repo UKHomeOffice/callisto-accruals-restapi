@@ -36,7 +36,7 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import uk.gov.homeoffice.digital.sas.accruals.model.Accrual;
 import uk.gov.homeoffice.digital.sas.accruals.model.Agreement;
-import uk.gov.homeoffice.digital.sas.accruals.repositories.AccrualsRepository;
+import uk.gov.homeoffice.digital.sas.accruals.repositories.AccrualRepository;
 
 
 @SpringBootTest
@@ -44,7 +44,7 @@ import uk.gov.homeoffice.digital.sas.accruals.repositories.AccrualsRepository;
 @Testcontainers
 @AutoConfigureMockMvc
 @Sql(scripts = "file:db/sql/003-function-get-impacted-accruals.sql")
-class AccrualsControllerIntegrationTest {
+class AccrualControllerIntegrationTest {
 
   /**
    * Test class spins up a postgresTestContainer
@@ -52,9 +52,14 @@ class AccrualsControllerIntegrationTest {
    * Please ensure you have docker running to allow access to the docker daemon
    */
   @Container
-  public static PostgreSQLContainer container =
-      new PostgreSQLContainer<>("postgres:13.1")
-            .withInitScript("init.sql");
+  public static PostgreSQLContainer container =createContainer();
+
+  private static PostgreSQLContainer<?> createContainer() {
+    try (PostgreSQLContainer<?> container = new PostgreSQLContainer<>("postgres:13.1")
+        .withInitScript("init.sql")) {
+      return container;
+    }
+  }
 
   @DynamicPropertySource
   public static void overrideDbProperties(DynamicPropertyRegistry registry){
@@ -78,6 +83,9 @@ class AccrualsControllerIntegrationTest {
   private static final LocalDate TIME_ENTRY_START_DATE = LocalDate.of(
       2023, 4, 2);
 
+  private static final LocalDate TIME_ENTRY_END_DATE = LocalDate.of(
+      2023, 4, 2);
+
   private static final LocalDate AGREEMENT_START_DATE = LocalDate.of(
       2023,4,1);
 
@@ -89,7 +97,7 @@ class AccrualsControllerIntegrationTest {
   MockMvc mvc;
 
   @Autowired
-  AccrualsRepository accrualsRepository;
+  AccrualRepository accrualRepository;
 
   @BeforeEach
   public void setUp() throws Exception {
@@ -105,7 +113,7 @@ class AccrualsControllerIntegrationTest {
 
   @AfterEach
   void tearDown() {
-    accrualsRepository.deleteAll();
+    accrualRepository.deleteAll();
   }
 
 
@@ -191,10 +199,11 @@ class AccrualsControllerIntegrationTest {
 
   private ResultActions getImpactedAccruals(String timeEntryId) throws Exception {
     return mvc.perform(get(ACCRUAL_URL
-            + "?&tenantId=" + TENANT_ID
+            + "?tenantId=" + TENANT_ID
+            + "&personId=" + PERSON_ID
             + "&timeEntryId=" + timeEntryId
             + "&timeEntryStartDate=" + TIME_ENTRY_START_DATE
-            + "&agreementEndDate=" + AGREEMENT_END_DATE)
+            + "&timeEntryEndDate=" + TIME_ENTRY_END_DATE)
             .contentType(MediaType.APPLICATION_JSON));
   }
 
