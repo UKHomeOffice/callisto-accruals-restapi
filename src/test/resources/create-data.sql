@@ -8,11 +8,6 @@ DO ' DECLARE
     agreement2_start_date CONSTANT DATE := ''2022-04-06'';
     agreement2_end_date CONSTANT DATE := ''2022-04-10'';
 BEGIN
-    raise notice ''Agreement 1%'' , agreement1_id;
-    raise notice ''Agreement 2%'' , agreement2_id;
-
-    DELETE FROM accruals.accrual;
-    DELETE FROM accruals.agreement;
 
     INSERT INTO accruals.agreement (
         id,

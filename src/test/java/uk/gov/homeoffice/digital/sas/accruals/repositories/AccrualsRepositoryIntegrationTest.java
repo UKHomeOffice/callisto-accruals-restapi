@@ -18,32 +18,36 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import uk.gov.homeoffice.digital.sas.accruals.model.Accrual;
 
 @SpringBootTest
-@TestPropertySource(locations="classpath:postgres.properties")
+@TestPropertySource(locations = "classpath:postgres.properties")
 @Testcontainers
+@Transactional
+@Sql(scripts = {"file:db/sql/003-function-get-impacted-accruals.sql", "/create-data.sql"})
 class AccrualsRepositoryIntegrationTest {
 
+  private static final String TENANT_ID = "00000000-0000-0000-0000-000000000000";
+  private static final String PERSON_ID = "00000000-0000-0000-0000-000000000001";
+
   @Container
-  public static PostgreSQLContainer container =
-      new PostgreSQLContainer<>("postgres:13.1")
-          .withInitScript("init.sql");
+  public static PostgreSQLContainer<?> container = createContainer();
+
+  @Autowired
+  private AccrualsRepository accrualsRepository;
+
+  private static PostgreSQLContainer<?> createContainer() {
+    try (PostgreSQLContainer<?> container = new PostgreSQLContainer<>("postgres:13.1")
+        .withInitScript("init.sql")) {
+      return container;
+    }
+  }
 
   @DynamicPropertySource
-  public static void overrideDbProperties(DynamicPropertyRegistry registry){
+  public static void overrideDbProperties(DynamicPropertyRegistry registry) {
     registry.add("spring.datasource.url", container::getJdbcUrl);
     registry.add("spring.datasource.username", container::getUsername);
     registry.add("spring.datasource.password", container::getPassword);
   }
 
-
-  private static final String TENANT_ID = "00000000-0000-0000-0000-000000000000";
-  private static final String PERSON_ID = "00000000-0000-0000-0000-000000000001";
-
-  @Autowired
-  private AccrualsRepository accrualsRepository;
-
   @Test
-  @Transactional
-  @Sql(scripts = {"file:db/sql/003-function-get-impacted-accruals.sql", "/create-data.sql"})
   void getAccrualsImpactedByTimeEntryWithPreviousDay_timeEntryIdContributionBeforeStartDate() {
     LocalDate timeEntryStartDate = LocalDate.parse("2022-04-03");
     LocalDate timeEntryEndDate = LocalDate.parse("2022-04-03");
@@ -58,8 +62,6 @@ class AccrualsRepositoryIntegrationTest {
   }
 
   @Test
-  @Transactional
-  @Sql(scripts = {"file:db/sql/003-function-get-impacted-accruals.sql", "/create-data.sql"})
   void getAccrualsImpactedByTimeEntryWithPreviousDay_timeEntryIdContributionOnStartDate() {
     LocalDate timeEntryStartDate = LocalDate.parse("2022-04-03");
     LocalDate timeEntryEndDate = LocalDate.parse("2022-04-03");
@@ -74,8 +76,6 @@ class AccrualsRepositoryIntegrationTest {
   }
 
   @Test
-  @Transactional
-  @Sql(scripts = {"file:db/sql/003-function-get-impacted-accruals.sql", "/create-data.sql"})
   void getAccrualsImpactedByTimeEntryWithPreviousDay_timeEntrySpansTwoAgreementPeriods() {
     LocalDate timeEntryStartDate = LocalDate.parse("2022-04-05");
     LocalDate timeEntryEndDate = LocalDate.parse("2022-04-06");
@@ -88,5 +88,4 @@ class AccrualsRepositoryIntegrationTest {
             timeEntryEndDate);
     assertThat(accruals).hasSize(7);
   }
-
 }
