@@ -9,6 +9,7 @@ DO ' DECLARE
     agreement2_end_date CONSTANT DATE := ''2022-04-10'';
 BEGIN
 
+
     INSERT INTO accruals.agreement (
         id,
         tenant_id,

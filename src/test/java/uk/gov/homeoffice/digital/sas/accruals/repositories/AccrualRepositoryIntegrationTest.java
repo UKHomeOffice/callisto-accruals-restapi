@@ -21,7 +21,7 @@ import uk.gov.homeoffice.digital.sas.accruals.model.Accrual;
 @TestPropertySource(locations = "classpath:postgres.properties")
 @Testcontainers
 @Transactional
-@Sql(scripts = {"file:db/sql/003-function-get-impacted-accruals.sql", "/create-data.sql"})
+@Sql(scripts = {"file:db/sql/003-function-get-impacted-accruals.sql", "/repository-it-set-up-data.sql"})
 class AccrualRepositoryIntegrationTest {
 
   private static final String TENANT_ID = "00000000-0000-0000-0000-000000000000";

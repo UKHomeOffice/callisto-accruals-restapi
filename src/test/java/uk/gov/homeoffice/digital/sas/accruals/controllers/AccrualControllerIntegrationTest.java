@@ -5,20 +5,11 @@ import static org.hamcrest.Matchers.hasKey;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static uk.gov.homeoffice.digital.sas.accruals.testUtils.AccrualFactory.createAccrualAnnualTargetHours;
-import static uk.gov.homeoffice.digital.sas.accruals.testUtils.AccrualFactory.createContribution;
-import static uk.gov.homeoffice.digital.sas.accruals.testUtils.AgreementFactory.createAgreement;
-import static uk.gov.homeoffice.digital.sas.accruals.testUtils.CommonUtils.objectAsJsonString;
 
-import com.jayway.jsonpath.JsonPath;
 import java.time.LocalDate;
-import java.util.Set;
 import java.util.UUID;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -29,13 +20,10 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import uk.gov.homeoffice.digital.sas.accruals.model.Accrual;
-import uk.gov.homeoffice.digital.sas.accruals.model.Agreement;
 import uk.gov.homeoffice.digital.sas.accruals.repositories.AccrualRepository;
 
 
@@ -43,7 +31,8 @@ import uk.gov.homeoffice.digital.sas.accruals.repositories.AccrualRepository;
 @TestPropertySource(locations="classpath:postgres.properties")
 @Testcontainers
 @AutoConfigureMockMvc
-@Sql(scripts = "file:db/sql/003-function-get-impacted-accruals.sql")
+@Sql(scripts = {"file:db/sql/003-function-get-impacted-accruals.sql",
+    "/controller-it-set-up-data.sql"})
 class AccrualControllerIntegrationTest {
 
   /**
@@ -52,7 +41,7 @@ class AccrualControllerIntegrationTest {
    * Please ensure you have docker running to allow access to the docker daemon
    */
   @Container
-  public static PostgreSQLContainer container =createContainer();
+  public static PostgreSQLContainer container = createContainer();
 
   private static PostgreSQLContainer<?> createContainer() {
     try (PostgreSQLContainer<?> container = new PostgreSQLContainer<>("postgres:13.1")
@@ -70,79 +59,49 @@ class AccrualControllerIntegrationTest {
 
   private static final String ACCRUAL_URL = "/resources/accruals";
 
-  private static final String AGREEMENT_URL = "/resources/agreements";
-
   private static final UUID TENANT_ID =
-      UUID.fromString("b7e813a2-bb28-11ec-8422-0242ac120002");
-
-  private static final String TENANT_ID_PARAM = "?tenantId="+TENANT_ID;
+      UUID.fromString("00000000-0000-0000-0000-000000000000");
 
   private static final UUID PERSON_ID =
-      UUID.fromString("722875f4-e5de-40fa-b84d-eea99d1fba66");
+      UUID.fromString("00000000-0000-0000-0000-000000000001");
 
-  private static final LocalDate TIME_ENTRY_START_DATE = LocalDate.of(
-      2023, 4, 2);
 
-  private static final LocalDate TIME_ENTRY_END_DATE = LocalDate.of(
-      2023, 4, 2);
-
-  private static final LocalDate AGREEMENT_START_DATE = LocalDate.of(
-      2023,4,1);
-
-  private static final LocalDate AGREEMENT_END_DATE = LocalDate.of(
-      2023,  4,3);
-
-  private String agreementId;
   @Autowired
   MockMvc mvc;
 
   @Autowired
   AccrualRepository accrualRepository;
 
-  @BeforeEach
-  public void setUp() throws Exception {
-    Agreement agreement = createAgreement(AGREEMENT_START_DATE, AGREEMENT_END_DATE, PERSON_ID);
-
-    MvcResult result = postAgreement(agreement)
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.items", not(empty())))
-        .andReturn();
-
-    agreementId = JsonPath.read(result.getResponse().getContentAsString(), "$.items[0].id");
-  }
-
-  @AfterEach
-  void tearDown() {
-    accrualRepository.deleteAll();
-  }
-
 
   @Test
   void getAccrualsImpactedByTimeEntry_endPointIsCalled_shouldReturnEmptyList()
       throws Exception {
      String timeEntryId = "4d254823-0a7d-43b4-b948-b43266c9cbc1";
+    LocalDate timeEntryStartDate = LocalDate.of(2022, 3, 31);
+    LocalDate timeEntryEndDate = LocalDate.of(2022, 3, 31);
 
-        getImpactedAccruals(timeEntryId)
+        getImpactedAccruals(timeEntryId, timeEntryStartDate, timeEntryEndDate)
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.items", empty()))
         .andReturn();
   }
 
   @Test
-  void getAccrualsImpactedByTimeEntry_priorAccrualIsPresent_shouldGetPriorAndAccrualWithContribution()
+  void getAccrualsImpactedByTimeEntry_priorAccrualIsPresent_shouldGetPriorAndAccrualUntilEndOfAgreement()
       throws Exception {
 
-    setUpAccrualsData(LocalDate.of(2023, 4, 1), 1, agreementId);
+    String timeEntryId = "10000000-0000-0000-0000-000000000002";
+    LocalDate timeEntryStartDate = LocalDate.of(2022, 4, 2);
+    LocalDate timeEntryEndDate = LocalDate.of(2022, 4, 2);
 
-    String timeEntryId = getStoredTimeEntryId(LocalDate.of(2023,4,1));
-
-    getImpactedAccruals(timeEntryId)
+    getImpactedAccruals(timeEntryId, timeEntryStartDate, timeEntryEndDate)
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.items", not(empty())))
-        .andExpect(jsonPath("$.items.length()", is(2)))
-        .andExpect(jsonPath("$.items[0].accrualDate", is("2023-04-01")))
-        .andExpect((jsonPath("$.items[0].contributions.timeEntries", hasKey(timeEntryId))))
-        .andExpect(jsonPath("$.items[1].accrualDate", is("2023-04-02")))
+        .andExpect(jsonPath("$.items.length()", is(11)))
+        .andExpect(jsonPath("$.items[0].accrualDate", is("2022-04-01")))
+        .andExpect((jsonPath("$.items[1].contributions.timeEntries", hasKey(timeEntryId))))
+        .andExpect(jsonPath("$.items[1].accrualDate", is("2022-04-02")))
+        .andExpect(jsonPath("$.items[10].accrualDate", is("2022-04-11")))
         .andReturn();
   }
 
@@ -150,112 +109,173 @@ class AccrualControllerIntegrationTest {
   void getAccrualsImpactedByTimeEntry_earlierContributionIsPresent_shouldGetContributionBeforeTimeEntry()
       throws Exception {
 
-    setUpAccrualsData(LocalDate.of(2023, 3, 31), 2, agreementId);
+    String timeEntryId = "10000000-0000-0000-0000-000000000002";
+    LocalDate timeEntryStartDate = LocalDate.of(2022, 4, 3);
+    LocalDate timeEntryEndDate = LocalDate.of(2022, 4, 3);
 
-    String timeEntryId = getStoredTimeEntryId(LocalDate.of(2023,4,1));
-
-    getImpactedAccruals(timeEntryId)
+    getImpactedAccruals(timeEntryId, timeEntryStartDate, timeEntryEndDate)
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.items", not(empty())))
-        .andExpect(jsonPath("$.items.length()", is(3)))
-        .andExpect(jsonPath("$.items[0].accrualDate", is("2023-03-31")))
-        .andExpect(jsonPath("$.items[1].accrualDate", is("2023-04-01")))
+        .andExpect(jsonPath("$.items.length()", is(11)))
+        .andExpect(jsonPath("$.items[0].accrualDate", is("2022-04-01")))
+        .andExpect(jsonPath("$.items[1].accrualDate", is("2022-04-02")))
         .andExpect((jsonPath("$.items[1].contributions.timeEntries", hasKey(timeEntryId))))
-        .andExpect(jsonPath("$.items[2].accrualDate", is("2023-04-02")));
+        .andExpect(jsonPath("$.items[2].accrualDate", is("2022-04-03")))
+        .andExpect(jsonPath("$.items[10].accrualDate", is("2022-04-11")));
   }
 
   @Test
-  void getAccrualsImpactedByTimeEntry_timeEntryIsBetweenCurrentAccrual_shouldGetContributionCoveringTimeEntry()
+  void getAccrualsImpactedByTimeEntry_currentAccrualSpansTwoDays_shouldGetContributionBeforeCurrentAccrual()
       throws Exception {
-    String timeEntryId = "4d254823-0a7d-43b4-b948-b43266c9cbc1";
 
-    Accrual accrualDay1 = createAccrualAnnualTargetHours(
-        PERSON_ID,
-        LocalDate.of(2023, 3,30),
-        UUID.fromString("4d254823-0a7d-43b4-b948-b43266c9cbc1"),
-        UUID.fromString(agreementId));
+    String timeEntryId = "10000000-0000-0000-0000-000000000008";
+    LocalDate timeEntryStartDate = LocalDate.of(2022, 4, 9);
+    LocalDate timeEntryEndDate = LocalDate.of(2022, 4, 9);
 
-    postAccrual(accrualDay1);
 
-    Accrual accrualDay2 = createAccrualAnnualTargetHours(PERSON_ID,
-        LocalDate.of(2023, 3,31),
-        UUID.fromString("4d254823-0a7d-43b4-b948-b43266c9cbc1"),
-        UUID.fromString(agreementId));
-
-    postAccrual(accrualDay2);
-
-    setUpAccrualsData(LocalDate.of(2023, 4, 1), 2, agreementId);
-
-    getImpactedAccruals(timeEntryId)
+    getImpactedAccruals(timeEntryId, timeEntryStartDate, timeEntryEndDate)
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.items", not(empty())))
         .andExpect(jsonPath("$.items.length()", is(5)))
-        .andExpect(jsonPath("$.items[0].accrualDate", is("2023-03-30")))
-        .andExpect((jsonPath("$.items[0].contributions.timeEntries", hasKey(timeEntryId))))
-        .andExpect(jsonPath("$.items[1].accrualDate", is("2023-03-31")))
+        .andExpect(jsonPath("$.items[0].accrualDate", is("2022-04-07")))
+        .andExpect(jsonPath("$.items[1].accrualDate", is("2022-04-08")))
         .andExpect((jsonPath("$.items[1].contributions.timeEntries", hasKey(timeEntryId))))
-        .andExpect(jsonPath("$.items[4].accrualDate", is("2023-04-03")));
+        .andExpect(jsonPath("$.items[2].accrualDate", is("2022-04-09")))
+        .andExpect((jsonPath("$.items[2].contributions.timeEntries", hasKey(timeEntryId))))
+        .andExpect(jsonPath("$.items[4].accrualDate", is("2022-04-11")));
   }
 
-  private ResultActions getImpactedAccruals(String timeEntryId) throws Exception {
+  @Test
+  void getAccrualsImpactedByTimeEntry_currentAccrualEndsOnAgreement_timeEntryUpdatedToDayBefore()
+      throws Exception {
+    LocalDate timeEntryStartDate = LocalDate.parse("2022-04-10");
+    LocalDate timeEntryEndDate = LocalDate.parse("2022-04-10");
+    String timeEntryId = "10000000-0000-0000-0000-000000000011";
+
+    getImpactedAccruals(timeEntryId, timeEntryStartDate, timeEntryEndDate)
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.items", not(empty())))
+        .andExpect(jsonPath("$.items.length()", is(3)))
+        .andExpect(jsonPath("$.items[0].accrualDate", is("2022-04-09")))
+        .andExpect(jsonPath("$.items[1].accrualDate", is("2022-04-10")))
+        .andExpect(jsonPath("$.items[2].accrualDate", is("2022-04-11")))
+        .andExpect((jsonPath("$.items[2].contributions.timeEntries", hasKey(timeEntryId))));
+  }
+
+  @Test
+  void getAccrualsImpactedByTimeEntry_currentAccrualOnFirstDayAgreement_timeEntryUpdatedToEndNextDay()
+      throws Exception {
+    LocalDate timeEntryStartDate = LocalDate.parse("2022-04-13");
+    LocalDate timeEntryEndDate = LocalDate.parse("2022-04-13");
+    String timeEntryId = "10000000-0000-0000-0000-000000000012";
+
+    getImpactedAccruals(timeEntryId, timeEntryStartDate, timeEntryEndDate)
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.items", not(empty())))
+        .andExpect(jsonPath("$.items.length()", is(4)))
+        .andExpect(jsonPath("$.items[0].accrualDate", is("2022-04-11")))
+        .andExpect(jsonPath("$.items[1].accrualDate", is("2022-04-12")))
+        .andExpect(jsonPath("$.items[1].contributions.timeEntries", hasKey(timeEntryId)))
+        .andExpect(jsonPath("$.items[2].accrualDate", is("2022-04-13")))
+        .andExpect(jsonPath("$.items[3].accrualDate", is("2022-04-14")));
+  }
+
+  @Test
+  void getAccrualsImpactedByTimeEntry_currentAccrualOvernightOnLastDayOfAgreement_timeEntryUpdatedToDayEarlier()
+      throws Exception {
+    LocalDate timeEntryStartDate = LocalDate.parse("2022-04-09");
+    LocalDate timeEntryEndDate = LocalDate.parse("2022-04-10");
+    String timeEntryId = "10000000-0000-0000-0000-000000000010";
+
+    getImpactedAccruals(timeEntryId, timeEntryStartDate, timeEntryEndDate)
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.items", not(empty())))
+        .andExpect(jsonPath("$.items.length()", is(4)))
+        .andExpect(jsonPath("$.items[0].accrualDate", is("2022-04-08")))
+        .andExpect(jsonPath("$.items[1].accrualDate", is("2022-04-09")))
+        .andExpect(jsonPath("$.items[2].accrualDate", is("2022-04-10")))
+        .andExpect(jsonPath("$.items[2].contributions.timeEntries", hasKey(timeEntryId)))
+        .andExpect(jsonPath("$.items[3].accrualDate", is("2022-04-11")));
+  }
+
+  @Test
+  void getAccrualsImpactedByTimeEntry_currentAccrualOvernightOnLastDayOfAgreement_timeEntryUpdatedToDayLater()
+      throws Exception {
+    LocalDate timeEntryStartDate = LocalDate.parse("2022-04-10");
+    LocalDate timeEntryEndDate = LocalDate.parse("2022-04-11");
+    String timeEntryId = "10000000-0000-0000-0000-000000000010";
+
+    getImpactedAccruals(timeEntryId, timeEntryStartDate, timeEntryEndDate)
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.items", not(empty())))
+        .andExpect(jsonPath("$.items.length()", is(3)))
+        .andExpect(jsonPath("$.items[0].accrualDate", is("2022-04-09")))
+        .andExpect(jsonPath("$.items[1].accrualDate", is("2022-04-10")))
+        .andExpect(jsonPath("$.items[1].contributions.timeEntries", hasKey(timeEntryId)))
+        .andExpect(jsonPath("$.items[2].accrualDate", is("2022-04-11")));
+  }
+
+  @Test
+  void getAccrualsImpactedByTimeEntry_timeEntryEndsInDifferentAgreement_returnEndOfSecondAgreement()
+      throws Exception {
+    LocalDate timeEntryStartDate = LocalDate.parse("2022-04-11");
+    LocalDate timeEntryEndDate = LocalDate.parse("2022-04-11");
+    String timeEntryId = "10000000-0000-0000-0000-000000000111";
+
+    getImpactedAccruals(timeEntryId, timeEntryStartDate, timeEntryEndDate)
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.items", not(empty())))
+        .andExpect(jsonPath("$.items.length()", is(5)))
+        .andExpect(jsonPath("$.items[0].accrualDate", is("2022-04-10")))
+        .andExpect(jsonPath("$.items[1].accrualDate", is("2022-04-11")))
+        .andExpect(jsonPath("$.items[1].contributions.timeEntries", hasKey(timeEntryId)))
+        .andExpect(jsonPath("$.items[2].accrualDate", is("2022-04-12")))
+        .andExpect(jsonPath("$.items[4].accrualDate", is("2022-04-14")));
+  }
+
+  @Test
+  void getAccrualsImpactedByTimeEntry_previousContributionIsInPreviousAgreement_returnEndOfSecondAgreement()
+      throws Exception {
+    LocalDate timeEntryStartDate = LocalDate.parse("2022-04-12");
+    LocalDate timeEntryEndDate = LocalDate.parse("2022-04-12");
+    String timeEntryId = "10000000-0000-0000-0000-000000000011";
+    getImpactedAccruals(timeEntryId, timeEntryStartDate, timeEntryEndDate)
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.items", not(empty())))
+        .andExpect(jsonPath("$.items.length()", is(5)))
+        .andExpect(jsonPath("$.items[0].accrualDate", is("2022-04-10")))
+        .andExpect(jsonPath("$.items[1].accrualDate", is("2022-04-11")))
+        .andExpect(jsonPath("$.items[1].contributions.timeEntries", hasKey(timeEntryId)))
+        .andExpect(jsonPath("$.items[2].accrualDate", is("2022-04-12")))
+        .andExpect(jsonPath("$.items[4].accrualDate", is("2022-04-14")));
+  }
+
+  @Test
+  void getAccrualsImpactedByTimeEntry_previousContributionIsInFutureAgreement_returnEndOfFirstAgreement()
+      throws Exception {
+    LocalDate timeEntryStartDate = LocalDate.parse("2022-04-11");
+    LocalDate timeEntryEndDate = LocalDate.parse("2022-04-11");
+    String timeEntryId = "10000000-0000-0000-0000-000000000012";
+
+    getImpactedAccruals(timeEntryId, timeEntryStartDate, timeEntryEndDate)
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.items", not(empty())))
+        .andExpect(jsonPath("$.items.length()", is(5)))
+        .andExpect(jsonPath("$.items[0].accrualDate", is("2022-04-10")))
+        .andExpect(jsonPath("$.items[1].accrualDate", is("2022-04-11")))
+        .andExpect(jsonPath("$.items[2].accrualDate", is("2022-04-12")))
+        .andExpect(jsonPath("$.items[2].contributions.timeEntries", hasKey(timeEntryId)))
+        .andExpect(jsonPath("$.items[4].accrualDate", is("2022-04-14")));
+  }
+
+  private ResultActions getImpactedAccruals(String timeEntryId, LocalDate timeEntryStartDate,
+                                            LocalDate timeEntryEndDate) throws Exception {
     return mvc.perform(get(ACCRUAL_URL
             + "?tenantId=" + TENANT_ID
             + "&personId=" + PERSON_ID
             + "&timeEntryId=" + timeEntryId
-            + "&timeEntryStartDate=" + TIME_ENTRY_START_DATE
-            + "&timeEntryEndDate=" + TIME_ENTRY_END_DATE)
+            + "&timeEntryStartDate=" + timeEntryStartDate
+            + "&timeEntryEndDate=" + timeEntryEndDate)
             .contentType(MediaType.APPLICATION_JSON));
   }
-
-  private void postAccrual(Accrual accrual) throws Exception {
-    mvc.perform(post(ACCRUAL_URL + TENANT_ID_PARAM)
-        .contentType(MediaType.APPLICATION_JSON)
-        .content(objectAsJsonString(accrual)))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.items", not(empty())))
-        .andReturn();
-  }
-
-  private ResultActions postAgreement(Agreement agreement) throws Exception {
-    return mvc.perform(post(AGREEMENT_URL + TENANT_ID_PARAM)
-        .contentType(MediaType.APPLICATION_JSON)
-        .content(objectAsJsonString(agreement)));
-  }
-
-  private String getStoredTimeEntryId(LocalDate timeEntryDate) throws Exception {
-
-    final String result = mvc.perform(get(ACCRUAL_URL + TENANT_ID_PARAM +
-        "&filter=accrualDate=='" + timeEntryDate + "'"))
-        .andExpect(status().isOk())
-        .andReturn()
-        .getResponse()
-        .getContentAsString();
-
-    Set<String> timeEntryIdSet  =
-        JsonPath.read(result, "$.items[0].contributions.timeEntries.keys()");
-
-    return timeEntryIdSet.iterator().next();
-  }
-
-  private void setUpAccrualsData(LocalDate accrualEarliestContribution,
-                                        int accrualPastEarliestDate, String agreementId)
-      throws Exception {
-
-    Accrual accrual = createAccrualAnnualTargetHours(PERSON_ID, accrualEarliestContribution,
-        UUID.fromString(agreementId));
-
-    for (int i = 0; i <= accrualPastEarliestDate; i++ ) {
-
-      if (i > 0) {
-        accrual.setAccrualDate(accrual.getAccrualDate().plusDays(1));
-        accrual.setContributions(createContribution(UUID.randomUUID()));
-      }
-
-      mvc.perform(post(ACCRUAL_URL + TENANT_ID_PARAM)
-              .contentType(MediaType.APPLICATION_JSON)
-              .content(objectAsJsonString(accrual)))
-          .andExpect(status().isOk());
-    }
-  }
-
 }
