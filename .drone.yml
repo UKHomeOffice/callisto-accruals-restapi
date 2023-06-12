@@ -107,9 +107,12 @@ steps:
     depends_on:
       - fetch
     environment:
+      DOCKER_HOST: tcp://127.0.0.1:2375
+      TESTCONTAINERS_RYUK_DISABLED: true
       ARTIFACTORY_TOKEN:
         from_secret: artifactory_token
     commands:
+      - n=0; while [ "$n" -lt 60 ] && [ ! docker stats --no-stream ]; do n=$(( n + 1 )); sleep 1; done; if [ ! docker stats --no-stream ]; then exit 1; fi
       - mvn -s ./accruals_settings.xml clean verify
 
   - name: sonar
@@ -162,6 +165,10 @@ steps:
         - push
       branch:
         - main
+
+services:
+  - name: docker
+    image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind
 
 ---
 kind: pipeline
