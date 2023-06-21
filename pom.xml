@@ -50,11 +50,11 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>uk.gov.homeoffice.digital.sas</groupId>
-			<artifactId>jparest</artifactId>
-			<version>${callisto.jparest.version}</version>
-		</dependency>
+        <dependency>
+            <groupId>uk.gov.homeoffice.digital.sas</groupId>
+            <artifactId>jparest</artifactId>
+            <version>${callisto.jparest.version}</version>
+        </dependency>
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
