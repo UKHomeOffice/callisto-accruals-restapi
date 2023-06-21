@@ -4,25 +4,20 @@
     <servers>
         <server>
             <id>callisto-jparest</id>
-            <configuration>
-                <httpHeaders>
-                    <property>
-                        <name>Authorization</name>
-                        <value>Bearer ${ARTIFACTORY_TOKEN}</value>
-                    </property>
-                </httpHeaders>
-            </configuration>
+            <!-- Any username would work as long as it's not empty -->
+            <name>DummyUser</name>
+            <value>${env.GITHUB_TOKEN}</value>
         </server>
     </servers>
 
     <profiles>
         <profile>
-            <id>artifactory</id>
+            <id>github</id>
             <repositories>
                 <repository>
                     <id>callisto-jparest</id>
                     <name>Callisto Jparest Repo</name>
-                    <url>https://artifactory.digital.homeoffice.gov.uk/artifactory/callisto-jparest</url>
+                    <url>https://maven.pkg.github.com/UKHomeOffice/callisto-jparest</url>
                     <snapshots>
                         <enabled>true</enabled>
                     </snapshots>
@@ -32,7 +27,7 @@
     </profiles>
 
     <activeProfiles>
-        <activeProfile>artifactory</activeProfile>
+        <activeProfile>github</activeProfile>
     </activeProfiles>
 
 </settings>
