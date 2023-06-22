@@ -21,9 +21,10 @@
 		<sonar.language>java</sonar.language>
 		<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
         <checkstyle-maven-plugin.version>3.2.0</checkstyle-maven-plugin.version>
-		<callisto.jparest.version>0.1.14-EAHW-2814-SNAPSHOT</callisto.jparest.version>
+		<callisto.jparest.version>0.1.14</callisto.jparest.version>
 		<test.containers.version>1.18.3</test.containers.version>
 	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
