@@ -12,6 +12,14 @@ $ mvn clean install
 
 ## 2. Running project locally
 
+#### Ports
+
+- Standalone service runs on port 9090.
+- LocalDev solution runs on port 50200.
+- Java Debugger runs on port 5005.
+
+  Check `docker-compose.yml` for any port mappings.
+
 #### Database
 
 - It requires a running instance of the Postgres database (For ports, username and password, please check docker-compose.yml)
@@ -29,6 +37,10 @@ $ mvn clean install
 3. Pull Accruals-restapi repository and from its root directory, run command `docker compose up -d`
 
 After successful start, you should be able to work with Accruals-restapi code and all changes will be reflected within LocalDev environment.
+
+### 3.1 Attaching Debugger
+
+The service can also be debugged. To do so in a JetBrains IDE, a debugger has to be added (Run -> Edit Configurations.. -> Add Remote JVM Debug), with the port matching the external port mapped in the docker compose file of the service to debug. For example, that would be 5005 for this service.
 
 ## 4. Devtools Hot Deployment in local environment
 
