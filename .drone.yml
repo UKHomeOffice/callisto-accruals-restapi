@@ -365,6 +365,7 @@ trigger:
   event:
     - promote
   target:
+    exclude:
     - production
 
 steps:
