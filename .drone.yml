@@ -109,8 +109,8 @@ steps:
     environment:
       DOCKER_HOST: tcp://127.0.0.1:2375
       TESTCONTAINERS_RYUK_DISABLED: true
-      ARTIFACTORY_TOKEN:
-        from_secret: artifactory_token
+      GITHUB_TOKEN:
+        from_secret: github_token
     commands:
       - n=0; while [ "$n" -lt 60 ] && [ ! docker stats --no-stream ]; do n=$(( n + 1 )); sleep 1; done; if [ ! docker stats --no-stream ]; then exit 1; fi
       - mvn -s ./accruals_settings.xml clean verify
@@ -120,8 +120,8 @@ steps:
     depends_on:
       - build
     environment:
-      ARTIFACTORY_TOKEN:
-        from_secret: artifactory_token
+      GITHUB_TOKEN:
+        from_secret: github_token
       SONAR_HOST:
         from_secret: sonar_cloud_host
       SONAR_TOKEN:
