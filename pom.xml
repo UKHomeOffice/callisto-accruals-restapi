@@ -13,6 +13,18 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>callisto-accruals-restapi</name>
 	<description>Callisto accruals service backend rest api project</description>
+
+    <repositories>
+        <repository>
+            <id>github-packages</id>
+            <name>Callisto github packages</name>
+            <url>https://maven.pkg.github.com/UKHomeOffice/*</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
 	<properties>
 		<java.version>17</java.version>
 		<maven.compiler.source>17</maven.compiler.source>
