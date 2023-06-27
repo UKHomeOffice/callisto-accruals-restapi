@@ -1,79 +1,56 @@
 # Callisto Accruals REST API
 
-Accruals-restapi service is a part of Callisto project (Check section [All Callisto Repositories](#headAllRepo) for links to all Callisto repositories)
+Callisto Accruals REST API is a part of Callisto project.
+The best way to run the service is to leverage the [callisto-localdev solution](https://github.com/UKHomeOffice/callisto-localdev).
 
-## 1. Building project
+## Running as part of the LocalDev environment
 
-To build the project, you will need to install Maven. You will also need JDK 17.
+1. Clone LocalDev repository from https://github.com/UKHomeOffice/callisto-localdev and run it locally as described in [Scenario 1](https://github.com/UKHomeOffice/callisto-localdev#scenario-1-running-callisto-without-need-to-edit-code-base-eg-demo-purposes).
 
-```sh
-$ mvn clean install
+2. From the LocalDev project root, stop the service by running `docker compose stop callisto-accruals-restapi` command.
+
+3. Ensure you have configured your [Authentication for GitHub Packages](#authentication-for-github-packages)
+
+4. Clone the service repository, and from its root directory run command `docker compose up -d`
+
+After successful start, you should be able to work with the service code, and see all changes without restaring the docker container.
+
+## Authentication for Github Packages
+
+In order to pull in Github package dependencies you will need a Github Personal Access Token.
+This token will need the minimum of 'packages:read' permissions.
+
+This can be configured in your .m2/settings.xml file.
+
+E.g.
+
+```xml
+<servers>
+  <server>
+      <id>github-packages</id>
+      <username>[Insert GitHub username here]</username>
+      <password>{[Insert GitHub Personal Access Token here]}</password>
+  </server>
+</servers>
 ```
 
-## 2. Running project locally
+For more info see:
+[https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-apache-maven-registry](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-apache-maven-registry)
 
-#### Ports
+Then run the following to build the project
 
-- Standalone service runs on port 9090.
-- LocalDev solution runs on port 50200.
-- Java Debugger runs on port 5005.
+## Debugging
 
-  Check `docker-compose.yml` for any port mappings.
+Assuming you know how to debug java service, the principal is the same when using [callisto-localdev solution](https://github.com/UKHomeOffice/callisto-localdev). When running using docker compose, the debugger is exposed on the default port (5005). In the case of the debugger port conflicts, change both the ports and the entrypoint section in the docker-compose.yml
 
-#### Database
+## Kafka
 
-- It requires a running instance of the Postgres database (For ports, username and password, please check docker-compose.yml)
-- Check `<project_root>/src/main/resources/application.properties` for all required environment variables.
-- The project uses Liquibase for db migrations. All required files are in `<project_root>/db` directory. Please, also check `docker-compose.yml`.
-- In case of having issues with accruals schema, create schema manually or use LocalDev solution to create schema (check section [3](#headLocalDev) )
-- For more information visit https://github.com/UKHomeOffice/callisto-timecard-restapi section `Create database`
+Project requires a Kafka instance with all required permissions to write to topic. If [running the service within LocalDev solution](#running-as-part-of-the-localdev-environment), no futher configuration is required.
 
-## <a name="headLocalDev"></a> 3. Running project locally as part of LocalDev environment.
+All Kafka settings can be found in application.properties file.
 
-1. Download LocalDev repository from https://github.com/UKHomeOffice/callisto-localdev and run it locally as described in Scenario 1.
+## Database management
 
-2. From the LocalDev project root, stop Accruals-restapi service by running `docker compose stop accruals-restapi` command.
+The database is configured to run on Postgres. Liquibase is used to manage database changesets. The docker-compose.yml ensures that the changesets are applied.
 
-3. Pull Accruals-restapi repository and from its root directory, run command `docker compose up -d`
-
-After successful start, you should be able to work with Accruals-restapi code and all changes will be reflected within LocalDev environment.
-
-### 3.1 Attaching Debugger
-
-The service can also be debugged. To do so in a JetBrains IDE, a debugger has to be added (Run -> Edit Configurations.. -> Add Remote JVM Debug), with the port matching the external port mapped in the docker compose file of the service to debug. For example, that would be 5005 for this service.
-
-## 4. Devtools Hot Deployment in local environment
-
-Devtools allows you to reload the application after making any changes to the project files.
-However, it may need stage of building project manually (InteliJ IDEA: Build/Build Project)
-or IntelliJ IDEA has 2 properties that will allow you to execute `Build Project` automatically. To enable that :
-
-1.  Go to `Preferences/Build,Execution,Deployment/Compiler` and select option
-    `Build project automatically`
-2.  [Optional] Go to `Preferences/Advanced Settings` and select `Allow auto-make to start even if developed application is currently running`
-
-## 5. Integration Tests
-
-AccrualsControllerIntegrationTest.java is using a postgres test container. When running locally this
-requires docker to be running to allow access to the docker daemon.
-
-## <a name="headAllRepo"></a> 6. All Callisto repositories
-
-- https://github.com/UKHomeOffice/callisto-accruals-restapi
-- https://github.com/UKHomeOffice/callisto-balance-calculator
-- https://github.com/UKHomeOffice/callisto-person-restapi
-- https://github.com/UKHomeOffice/callisto-timecard-restapi
-- https://github.com/UKHomeOffice/callisto-accruals-person-consumer
-- https://github.com/UKHomeOffice/callisto-auth-keycloak
-- https://github.com/UKHomeOffice/callisto-build-github
-- https://github.com/UKHomeOffice/callisto-kafka-commons
-- https://github.com/UKHomeOffice/callisto-devops
-- https://github.com/UKHomeOffice/callisto-docs
-- https://github.com/UKHomeOffice/callisto-helm-charts
-- https://github.com/UKHomeOffice/callisto-ingress-nginx
-- https://github.com/UKHomeOffice/callisto-jparest
-- https://github.com/UKHomeOffice/callisto-localdev
-- https://github.com/UKHomeOffice/callisto-postman-collections
-- https://github.com/UKHomeOffice/callisto-service-template
-- https://github.com/UKHomeOffice/callisto-ui
-- https://github.com/UKHomeOffice/callisto-ui-nginx
+A separate docker image is created on top of the Liquibase image that contains all the changesets. This image is used to deploy the database to other environments.
