@@ -37,7 +37,6 @@ E.g.
 For more info see:
 [https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-apache-maven-registry](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-apache-maven-registry)
 
-Then run the following to build the project
 
 ## Debugging
 
